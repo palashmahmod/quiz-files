@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>মডেল টেস্ট </title>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
+        .start-screen { position: fixed; inset: 0; background: white; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .header-fixed { position: sticky; top: 0; background: #2c3e50; color: white; padding: 10px; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .container { max-width: 700px; margin: 20px auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .question-card { margin-bottom: 30px; padding: 15px; border-bottom: 1px solid #eee; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+        .option-btn { border: 2px solid #ddd; padding: 12px; border-radius: 10px; cursor: pointer; background: #fff; position: relative; }
+        .selected { border-color: #3498db !important; background: #e3f2fd !important; }
+        .correct { background: #d4edda !important; border-color: #27ae60 !important; }
+        .wrong { background: #f8d7da !important; border-color: #e74c3c !important; }
+        .tick { position: absolute; right: 10px; color: #27ae60; font-weight: bold; }
+        .btn-main { background: #27ae60; color: white; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .res-box { background: #fff; padding: 20px; border-radius: 15px; margin-top: 20px; border: 2px solid #3498db; }
+        img { max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+    <div id="start-screen" class="start-screen">
+        <h1>মডেল টেস্ট </h1>
+        <p>শ্রেণি: ৭ম | বিষয়: গণিত  | অধ্যায়: ১ম</p>
+        <p>পূর্ণমান: ২ | সময়: ১ মিনিট</p>
+        <button class="btn-main" id="startBtn">পরীক্ষা শুরু করুন</button>
+    </div>
+    <div id="quiz-content" style="display:none;">
+        <div class="header-fixed">
+            <div>সময়: <span id="clock">১:00</span></div>
+            <div>পূরণ: <span id="answered">0</span>/2</div>
+            <button class="btn-main" style="padding:8px 15px; font-size:14px; background:#e74c3c" id="submitBtn">সাবমিট</button>
+        </div>
+        <div class="container" id="mainArea">
+            <div id="resDisplay"></div>
+            
+            <div class="question-card" id="q1">
+                <div class="q-text">1. ক</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(1, 'ক', this)">ক) কক</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'খ', this)">খ) তত</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'গ', this)">গ) ক</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'ঘ', this)">ঘ) চজ</div>
+                </div>
+            </div>
+            <div class="question-card" id="q2">
+                <div class="q-text">2. ম</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(2, 'ক', this)">ক) ট</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'খ', this)">খ) চ</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'গ', this)">গ) জ</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'ঘ', this)">ঘ) গ</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function() {
+            var sol = {"1":"ক","2":"গ"};
+            var userAns = JSON.parse(sessionStorage.getItem('userAns_659')) || {}; 
+            var totalSeconds = parseInt("1") * 60;
+            var isDone = sessionStorage.getItem('isDone_659') === 'true';
+            var startTimeFormatted = sessionStorage.getItem('startTime_659') || "";
+            var startTimestamp = parseInt(sessionStorage.getItem('startTS_659')) || 0;
+
+            function init() {
+                if(sessionStorage.getItem('quizStarted_659') === 'true') {
+                    showQuiz();
+                    restoreAnswers();
+                    if(isDone) window.submitQuiz(true);
+                }
+            }
+
+            function showQuiz() {
+                document.getElementById('start-screen').style.display = 'none';
+                document.getElementById('quiz-content').style.display = 'block';
+                if(!startTimestamp) {
+                   var now = new Date();
+                   startTimeFormatted = now.getHours() + ":" + (now.getMinutes()<10?'0':'')+now.getMinutes();
+                   startTimestamp = Date.now();
+                   sessionStorage.setItem('startTime_659', startTimeFormatted);
+                   sessionStorage.setItem('startTS_659', startTimestamp);
+                }
+                startTimer();
+                if(history.state !== 'quiz') {
+                   history.pushState('quiz', null, location.href);
+                }
+            }
+
+            window.addEventListener('popstate', function(event) {
+                if(!isDone && sessionStorage.getItem('quizStarted_659') === 'true') {
+                    window.submitQuiz(true);
+                }
+            });
+
+            document.getElementById('startBtn').addEventListener('click', function() {
+                sessionStorage.setItem('quizStarted_659', 'true');
+                showQuiz();
+            });
+
+            function startTimer() {
+                var timer = setInterval(function() {
+                    if(isDone) { clearInterval(timer); return; }
+                    var currentElapsed = Math.floor((Date.now() - startTimestamp) / 1000);
+                    var remaining = totalSeconds - currentElapsed;
+                    if(remaining <= 0) { 
+                        clearInterval(timer); 
+                        window.submitQuiz(true);
+                        return;
+                    }
+                    var m = Math.floor(remaining/60), s = remaining%60;
+                    document.getElementById('clock').innerText = m + ":" + (s < 10 ? '0' : '') + s;
+                }, 1000);
+            }
+
+            window.setAnswer = function(q, a, btn) {
+                if(isDone) return;
+                userAns[q] = a;
+                sessionStorage.setItem('userAns_659', JSON.stringify(userAns));
+                var parent = btn.parentElement;
+                var buttons = parent.getElementsByClassName('option-btn');
+                for(var i=0; i<buttons.length; i++) buttons[i].classList.remove('selected');
+                btn.classList.add('selected');
+                document.getElementById('answered').innerText = Object.keys(userAns).length;
+            };
+
+            function restoreAnswers() {
+                for(var q in userAns) {
+                    var card = document.getElementById('q'+q);
+                    if(card){
+                        var buttons = card.getElementsByClassName('option-btn');
+                        for(var i=0; i<buttons.length; i++) {
+                            if(buttons[i].innerText.trim().charAt(0) === userAns[q]) {
+                                buttons[i].classList.add('selected');
+                            }
+                        }
+                    }
+                }
+                document.getElementById('answered').innerText = Object.keys(userAns).length;
+            }
+
+            window.submitQuiz = function(isAuto = false) {
+                if(isDone && !isAuto) return;
+                if(!isAuto && !confirm("আপনি কি নিশ্চিত সাবমিট করতে চান?")) return;
+                isDone = true;
+                sessionStorage.setItem('isDone_659', 'true');
+                var score = 0;
+                var wrongQs = [];
+                var timeTaken = Math.floor((Date.now() - startTimestamp) / 1000);
+                var minutesTaken = Math.floor(timeTaken / 60);
+                var secondsTaken = timeTaken % 60;
+
+                for(var i in sol) {
+                    var card = document.getElementById('q'+i);
+                    var buttons = card.getElementsByClassName('option-btn');
+                    for(var j=0; j<buttons.length; j++) {
+                        var char = buttons[j].innerText.trim().charAt(0);
+                        if(char === sol[i]) {
+                            buttons[j].classList.add('correct');
+                            buttons[j].innerHTML += '<span class="tick">✔</span>';
+                        }
+                        if(userAns[i] === char && char !== sol[i]) {
+                            buttons[j].classList.add('wrong');
+                        }
+                    }
+                    if(userAns[i] === sol[i]) score++;
+                    else wrongQs.push(i);
+                }
+
+                var resHTML = '<div class="res-box"><h3>ফলাফল</h3>' +
+                    '<p><b>অংশগ্রহণের সময়:</b> ' + startTimeFormatted + '</p>' +
+                    '<p><b>ব্যয়কৃত সময়:</b> ' + minutesTaken + ' মিনিট ' + secondsTaken + ' সেকেন্ড</p>' +
+                    '<p><b>সঠিক হয়েছে:</b> ' + score + '/' + Object.keys(sol).length + '</p>' +
+                    '<p><b>ভুল হওয়া প্রশ্নের নং:</b> ' + (wrongQs.length > 0 ? wrongQs.join(', ') : 'নাই') + '</p></div>';
+                
+                document.getElementById('resDisplay').innerHTML = resHTML;
+                document.getElementById('submitBtn').style.display = 'none';
+                window.scrollTo({top:0, behavior:'smooth'});
+
+                const resultData = {
+                    quizName: "659", // changed from quizFile to quizName for consistency
+                    quizTitle: "মডেল টেস্ট ",
+                    chapter: "১ম",
+                    startTime: startTimeFormatted,
+                    duration: minutesTaken + ":" + (secondsTaken < 10 ? '0' : '') + secondsTaken,
+                    score: score + "/" + Object.keys(sol).length,
+                    wrongList: wrongQs.join(', ') || "নাই"
+                };
+
+                if(window.parent) window.parent.postMessage({ type: 'QUIZ_SUBMITTED', data: resultData }, "*");
+                if(window.opener) window.opener.postMessage({ type: 'QUIZ_SUBMITTED', data: resultData }, "*");
+            };
+
+            document.getElementById('submitBtn').addEventListener('click', function() { window.submitQuiz(false); });
+            init();
+        })();
+    </script>
+</body>
+</html>
