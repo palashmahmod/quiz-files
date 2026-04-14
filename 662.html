@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ টেস্ট </title>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
+        .start-screen { position: fixed; inset: 0; background: white; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .header-fixed { position: sticky; top: 0; background: #2c3e50; color: white; padding: 10px; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .container { max-width: 700px; margin: 20px auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .question-card { margin-bottom: 30px; padding: 15px; border-bottom: 1px solid #eee; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+        .option-btn { border: 2px solid #ddd; padding: 12px; border-radius: 10px; cursor: pointer; background: #fff; position: relative; }
+        .selected { border-color: #3498db !important; background: #e3f2fd !important; }
+        .correct { background: #d4edda !important; border-color: #27ae60 !important; }
+        .wrong { background: #f8d7da !important; border-color: #e74c3c !important; }
+        .tick { position: absolute; right: 10px; color: #27ae60; font-weight: bold; }
+        .btn-main { background: #27ae60; color: white; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .res-box { background: #fff; padding: 20px; border-radius: 15px; margin-top: 20px; border: 2px solid #3498db; }
+        img { max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+    <div id="start-screen" class="start-screen">
+        <h1>MCQ টেস্ট </h1>
+        <p>শ্রেণি: ৮ম | বিষয়: বিজ্ঞান  | অধ্যায়: ৩য়</p>
+        <p>পূর্ণমান: ১০ | সময়: ৫ মিনিট</p>
+        <button class="btn-main" id="startBtn">পরীক্ষা শুরু করুন</button>
+    </div>
+    <div id="quiz-content" style="display:none;">
+        <div class="header-fixed">
+            <div>সময়: <span id="clock">৫:00</span></div>
+            <div>পূরণ: <span id="answered">0</span>/10</div>
+            <button class="btn-main" style="padding:8px 15px; font-size:14px; background:#e74c3c" id="submitBtn">সাবমিট</button>
+        </div>
+        <div class="container" id="mainArea">
+            <div id="resDisplay"></div>
+            
+            <div class="question-card" id="q1">
+                <div class="q-text">1. বেশি ঘনত্বের স্থান থেকে কম ঘনত্বের স্থানের দিকে পদার্থের অণুর ছড়িয়ে পড়াকে কী বলে?</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(1, 'ক', this)">ক) অভিস্রবণ</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'খ', this)">খ) ব্যাপন</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'গ', this)">গ) শোষণ</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'ঘ', this)">ঘ) প্রস্বেদন</div>
+                </div>
+            </div>
+            <div class="question-card" id="q2">
+                <div class="q-text">2. অভিস্রবণ প্রক্রিয়ার জন্য কোন ধরনের পর্দার প্রয়োজন হয়?</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(2, 'ক', this)">ক) ভেদ্য পর্দা</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'খ', this)">খ) অভেদ্য পর্দা</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'গ', this)">গ) অর্ধভেদ্য পর্দা</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'ঘ', this)">ঘ) সাধারণ পর্দা</div>
+                </div>
+            </div>
+            <div class="question-card" id="q3">
+                <div class="q-text">3. উদ্ভিদের কোন প্রক্রিয়াকে 'Necessary Evil' বলা হয়?</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(3, 'ক', this)">ক) ব্যাপন</div>
+                    <div class="option-btn" onclick="window.setAnswer(3, 'খ', this)">খ) অভিস্রবণ</div>
+                    <div class="option-btn" onclick="window.setAnswer(3, 'গ', this)">গ) প্রস্বেদন</div>
+                    <div class="option-btn" onclick="window.setAnswer(3, 'ঘ', this)">ঘ) সালোকসংশ্লেষণ</div>
+                </div>
+            </div>
+            <div class="question-card" id="q4">
+                <div class="q-text">4. কিশমিশ পানিতে ভিজিয়ে রাখলে ফুলে ওঠে কেন?</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(4, 'ক', this)">ক) ব্যাপনের কারণে</div>
+                    <div class="option-btn" onclick="window.setAnswer(4, 'খ', this)">খ) প্রস্বেদনের কারণে</div>
+                    <div class="option-btn" onclick="window.setAnswer(4, 'গ', this)">গ) অভিস্রবণের কারণে</div>
+                    <div class="option-btn" onclick="window.setAnswer(4, 'ঘ', this)">ঘ) ইমবাইবিশনের কারণে</div>
+                </div>
+            </div>
+            <div class="question-card" id="q5">
+                <div class="q-text">5. উদ্ভিদ প্রস্বেদনের মাধ্যমে দেহ থেকে পানি কী আকারে বের করে দেয়?</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(5, 'ক', this)">ক) তরল পানি</div>
+                    <div class="option-btn" onclick="window.setAnswer(5, 'খ', this)">খ) জলীয় বাষ্প</div>
+                    <div class="option-btn" onclick="window.setAnswer(5, 'গ', this)">গ) বরফ</div>
+                    <div class="option-btn" onclick="window.setAnswer(5, 'ঘ', this)">ঘ) খনিজ লবণ</div>
+                </div>
+            </div>
+            <div class="question-card" id="q6">
+                <div class="q-text">6. নিচের কোনটি অর্ধভেদ্য পর্দার উদাহরণ?</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(6, 'ক', this)">ক) কোষ প্রাচীর</div>
+                    <div class="option-btn" onclick="window.setAnswer(6, 'খ', this)">খ) পলিথিন</div>
+                    <div class="option-btn" onclick="window.setAnswer(6, 'গ', this)">গ) কোষ পর্দা</div>
+                    <div class="option-btn" onclick="window.setAnswer(6, 'ঘ', this)">ঘ) কাঠের টুকরো</div>
+                </div>
+            </div>
+            <div class="question-card" id="q7">
+                <div class="q-text">7. শুকনো কাঠ বা তুলা পানি শোষণ করে ফুলে উঠলে সেই প্রক্রিয়াকে কী বলে?</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(7, 'ক', this)">ক) ইমবাইবিশন</div>
+                    <div class="option-btn" onclick="window.setAnswer(7, 'খ', this)">খ) ব্যাপন</div>
+                    <div class="option-btn" onclick="window.setAnswer(7, 'গ', this)">গ) অভিস্রবণ</div>
+                    <div class="option-btn" onclick="window.setAnswer(7, 'ঘ', this)">ঘ) গাটেশন</div>
+                </div>
+            </div>
+            <div class="question-card" id="q8">
+                <div class="q-text">8. প্রস্বেদন প্রধানত কোথায় ঘটে?</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(8, 'ক', this)">ক) কাণ্ডে</div>
+                    <div class="option-btn" onclick="window.setAnswer(8, 'খ', this)">খ) শিকড়ে</div>
+                    <div class="option-btn" onclick="window.setAnswer(8, 'গ', this)">গ) পাতার পত্ররন্ধ্রে</div>
+                    <div class="option-btn" onclick="window.setAnswer(8, 'ঘ', this)">ঘ) ফুলে</div>
+                </div>
+            </div>
+            <div class="question-card" id="q9">
+                <div class="q-text">9. জাইলেম ভেসেলের মাধ্যমে পানি ও খনিজ লবণ কোথায় পৌঁছায়?</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(9, 'ক', this)">ক) পাতায়</div>
+                    <div class="option-btn" onclick="window.setAnswer(9, 'খ', this)">খ) ফুলে</div>
+                    <div class="option-btn" onclick="window.setAnswer(9, 'গ', this)">গ) ফলের ভেতরে</div>
+                    <div class="option-btn" onclick="window.setAnswer(9, 'ঘ', this)">ঘ) মূলের ডগায়</div>
+                </div>
+            </div>
+            <div class="question-card" id="q10">
+                <div class="q-text">10. ব্যাপন চাপ ঘাটতির ফলে উদ্ভিদে কী ঘটে?</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(10, 'ক', this)">ক) পানি নির্গমন</div>
+                    <div class="option-btn" onclick="window.setAnswer(10, 'খ', this)">খ) পানি শোষণ</div>
+                    <div class="option-btn" onclick="window.setAnswer(10, 'গ', this)">গ) খাদ্য তৈরি</div>
+                    <div class="option-btn" onclick="window.setAnswer(10, 'ঘ', this)">ঘ) ফল পেকে যাওয়া</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function() {
+            var sol = {"1":"খ","2":"গ","3":"গ","4":"গ","5":"খ","6":"গ","7":"ক","8":"গ","9":"ক","10":"খ"};
+            var userAns = JSON.parse(sessionStorage.getItem('userAns_662')) || {}; 
+            var totalSeconds = parseInt("5") * 60;
+            var isDone = sessionStorage.getItem('isDone_662') === 'true';
+            var startTimeFormatted = sessionStorage.getItem('startTime_662') || "";
+            var startTimestamp = parseInt(sessionStorage.getItem('startTS_662')) || 0;
+            function init() {
+                if(sessionStorage.getItem('quizStarted_662') === 'true') {
+                    showQuiz(); restoreAnswers(); if(isDone) window.submitQuiz(true);
+                }
+            }
+            function showQuiz() {
+                document.getElementById('start-screen').style.display = 'none';
+                document.getElementById('quiz-content').style.display = 'block';
+                if(!startTimestamp) {
+                   var now = new Date();
+                   startTimeFormatted = (now.getHours() % 12 || 12) + ":" + (now.getMinutes()<10?'0':'')+now.getMinutes() + (now.getHours() >= 12 ? ' PM' : ' AM');
+                   startTimestamp = Date.now();
+                   sessionStorage.setItem('startTime_662', startTimeFormatted);
+                   sessionStorage.setItem('startTS_662', startTimestamp);
+                }
+                startTimer();
+                if(history.state !== 'quiz') { history.pushState('quiz', null, location.href); }
+            }
+            function startTimer() {
+                var timer = setInterval(function() {
+                    if(isDone) { clearInterval(timer); return; }
+                    var currentElapsed = Math.floor((Date.now() - startTimestamp) / 1000);
+                    var remaining = totalSeconds - currentElapsed;
+                    if(remaining <= 0) { clearInterval(timer); window.submitQuiz(true); return; }
+                    var m = Math.floor(remaining/60), s = remaining%60;
+                    document.getElementById('clock').innerText = m + ":" + (s < 10 ? '0' : '') + s;
+                }, 1000);
+            }
+            window.setAnswer = function(q, a, btn) {
+                if(isDone) return;
+                userAns[q] = a;
+                sessionStorage.setItem('userAns_662', JSON.stringify(userAns));
+                var buttons = btn.parentElement.getElementsByClassName('option-btn');
+                for(var i=0; i<buttons.length; i++) buttons[i].classList.remove('selected');
+                btn.classList.add('selected');
+                document.getElementById('answered').innerText = Object.keys(userAns).length;
+            };
+            function restoreAnswers() {
+                for(var q in userAns) {
+                    var card = document.getElementById('q'+q);
+                    if(card){
+                        var buttons = card.getElementsByClassName('option-btn');
+                        for(var i=0; i<buttons.length; i++) {
+                            if(buttons[i].innerText.trim().charAt(0) === userAns[q]) buttons[i].classList.add('selected');
+                        }
+                    }
+                }
+                document.getElementById('answered').innerText = Object.keys(userAns).length;
+            }
+            window.submitQuiz = function(isAuto = false) {
+                if(isDone && !isAuto) return;
+                if(!isAuto && !confirm("আপনি কি নিশ্চিত সাবমিট করতে চান?")) return;
+                isDone = true; sessionStorage.setItem('isDone_662', 'true');
+                var score = 0, wrongQs = [];
+                var timeTaken = Math.floor((Date.now() - startTimestamp) / 1000);
+                var minutesTaken = Math.floor(timeTaken / 60), secondsTaken = timeTaken % 60;
+                var durationStr = minutesTaken + ":" + (secondsTaken < 10 ? '0' : '') + secondsTaken;
+                
+                for(var i in sol) {
+                    var card = document.getElementById('q'+i);
+                    var buttons = card.getElementsByClassName('option-btn');
+                    for(var j=0; j<buttons.length; j++) {
+                        var char = buttons[j].innerText.trim().charAt(0);
+                        if(char === sol[i]) { buttons[j].classList.add('correct'); buttons[j].innerHTML += '<span class="tick">✔</span>'; }
+                        if(userAns[i] === char && char !== sol[i]) buttons[j].classList.add('wrong');
+                    }
+                    if(userAns[i] === sol[i]) score++; else wrongQs.push(i);
+                }
+                var resHTML = '<div class="res-box"><h3>ফলাফল</h3>' +
+                    '<p><b>ব্যয়কৃত সময়:</b> ' + durationStr + '</p>' +
+                    '<p><b>সঠিক হয়েছে:</b> ' + score + '/' + Object.keys(sol).length + '</p>' +
+                    '<p><b>ভুল নং:</b> ' + (wrongQs.length > 0 ? wrongQs.join(', ') : 'নাই') + '</p></div>';
+                document.getElementById('resDisplay').innerHTML = resHTML;
+                document.getElementById('submitBtn').style.display = 'none';
+                window.scrollTo({top:0, behavior:'smooth'});
+                
+                const resultData = {
+                    quizName: "662",
+                    quizTitle: "MCQ টেস্ট ",
+                    chapter: "৩য়",
+                    startTime: startTimeFormatted,
+                    duration: durationStr,
+                    score: score + "/" + Object.keys(sol).length,
+                    wrongList: wrongQs.join(', ') || "নাই"
+                };
+                if(window.parent) window.parent.postMessage({ type: 'QUIZ_SUBMITTED', data: resultData }, "*");
+                if(window.opener) window.opener.postMessage({ type: 'QUIZ_SUBMITTED', data: resultData }, "*");
+            };
+            document.getElementById('startBtn').addEventListener('click', function() {
+                sessionStorage.setItem('quizStarted_662', 'true'); showQuiz();
+            });
+            document.getElementById('submitBtn').addEventListener('click', function() { window.submitQuiz(false); });
+            init();
+        })();
+    </script>
+</body>
+</html>
