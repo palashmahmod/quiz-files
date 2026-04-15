@@ -27,125 +27,55 @@
     <div id="start-screen" class="start-screen">
         <h1>MCQ টেস্ট </h1>
         <p>শ্রেণি: ৮ম | বিষয়: বিজ্ঞান  | অধ্যায়: ৩য়</p>
-        <p>পূর্ণমান: ১০ | সময়: ৪ মিনিট</p>
+        <p>পূর্ণমান: ৩০ | সময়: ৩০ মিনিট</p>
         <button class="btn-main" id="startBtn">পরীক্ষা শুরু করুন</button>
     </div>
     <div id="quiz-content" style="display:none;">
         <div class="header-fixed">
-            <div>সময়: <span id="clock">৪:00</span></div>
-            <div>পূরণ: <span id="answered">0</span>/10</div>
+            <div>সময়: <span id="clock">৩০:00</span></div>
+            <div>পূরণ: <span id="answered">0</span>/3</div>
             <button class="btn-main" style="padding:8px 15px; font-size:14px; background:#e74c3c" id="submitBtn">সাবমিট</button>
         </div>
         <div class="container" id="mainArea">
             <div id="resDisplay"></div>
             
             <div class="question-card" id="q1">
-                <div class="q-text">1. বেশি ঘনত্বের স্থান থেকে কম ঘনত্বের স্থানের দিকে পদার্থের অণুর ছড়িয়ে পড়াকে কী বলে?</div>
+                <div class="q-text">1. অণুগুলোর বেশি ঘনত্ব থেকে কম ঘনত্বের দিকে ছড়িয়ে পড়াকে কী বলে?</div>
                 
                 <div class="options-grid">
                     <div class="option-btn" onclick="window.setAnswer(1, 'ক', this)">ক) অভিস্রবণ</div>
                     <div class="option-btn" onclick="window.setAnswer(1, 'খ', this)">খ) ব্যাপন</div>
-                    <div class="option-btn" onclick="window.setAnswer(1, 'গ', this)">গ) শোষণ</div>
-                    <div class="option-btn" onclick="window.setAnswer(1, 'ঘ', this)">ঘ) প্রস্বেদন</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'গ', this)">গ) প্রস্বেদন</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'ঘ', this)">ঘ) শোষণ</div>
                 </div>
             </div>
             <div class="question-card" id="q2">
-                <div class="q-text">2. অভিস্রবণ প্রক্রিয়ার জন্য কোন ধরনের পর্দার প্রয়োজন হয়?</div>
+                <div class="q-text">2. ব্যাপন ততক্ষণ চলতে থাকে যতক্ষণ না অণুগুলোর ঘনত্ব—</div>
                 
                 <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(2, 'ক', this)">ক) ভেদ্য পর্দা</div>
-                    <div class="option-btn" onclick="window.setAnswer(2, 'খ', this)">খ) অভেদ্য পর্দা</div>
-                    <div class="option-btn" onclick="window.setAnswer(2, 'গ', this)">গ) অর্ধভেদ্য পর্দা</div>
-                    <div class="option-btn" onclick="window.setAnswer(2, 'ঘ', this)">ঘ) সাধারণ পর্দা</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'ক', this)">ক) সমান হয়</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'খ', this)">খ) হ্রাস পায়</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'গ', this)">গ) বৃদ্ধি পায়</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'ঘ', this)">ঘ) শূন্য হয়</div>
                 </div>
             </div>
             <div class="question-card" id="q3">
-                <div class="q-text">3. উদ্ভিদের কোন প্রক্রিয়াকে 'Necessary Evil' বলা হয়?</div>
+                <div class="q-text">3. ব্যাপনকারী পদার্থের অণুগুলোর সৃষ্ট চাপকে কী বলে?</div>
                 
                 <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(3, 'ক', this)">ক) ব্যাপন</div>
-                    <div class="option-btn" onclick="window.setAnswer(3, 'খ', this)">খ) অভিস্রবণ</div>
-                    <div class="option-btn" onclick="window.setAnswer(3, 'গ', this)">গ) প্রস্বেদন</div>
-                    <div class="option-btn" onclick="window.setAnswer(3, 'ঘ', this)">ঘ) সালোকসংশ্লেষণ</div>
-                </div>
-            </div>
-            <div class="question-card" id="q4">
-                <div class="q-text">4. কিশমিশ পানিতে ভিজিয়ে রাখলে ফুলে ওঠে কেন?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(4, 'ক', this)">ক) ব্যাপনের কারণে</div>
-                    <div class="option-btn" onclick="window.setAnswer(4, 'খ', this)">খ) প্রস্বেদনের কারণে</div>
-                    <div class="option-btn" onclick="window.setAnswer(4, 'গ', this)">গ) অভিস্রবণের কারণে</div>
-                    <div class="option-btn" onclick="window.setAnswer(4, 'ঘ', this)">ঘ) ইমবাইবিশনের কারণে</div>
-                </div>
-            </div>
-            <div class="question-card" id="q5">
-                <div class="q-text">5. উদ্ভিদ প্রস্বেদনের মাধ্যমে দেহ থেকে পানি কী আকারে বের করে দেয়?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(5, 'ক', this)">ক) তরল পানি</div>
-                    <div class="option-btn" onclick="window.setAnswer(5, 'খ', this)">খ) জলীয় বাষ্প</div>
-                    <div class="option-btn" onclick="window.setAnswer(5, 'গ', this)">গ) বরফ</div>
-                    <div class="option-btn" onclick="window.setAnswer(5, 'ঘ', this)">ঘ) খনিজ লবণ</div>
-                </div>
-            </div>
-            <div class="question-card" id="q6">
-                <div class="q-text">6. নিচের কোনটি অর্ধভেদ্য পর্দার উদাহরণ?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(6, 'ক', this)">ক) কোষ প্রাচীর</div>
-                    <div class="option-btn" onclick="window.setAnswer(6, 'খ', this)">খ) পলিথিন</div>
-                    <div class="option-btn" onclick="window.setAnswer(6, 'গ', this)">গ) কোষ পর্দা</div>
-                    <div class="option-btn" onclick="window.setAnswer(6, 'ঘ', this)">ঘ) কাঠের টুকরো</div>
-                </div>
-            </div>
-            <div class="question-card" id="q7">
-                <div class="q-text">7. শুকনো কাঠ বা তুলা পানি শোষণ করে ফুলে উঠলে সেই প্রক্রিয়াকে কী বলে?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(7, 'ক', this)">ক) ইমবাইবিশন</div>
-                    <div class="option-btn" onclick="window.setAnswer(7, 'খ', this)">খ) ব্যাপন</div>
-                    <div class="option-btn" onclick="window.setAnswer(7, 'গ', this)">গ) অভিস্রবণ</div>
-                    <div class="option-btn" onclick="window.setAnswer(7, 'ঘ', this)">ঘ) গাটেশন</div>
-                </div>
-            </div>
-            <div class="question-card" id="q8">
-                <div class="q-text">8. প্রস্বেদন প্রধানত কোথায় ঘটে?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(8, 'ক', this)">ক) কাণ্ডে</div>
-                    <div class="option-btn" onclick="window.setAnswer(8, 'খ', this)">খ) শিকড়ে</div>
-                    <div class="option-btn" onclick="window.setAnswer(8, 'গ', this)">গ) পাতার পত্ররন্ধ্রে</div>
-                    <div class="option-btn" onclick="window.setAnswer(8, 'ঘ', this)">ঘ) ফুলে</div>
-                </div>
-            </div>
-            <div class="question-card" id="q9">
-                <div class="q-text">9. জাইলেম ভেসেলের মাধ্যমে পানি ও খনিজ লবণ কোথায় পৌঁছায়?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(9, 'ক', this)">ক) পাতায়</div>
-                    <div class="option-btn" onclick="window.setAnswer(9, 'খ', this)">খ) ফুলে</div>
-                    <div class="option-btn" onclick="window.setAnswer(9, 'গ', this)">গ) ফলের ভেতরে</div>
-                    <div class="option-btn" onclick="window.setAnswer(9, 'ঘ', this)">ঘ) মূলের ডগায়</div>
-                </div>
-            </div>
-            <div class="question-card" id="q10">
-                <div class="q-text">10. ব্যাপন চাপ ঘাটতির ফলে উদ্ভিদে কী ঘটে?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(10, 'ক', this)">ক) পানি নির্গমন</div>
-                    <div class="option-btn" onclick="window.setAnswer(10, 'খ', this)">খ) পানি শোষণ</div>
-                    <div class="option-btn" onclick="window.setAnswer(10, 'গ', this)">গ) খাদ্য তৈরি</div>
-                    <div class="option-btn" onclick="window.setAnswer(10, 'ঘ', this)">ঘ) ফল পেকে যাওয়া</div>
+                    <div class="option-btn" onclick="window.setAnswer(3, 'ক', this)">ক) অভিস্রবণ চাপ</div>
+                    <div class="option-btn" onclick="window.setAnswer(3, 'খ', this)">খ) ব্যাপন চাপ</div>
+                    <div class="option-btn" onclick="window.setAnswer(3, 'গ', this)">গ) বায়ুমণ্ডলীয় চাপ</div>
+                    <div class="option-btn" onclick="window.setAnswer(3, 'ঘ', this)">ঘ) তড়িৎ চাপ</div>
                 </div>
             </div>
         </div>
     </div>
     <script>
         (function() {
-            var sol = {"1":"খ","2":"গ","3":"গ","4":"গ","5":"খ","6":"গ","7":"ক","8":"গ","9":"ক","10":"খ"};
+            var sol = {"1":"খ","2":"ক","3":"খ"};
             var userAns = JSON.parse(sessionStorage.getItem('userAns_663')) || {}; 
-            var totalSeconds = parseInt("4") * 60;
+            var totalSeconds = parseInt("30") * 60;
             var isDone = sessionStorage.getItem('isDone_663') === 'true';
             var startTimeFormatted = sessionStorage.getItem('startTime_663') || "";
             var startTimestamp = parseInt(sessionStorage.getItem('startTS_663')) || 0;
