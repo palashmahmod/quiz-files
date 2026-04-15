@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ টেস্ট </title>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; font-size: 14px; }
+        .start-screen { position: fixed; inset: 0; background: white; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .header-fixed { position: sticky; top: 0; background: #2c3e50; color: white; padding: 10px; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .container { max-width: 700px; margin: 10px auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .question-card { margin-bottom: 15px; padding: 10px 10px 20px 10px; border-bottom: 1.5px solid #f0f0f0; }
+        .stem-box { background: #f8f9fa; border-left: 4px solid #3498db; padding: 10px; margin-bottom: 10px; font-size: 14.5px; line-height: 1.5; color: #444; }
+        .q-text { font-size: 15px; font-weight: 600; color: #2c3e50; margin-bottom: 10px; line-height: 1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
+        .option-btn { border: 1.5px solid #ddd; padding: 8px 10px; border-radius: 8px; cursor: pointer; background: #fff; position: relative; font-size: 13px; min-height: 38px; display: flex; align-items: center; transition: 0.2s; }
+        .selected { border-color: #3498db !important; background: #e3f2fd !important; }
+        .correct { background: #d4edda !important; border-color: #27ae60 !important; }
+        .wrong { background: #f8d7da !important; border-color: #e74c3c !important; }
+        .tick { position: absolute; right: 5px; color: #27ae60; font-weight: bold; }
+        .btn-main { background: #27ae60; color: white; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .res-box { background: #fff; padding: 20px; border-radius: 15px; margin-top: 10px; border: 2px solid #3498db; }
+        @media (max-width: 480px) { .options-grid { gap: 8px; } .option-btn { padding: 6px 8px; } }
+    </style>
+</head>
+<body>
+    <div id="start-screen" class="start-screen">
+        <h1>MCQ টেস্ট </h1>
+        <p>শ্রেণি: ৮ম | বিষয়: বিজ্ঞান  | অধ্যায়: ৩য়</p>
+        <p>পূর্ণমান: ৩০ | সময়: ৩০ মিনিট</p>
+        <button class="btn-main" id="startBtn">পরীক্ষা শুরু করুন</button>
+    </div>
+    <div id="quiz-content" style="display:none;">
+        <div class="header-fixed">
+            <div>সময়: <span id="clock">৩০:00</span></div>
+            <div>পূরণ: <span id="answered">0</span>/30</div>
+            <button class="btn-main" style="padding:8px 15px; font-size:14px; background:#e74c3c" id="submitBtn">সাবমিট</button>
+        </div>
+        <div class="container" id="mainArea">
+            <div id="resDisplay"></div>
+            
+            <div class="question-card" id="q1">
+                <div class="stem-box">হ<br>ম<br>আমাদের স্কুলের </div>
+                <div class="q-text">1. অণুগুলোর বেশি ঘনত্ব থেকে কম ঘনত্বের দিকে ছড়িয়ে পড়াকে কী বলে?</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(1, 'ক', this)">ক) অভিস্রবণ</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'খ', this)">খ) ব্যাপন</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'গ', this)">গ) প্রস্বেদন</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'ঘ', this)">ঘ) শোষণ</div>
+                </div>
+            </div>
+            <div class="question-card" id="q2">
+                
+                <div class="q-text">2. ব্যাপন ততক্ষণ চলতে থাকে যতক্ষণ না অণুগুলোর ঘনত্ব—</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(2, 'ক', this)">ক) সমান হয়</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'খ', this)">খ) হ্রাস পায়</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'গ', this)">গ) বৃদ্ধি পায়</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'ঘ', this)">ঘ) শূন্য হয়</div>
+                </div>
+            </div>
+            <div class="question-card" id="q3">
+                
+                <div class="q-text">3. ব্যাপনকারী পদার্থের অণুগুলোর সৃষ্ট চাপকে কী বলে?</div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(3, 'ক', this)">ক) অভিস্রবণ চাপ</div>
+                    <div class="option-btn" onclick="window.setAnswer(3, 'খ', this)">খ) ব্যাপন চাপ</div>
+                    <div class="option-btn" onclick="window.setAnswer(3, 'গ', this)">গ) বায়ুমণ্ডলীয় চাপ</div>
+                    <div class="option-btn" onclick="window.setAnswer(3, 'ঘ', this)">ঘ) তড়িৎ চাপ</div>
+                </div>
+            </div>
+            <div class="question-card" id="q4">
+                
+                <div class="q-text">4. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(4, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(4, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(4, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(4, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q5">
+                
+                <div class="q-text">5. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(5, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(5, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(5, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(5, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q6">
+                
+                <div class="q-text">6. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(6, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(6, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(6, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(6, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q7">
+                
+                <div class="q-text">7. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(7, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(7, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(7, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(7, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q8">
+                
+                <div class="q-text">8. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(8, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(8, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(8, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(8, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q9">
+                
+                <div class="q-text">9. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(9, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(9, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(9, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(9, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q10">
+                
+                <div class="q-text">10. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(10, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(10, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(10, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(10, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q11">
+                
+                <div class="q-text">11. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(11, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(11, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(11, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(11, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q12">
+                
+                <div class="q-text">12. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(12, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(12, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(12, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(12, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q13">
+                
+                <div class="q-text">13. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(13, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(13, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(13, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(13, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q14">
+                
+                <div class="q-text">14. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(14, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(14, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(14, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(14, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q15">
+                
+                <div class="q-text">15. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(15, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(15, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(15, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(15, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q16">
+                
+                <div class="q-text">16. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(16, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(16, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(16, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(16, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q17">
+                
+                <div class="q-text">17. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(17, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(17, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(17, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(17, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q18">
+                
+                <div class="q-text">18. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(18, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(18, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(18, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(18, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q19">
+                
+                <div class="q-text">19. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(19, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(19, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(19, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(19, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q20">
+                
+                <div class="q-text">20. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(20, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(20, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(20, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(20, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q21">
+                
+                <div class="q-text">21. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(21, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(21, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(21, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(21, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q22">
+                
+                <div class="q-text">22. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(22, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(22, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(22, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(22, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q23">
+                
+                <div class="q-text">23. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(23, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(23, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(23, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(23, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q24">
+                
+                <div class="q-text">24. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(24, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(24, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(24, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(24, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q25">
+                
+                <div class="q-text">25. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(25, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(25, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(25, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(25, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q26">
+                
+                <div class="q-text">26. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(26, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(26, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(26, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(26, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q27">
+                
+                <div class="q-text">27. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(27, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(27, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(27, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(27, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q28">
+                
+                <div class="q-text">28. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(28, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(28, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(28, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(28, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q29">
+                
+                <div class="q-text">29. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(29, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(29, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(29, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(29, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+            <div class="question-card" id="q30">
+                
+                <div class="q-text">30. </div>
+                
+                <div class="options-grid">
+                    <div class="option-btn" onclick="window.setAnswer(30, 'ক', this)">ক) </div>
+                    <div class="option-btn" onclick="window.setAnswer(30, 'খ', this)">খ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(30, 'গ', this)">গ) </div>
+                    <div class="option-btn" onclick="window.setAnswer(30, 'ঘ', this)">ঘ) </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function() {
+            var sol = {"1":"খ","2":"ক","3":"খ","4":"ক","5":"ক","6":"ক","7":"ক","8":"ক","9":"ক","10":"ক","11":"ক","12":"ক","13":"ক","14":"ক","15":"ক","16":"ক","17":"ক","18":"ক","19":"ক","20":"ক","21":"ক","22":"ক","23":"ক","24":"ক","25":"ক","26":"ক","27":"ক","28":"ক","29":"ক","30":"ক"};
+            var userAns = JSON.parse(sessionStorage.getItem('userAns_664')) || {}; 
+            var totalSeconds = parseInt("30") * 60;
+            var isDone = sessionStorage.getItem('isDone_664') === 'true';
+            var startTimeFormatted = sessionStorage.getItem('startTime_664') || "";
+            var startTimestamp = parseInt(sessionStorage.getItem('startTS_664')) || 0;
+
+            function init() {
+                if(sessionStorage.getItem('quizStarted_664') === 'true') {
+                    showQuiz(); restoreAnswers(); if(isDone) window.submitQuiz(true);
+                }
+            }
+            function showQuiz() {
+                document.getElementById('start-screen').style.display = 'none';
+                document.getElementById('quiz-content').style.display = 'block';
+                if(!startTimestamp) {
+                   var now = new Date();
+                   startTimeFormatted = (now.getHours() % 12 || 12) + ":" + (now.getMinutes()<10?'0':'')+now.getMinutes() + (now.getHours() >= 12 ? ' PM' : ' AM');
+                   startTimestamp = Date.now();
+                   sessionStorage.setItem('startTime_664', startTimeFormatted);
+                   sessionStorage.setItem('startTS_664', startTimestamp);
+                }
+                startTimer();
+                if(history.state !== 'quiz') { history.pushState('quiz', null, location.href); }
+            }
+            function startTimer() {
+                var timer = setInterval(function() {
+                    if(isDone) { clearInterval(timer); return; }
+                    var currentElapsed = Math.floor((Date.now() - startTimestamp) / 1000);
+                    var remaining = totalSeconds - currentElapsed;
+                    if(remaining <= 0) { clearInterval(timer); window.submitQuiz(true); return; }
+                    var m = Math.floor(remaining/60), s = remaining%60;
+                    document.getElementById('clock').innerText = m + ":" + (s < 10 ? '0' : '') + s;
+                }, 1000);
+            }
+            window.setAnswer = function(q, a, btn) {
+                if(isDone) return;
+                userAns[q] = a;
+                sessionStorage.setItem('userAns_664', JSON.stringify(userAns));
+                var buttons = btn.parentElement.getElementsByClassName('option-btn');
+                for(var i=0; i<buttons.length; i++) buttons[i].classList.remove('selected');
+                btn.classList.add('selected');
+                document.getElementById('answered').innerText = Object.keys(userAns).length;
+            };
+            function restoreAnswers() {
+                for(var q in userAns) {
+                    var card = document.getElementById('q'+q);
+                    if(card){
+                        var buttons = card.getElementsByClassName('option-btn');
+                        for(var i=0; i<buttons.length; i++) {
+                            if(buttons[i].innerText.trim().charAt(0) === userAns[q]) buttons[i].classList.add('selected');
+                        }
+                    }
+                }
+                document.getElementById('answered').innerText = Object.keys(userAns).length;
+            }
+            window.submitQuiz = function(isAuto = false) {
+                if(isDone && !isAuto) return;
+                if(!isAuto && !confirm("আপনি কি নিশ্চিত সাবমিট করতে চান?")) return;
+                isDone = true; sessionStorage.setItem('isDone_664', 'true');
+                var score = 0, wrongQs = [];
+                var timeTaken = Math.floor((Date.now() - startTimestamp) / 1000);
+                var minutesTaken = Math.floor(timeTaken / 60), secondsTaken = timeTaken % 60;
+                var durationStr = minutesTaken + ":" + (secondsTaken < 10 ? '0' : '') + secondsTaken;
+                
+                for(var i in sol) {
+                    var card = document.getElementById('q'+i);
+                    var buttons = card.getElementsByClassName('option-btn');
+                    for(var j=0; j<buttons.length; j++) {
+                        var char = buttons[j].innerText.trim().charAt(0);
+                        if(char === sol[i]) { buttons[j].classList.add('correct'); buttons[j].innerHTML += '<span class="tick">✔</span>'; }
+                        if(userAns[i] === char && char !== sol[i]) buttons[j].classList.add('wrong');
+                    }
+                    if(userAns[i] === sol[i]) score++; else wrongQs.push(i);
+                }
+                var resHTML = '<div class="res-box"><h3>ফলাফল</h3>' +
+                    '<p><b>ব্যয়কৃত সময়:</b> ' + durationStr + '</p>' +
+                    '<p><b>সঠিক হয়েছে:</b> ' + score + '/' + Object.keys(sol).length + '</p>' +
+                    '<p><b>ভুল নং:</b> ' + (wrongQs.length > 0 ? wrongQs.join(', ') : 'নাই') + '</p></div>';
+                document.getElementById('resDisplay').innerHTML = resHTML;
+                document.getElementById('submitBtn').style.display = 'none';
+                window.scrollTo({top:0, behavior:'smooth'});
+                
+                const resultData = {
+                    quizName: "664",
+                    quizTitle: "MCQ টেস্ট ",
+                    chapter: "৩য়",
+                    startTime: startTimeFormatted,
+                    duration: durationStr,
+                    score: score + "/" + Object.keys(sol).length,
+                    wrongList: wrongQs.join(', ') || "নাই"
+                };
+                if(window.parent) window.parent.postMessage({ type: 'QUIZ_SUBMITTED', data: resultData }, "*");
+                if(window.opener) window.opener.postMessage({ type: 'QUIZ_SUBMITTED', data: resultData }, "*");
+            };
+            document.getElementById('startBtn').addEventListener('click', function() {
+                sessionStorage.setItem('quizStarted_664', 'true'); showQuiz();
+            });
+            document.getElementById('submitBtn').addEventListener('click', function() { window.submitQuiz(false); });
+            init();
+        })();
+    </script>
+</body>
+</html>
