@@ -3,151 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCQ টেস্ট </title>
+    <title>মডেল টেস্ট </title>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
+        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; font-size: 14px; }
         .start-screen { position: fixed; inset: 0; background: white; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
         .header-fixed { position: sticky; top: 0; background: #2c3e50; color: white; padding: 10px; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .container { max-width: 700px; margin: 20px auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .question-card { margin-bottom: 30px; padding: 15px; border-bottom: 1px solid #eee; }
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
-        .option-btn { border: 2px solid #ddd; padding: 12px; border-radius: 10px; cursor: pointer; background: #fff; position: relative; }
+        .container { max-width: 700px; margin: 10px auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .question-card { margin-bottom: 15px; padding: 10px 10px 20px 10px; border-bottom: 1.5px solid #f0f0f0; }
+        .stem-box { background: #f8f9fa; border-left: 4px solid #3498db; padding: 10px; margin-bottom: 10px; font-size: 14.5px; line-height: 1.5; color: #444; }
+        .q-text { font-size: 15px; font-weight: 600; color: #2c3e50; margin-bottom: 10px; line-height: 1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
+        .option-btn { border: 1.5px solid #ddd; padding: 8px 10px; border-radius: 8px; cursor: pointer; background: #fff; position: relative; font-size: 13px; min-height: 38px; display: flex; align-items: center; transition: 0.2s; }
         .selected { border-color: #3498db !important; background: #e3f2fd !important; }
         .correct { background: #d4edda !important; border-color: #27ae60 !important; }
         .wrong { background: #f8d7da !important; border-color: #e74c3c !important; }
-        .tick { position: absolute; right: 10px; color: #27ae60; font-weight: bold; }
+        .tick { position: absolute; right: 5px; color: #27ae60; font-weight: bold; }
         .btn-main { background: #27ae60; color: white; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; }
-        .res-box { background: #fff; padding: 20px; border-radius: 15px; margin-top: 20px; border: 2px solid #3498db; }
-        img { max-width: 100%; height: auto; }
+        .res-box { background: #fff; padding: 20px; border-radius: 15px; margin-top: 10px; border: 2px solid #3498db; }
+        @media (max-width: 480px) { .options-grid { gap: 8px; } .option-btn { padding: 6px 8px; } }
     </style>
 </head>
 <body>
     <div id="start-screen" class="start-screen">
-        <h1>MCQ টেস্ট </h1>
-        <p>শ্রেণি: ৮ম | বিষয়: বিজ্ঞান  | অধ্যায়: ৩য়</p>
-        <p>পূর্ণমান: ১০ | সময়: ৫ মিনিট</p>
+        <h1>মডেল টেস্ট </h1>
+        <p>শ্রেণি: ৭ম | বিষয়: গণিত  | অধ্যায়: ১ম</p>
+        <p>পূর্ণমান: ২ | সময়: ১ মিনিট</p>
         <button class="btn-main" id="startBtn">পরীক্ষা শুরু করুন</button>
     </div>
     <div id="quiz-content" style="display:none;">
         <div class="header-fixed">
-            <div>সময়: <span id="clock">৫:00</span></div>
-            <div>পূরণ: <span id="answered">0</span>/10</div>
+            <div>সময়: <span id="clock">১:00</span></div>
+            <div>পূরণ: <span id="answered">0</span>/2</div>
             <button class="btn-main" style="padding:8px 15px; font-size:14px; background:#e74c3c" id="submitBtn">সাবমিট</button>
         </div>
         <div class="container" id="mainArea">
             <div id="resDisplay"></div>
             
             <div class="question-card" id="q1">
-                <div class="q-text">1. বেশি ঘনত্বের স্থান থেকে কম ঘনত্বের স্থানের দিকে পদার্থের অণুর ছড়িয়ে পড়াকে কী বলে?</div>
+                <div class="stem-box">ক</div>
+                <div class="q-text">1. ক</div>
                 
                 <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(1, 'ক', this)">ক) অভিস্রবণ</div>
-                    <div class="option-btn" onclick="window.setAnswer(1, 'খ', this)">খ) ব্যাপন</div>
-                    <div class="option-btn" onclick="window.setAnswer(1, 'গ', this)">গ) শোষণ</div>
-                    <div class="option-btn" onclick="window.setAnswer(1, 'ঘ', this)">ঘ) প্রস্বেদন</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'ক', this)">ক) কক</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'খ', this)">খ) তত</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'গ', this)">গ) ক</div>
+                    <div class="option-btn" onclick="window.setAnswer(1, 'ঘ', this)">ঘ) চজ</div>
                 </div>
             </div>
             <div class="question-card" id="q2">
-                <div class="q-text">2. অভিস্রবণ প্রক্রিয়ার জন্য কোন ধরনের পর্দার প্রয়োজন হয়?</div>
+                
+                <div class="q-text">2. ম</div>
                 
                 <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(2, 'ক', this)">ক) ভেদ্য পর্দা</div>
-                    <div class="option-btn" onclick="window.setAnswer(2, 'খ', this)">খ) অভেদ্য পর্দা</div>
-                    <div class="option-btn" onclick="window.setAnswer(2, 'গ', this)">গ) অর্ধভেদ্য পর্দা</div>
-                    <div class="option-btn" onclick="window.setAnswer(2, 'ঘ', this)">ঘ) সাধারণ পর্দা</div>
-                </div>
-            </div>
-            <div class="question-card" id="q3">
-                <div class="q-text">3. উদ্ভিদের কোন প্রক্রিয়াকে 'Necessary Evil' বলা হয়?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(3, 'ক', this)">ক) ব্যাপন</div>
-                    <div class="option-btn" onclick="window.setAnswer(3, 'খ', this)">খ) অভিস্রবণ</div>
-                    <div class="option-btn" onclick="window.setAnswer(3, 'গ', this)">গ) প্রস্বেদন</div>
-                    <div class="option-btn" onclick="window.setAnswer(3, 'ঘ', this)">ঘ) সালোকসংশ্লেষণ</div>
-                </div>
-            </div>
-            <div class="question-card" id="q4">
-                <div class="q-text">4. কিশমিশ পানিতে ভিজিয়ে রাখলে ফুলে ওঠে কেন?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(4, 'ক', this)">ক) ব্যাপনের কারণে</div>
-                    <div class="option-btn" onclick="window.setAnswer(4, 'খ', this)">খ) প্রস্বেদনের কারণে</div>
-                    <div class="option-btn" onclick="window.setAnswer(4, 'গ', this)">গ) অভিস্রবণের কারণে</div>
-                    <div class="option-btn" onclick="window.setAnswer(4, 'ঘ', this)">ঘ) ইমবাইবিশনের কারণে</div>
-                </div>
-            </div>
-            <div class="question-card" id="q5">
-                <div class="q-text">5. উদ্ভিদ প্রস্বেদনের মাধ্যমে দেহ থেকে পানি কী আকারে বের করে দেয়?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(5, 'ক', this)">ক) তরল পানি</div>
-                    <div class="option-btn" onclick="window.setAnswer(5, 'খ', this)">খ) জলীয় বাষ্প</div>
-                    <div class="option-btn" onclick="window.setAnswer(5, 'গ', this)">গ) বরফ</div>
-                    <div class="option-btn" onclick="window.setAnswer(5, 'ঘ', this)">ঘ) খনিজ লবণ</div>
-                </div>
-            </div>
-            <div class="question-card" id="q6">
-                <div class="q-text">6. নিচের কোনটি অর্ধভেদ্য পর্দার উদাহরণ?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(6, 'ক', this)">ক) কোষ প্রাচীর</div>
-                    <div class="option-btn" onclick="window.setAnswer(6, 'খ', this)">খ) পলিথিন</div>
-                    <div class="option-btn" onclick="window.setAnswer(6, 'গ', this)">গ) কোষ পর্দা</div>
-                    <div class="option-btn" onclick="window.setAnswer(6, 'ঘ', this)">ঘ) কাঠের টুকরো</div>
-                </div>
-            </div>
-            <div class="question-card" id="q7">
-                <div class="q-text">7. শুকনো কাঠ বা তুলা পানি শোষণ করে ফুলে উঠলে সেই প্রক্রিয়াকে কী বলে?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(7, 'ক', this)">ক) ইমবাইবিশন</div>
-                    <div class="option-btn" onclick="window.setAnswer(7, 'খ', this)">খ) ব্যাপন</div>
-                    <div class="option-btn" onclick="window.setAnswer(7, 'গ', this)">গ) অভিস্রবণ</div>
-                    <div class="option-btn" onclick="window.setAnswer(7, 'ঘ', this)">ঘ) গাটেশন</div>
-                </div>
-            </div>
-            <div class="question-card" id="q8">
-                <div class="q-text">8. প্রস্বেদন প্রধানত কোথায় ঘটে?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(8, 'ক', this)">ক) কাণ্ডে</div>
-                    <div class="option-btn" onclick="window.setAnswer(8, 'খ', this)">খ) শিকড়ে</div>
-                    <div class="option-btn" onclick="window.setAnswer(8, 'গ', this)">গ) পাতার পত্ররন্ধ্রে</div>
-                    <div class="option-btn" onclick="window.setAnswer(8, 'ঘ', this)">ঘ) ফুলে</div>
-                </div>
-            </div>
-            <div class="question-card" id="q9">
-                <div class="q-text">9. জাইলেম ভেসেলের মাধ্যমে পানি ও খনিজ লবণ কোথায় পৌঁছায়?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(9, 'ক', this)">ক) পাতায়</div>
-                    <div class="option-btn" onclick="window.setAnswer(9, 'খ', this)">খ) ফুলে</div>
-                    <div class="option-btn" onclick="window.setAnswer(9, 'গ', this)">গ) ফলের ভেতরে</div>
-                    <div class="option-btn" onclick="window.setAnswer(9, 'ঘ', this)">ঘ) মূলের ডগায়</div>
-                </div>
-            </div>
-            <div class="question-card" id="q10">
-                <div class="q-text">10. ব্যাপন চাপ ঘাটতির ফলে উদ্ভিদে কী ঘটে?</div>
-                
-                <div class="options-grid">
-                    <div class="option-btn" onclick="window.setAnswer(10, 'ক', this)">ক) পানি নির্গমন</div>
-                    <div class="option-btn" onclick="window.setAnswer(10, 'খ', this)">খ) পানি শোষণ</div>
-                    <div class="option-btn" onclick="window.setAnswer(10, 'গ', this)">গ) খাদ্য তৈরি</div>
-                    <div class="option-btn" onclick="window.setAnswer(10, 'ঘ', this)">ঘ) ফল পেকে যাওয়া</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'ক', this)">ক) ট</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'খ', this)">খ) চ</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'গ', this)">গ) জ</div>
+                    <div class="option-btn" onclick="window.setAnswer(2, 'ঘ', this)">ঘ) গ</div>
                 </div>
             </div>
         </div>
     </div>
     <script>
         (function() {
-            var sol = {"1":"খ","2":"গ","3":"গ","4":"গ","5":"খ","6":"গ","7":"ক","8":"গ","9":"ক","10":"খ"};
+            var sol = {"1":"ক","2":"গ"};
             var userAns = JSON.parse(sessionStorage.getItem('userAns_662')) || {}; 
-            var totalSeconds = parseInt("5") * 60;
+            var totalSeconds = parseInt("1") * 60;
             var isDone = sessionStorage.getItem('isDone_662') === 'true';
             var startTimeFormatted = sessionStorage.getItem('startTime_662') || "";
             var startTimestamp = parseInt(sessionStorage.getItem('startTS_662')) || 0;
+
             function init() {
                 if(sessionStorage.getItem('quizStarted_662') === 'true') {
                     showQuiz(); restoreAnswers(); if(isDone) window.submitQuiz(true);
@@ -226,8 +151,8 @@
                 
                 const resultData = {
                     quizName: "662",
-                    quizTitle: "MCQ টেস্ট ",
-                    chapter: "৩য়",
+                    quizTitle: "মডেল টেস্ট ",
+                    chapter: "১ম",
                     startTime: startTimeFormatted,
                     duration: durationStr,
                     score: score + "/" + Object.keys(sol).length,
