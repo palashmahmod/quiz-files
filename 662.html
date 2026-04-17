@@ -11,7 +11,6 @@
         .header-fixed { position: sticky; top: 0; background: #2c3e50; color: white; padding: 10px; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .container { max-width: 700px; margin: 10px auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .question-card { margin-bottom: 15px; padding: 10px 10px 20px 10px; border-bottom: 1.5px solid #f0f0f0; }
-        .stem-box { background: #f8f9fa; border-left: 4px solid #3498db; padding: 10px; margin-bottom: 10px; font-size: 14.5px; line-height: 1.5; color: #444; }
         .q-text { font-size: 15px; font-weight: 600; color: #2c3e50; margin-bottom: 10px; line-height: 1.4; }
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
         .option-btn { border: 1.5px solid #ddd; padding: 8px 10px; border-radius: 8px; cursor: pointer; background: #fff; position: relative; font-size: 13px; min-height: 38px; display: flex; align-items: center; transition: 0.2s; }
@@ -39,9 +38,8 @@
         </div>
         <div class="container" id="mainArea">
             <div id="resDisplay"></div>
-            <div id="questions-wrapper">
+            
             <div class="question-card" id="q1">
-                <div class="stem-box">কক</div>
                 <div class="q-text">1. ক</div>
                 
                 <div class="options-grid">
@@ -52,7 +50,6 @@
                 </div>
             </div>
             <div class="question-card" id="q2">
-                
                 <div class="q-text">2. ম</div>
                 
                 <div class="options-grid">
@@ -61,7 +58,7 @@
                     <div class="option-btn" onclick="window.setAnswer(2, 'গ', this)">গ) জ</div>
                     <div class="option-btn" onclick="window.setAnswer(2, 'ঘ', this)">ঘ) গ</div>
                 </div>
-            </div></div>
+            </div>
         </div>
     </div>
     <script>
@@ -70,45 +67,27 @@
             var userAns = JSON.parse(sessionStorage.getItem('userAns_662')) || {}; 
             var totalSeconds = parseInt("1") * 60;
             var isDone = sessionStorage.getItem('isDone_662') === 'true';
-            var startTimeFormatted = "";
-            var startTimestamp = 0;
+            var startTimeFormatted = sessionStorage.getItem('startTime_662') || "";
+            var startTimestamp = parseInt(sessionStorage.getItem('startTS_662')) || 0;
 
-            // ১. ড্যাশবোর্ড থেকে টাইম আসা মাত্রই চেক করা
-            window.addEventListener('message', function(e) {
-                if (e.data.type === 'SEND_START_TIME') {
-                    startTimestamp = e.data.startTime;
-                    checkAutoSubmit();
-                }
-            });
-
-            // ২. ফাইল লোড হলে টাইম রিকোয়েস্ট পাঠানো
-            if (window.parent) window.parent.postMessage({ type: 'GET_START_TIME' }, "*");
-
-            function checkAutoSubmit() {
-                var now = Date.now();
-                var elapsed = Math.floor((now - startTimestamp) / 1000);
-                var remaining = totalSeconds - elapsed;
-
-                // যদি সময় শেষ হয়ে যায়
-                if (remaining <= 0) {
-                    // সরাসরি সাবমিট ফাংশন কল করা (বাটন ছাড়াই)
-                    window.submitQuiz(true); 
-                } else if (startTimestamp > 0) {
-                    // সময় থাকলে যদি আগে শুরু করা হয়ে থাকে তবে অটো শো করা
-                    if(sessionStorage.getItem('quizStarted_662') === 'true') {
-                        showQuiz();
-                    }
+            function init() {
+                if(sessionStorage.getItem('quizStarted_662') === 'true') {
+                    showQuiz(); restoreAnswers(); if(isDone) window.submitQuiz(true);
                 }
             }
 
             function showQuiz() {
                 document.getElementById('start-screen').style.display = 'none';
                 document.getElementById('quiz-content').style.display = 'block';
-                var d = new Date(startTimestamp);
-                startTimeFormatted = (d.getHours() % 12 || 12) + ":" + (d.getMinutes()<10?'0':'')+d.getMinutes() + (d.getHours() >= 12 ? ' PM' : ' AM');
+                if(!startTimestamp) {
+                   var now = new Date();
+                   startTimeFormatted = (now.getHours() % 12 || 12) + ":" + (now.getMinutes()<10?'0':'')+now.getMinutes() + (now.getHours() >= 12 ? ' PM' : ' AM');
+                   startTimestamp = Date.now();
+                   sessionStorage.setItem('startTime_662', startTimeFormatted);
+                   sessionStorage.setItem('startTS_662', startTimestamp);
+                }
                 startTimer();
-                restoreAnswers();
-                if(isDone) window.submitQuiz(true);
+                if(history.state !== 'quiz') { history.pushState('quiz', null, location.href); }
             }
 
             function startTimer() {
@@ -148,55 +127,52 @@
             window.submitQuiz = function(isAuto = false) {
                 if(isDone && !isAuto) return;
                 if(!isAuto && !confirm("আপনি কি নিশ্চিত সাবমিট করতে চান?")) return;
-                
-                isDone = true; 
-                sessionStorage.setItem('isDone_662', 'true');
-                
-                // কুইজ ইন্টারফেস এবং স্টার্ট স্ক্রিন দুটোই হাইড করে ফেলা (মুছে ফেলা)
-                document.getElementById('start-screen').style.display = 'none';
-                document.getElementById('quiz-content').style.display = 'block';
-                document.getElementById('questions-wrapper').innerHTML = ""; // প্রশ্ন মুছে ফেলা
-                document.querySelector('.header-fixed').style.display = 'none'; // হেডার মুছে ফেলা
-
+                isDone = true; sessionStorage.setItem('isDone_662', 'true');
                 var score = 0, wrongQs = [];
                 var timeTaken = Math.floor((Date.now() - startTimestamp) / 1000);
-                if(timeTaken > totalSeconds) timeTaken = totalSeconds;
-                if(timeTaken < 0) timeTaken = 0;
-                
                 var minutesTaken = Math.floor(timeTaken / 60), secondsTaken = timeTaken % 60;
                 var durationStr = minutesTaken + ":" + (secondsTaken < 10 ? '0' : '') + secondsTaken;
                 
                 for(var i in sol) {
+                    var card = document.getElementById('q'+i);
+                    var buttons = card.getElementsByClassName('option-btn');
+                    for(var j=0; j<buttons.length; j++) {
+                        var char = buttons[j].innerText.trim().charAt(0);
+                        if(char === sol[i]) { buttons[j].classList.add('correct'); buttons[j].innerHTML += '<span class="tick">✔</span>'; }
+                        if(userAns[i] === char && char !== sol[i]) buttons[j].classList.add('wrong');
+                    }
                     if(userAns[i] === sol[i]) score++; else wrongQs.push(i);
                 }
 
-                // রেজাল্ট দেখানো (প্রশ্নের জায়গায়)
-                var resHTML = '<div class="res-box"><h3>পরীক্ষা শেষ</h3>' +
-                    '<p>সময় শেষ হওয়ার কারণে আপনার উত্তরপত্রটি স্বয়ংক্রিয়ভাবে জমা নেওয়া হয়েছে।</p>' +
+                var resHTML = '<div class="res-box"><h3>ফলাফল</h3>' +
                     '<p><b>ব্যয়কৃত সময়:</b> ' + durationStr + '</p>' +
-                    '<p><b>সঠিক হয়েছে:</b> ' + score + '/' + Object.keys(sol).length + '</p></div>';
+                    '<p><b>সঠিক হয়েছে:</b> ' + score + '/' + Object.keys(sol).length + '</p>' +
+                    '<p><b>ভুল নং:</b> ' + (wrongQs.length > 0 ? wrongQs.join(', ') : 'নাই') + '</p></div>';
+
                 document.getElementById('resDisplay').innerHTML = resHTML;
+                document.getElementById('submitBtn').style.display = 'none';
+                window.scrollTo({top:0, behavior:'smooth'});
                 
                 const resultData = {
                     quizName: "662",
                     quizTitle: "মডেল টেস্ট ",
                     chapter: "১ম",
-                    startTime: startTimeFormatted || "Auto",
+                    startTime: startTimeFormatted,
                     duration: durationStr,
                     score: score + "/" + Object.keys(sol).length,
                     wrongList: wrongQs.join(', ') || "নাই"
                 };
-                
-                // ডেটা পাঠানো
+
                 if(window.parent) window.parent.postMessage({ type: 'QUIZ_SUBMITTED', data: resultData }, "*");
+                if(window.opener) window.opener.postMessage({ type: 'QUIZ_SUBMITTED', data: resultData }, "*");
             };
 
             document.getElementById('startBtn').addEventListener('click', function() {
-                sessionStorage.setItem('quizStarted_662', 'true');
-                showQuiz();
+                sessionStorage.setItem('quizStarted_662', 'true'); showQuiz();
             });
 
             document.getElementById('submitBtn').addEventListener('click', function() { window.submitQuiz(false); });
+            init();
         })();
     </script>
 </body>
