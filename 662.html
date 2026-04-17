@@ -41,7 +41,7 @@
             <div id="resDisplay"></div>
             
             <div class="question-card" id="q1">
-                <div class="stem-box">ক</div>
+                <div class="stem-box">কক</div>
                 <div class="q-text">1. ক</div>
                 
                 <div class="options-grid">
@@ -70,27 +70,42 @@
             var userAns = JSON.parse(sessionStorage.getItem('userAns_662')) || {}; 
             var totalSeconds = parseInt("1") * 60;
             var isDone = sessionStorage.getItem('isDone_662') === 'true';
-            var startTimeFormatted = sessionStorage.getItem('startTime_662') || "";
-            var startTimestamp = parseInt(sessionStorage.getItem('startTS_662')) || 0;
+            var startTimeFormatted = "";
+            var startTimestamp = 0;
 
-            function init() {
-                if(sessionStorage.getItem('quizStarted_662') === 'true') {
-                    showQuiz(); restoreAnswers(); if(isDone) window.submitQuiz(true);
+            window.addEventListener('message', function(e) {
+                if (e.data.type === 'SEND_START_TIME') {
+                    startTimestamp = e.data.startTime;
+                    checkTimerStatus();
+                }
+            });
+
+            if (window.parent) window.parent.postMessage({ type: 'GET_START_TIME' }, "*");
+
+            function checkTimerStatus() {
+                var now = Date.now();
+                var elapsed = Math.floor((now - startTimestamp) / 1000);
+                var remaining = totalSeconds - elapsed;
+
+                if (remaining <= 0) {
+                    showQuiz();
+                    window.submitQuiz(true); 
+                } else if (startTimestamp > 0) {
+                    showQuiz();
                 }
             }
+
             function showQuiz() {
                 document.getElementById('start-screen').style.display = 'none';
                 document.getElementById('quiz-content').style.display = 'block';
-                if(!startTimestamp) {
-                   var now = new Date();
-                   startTimeFormatted = (now.getHours() % 12 || 12) + ":" + (now.getMinutes()<10?'0':'')+now.getMinutes() + (now.getHours() >= 12 ? ' PM' : ' AM');
-                   startTimestamp = Date.now();
-                   sessionStorage.setItem('startTime_662', startTimeFormatted);
-                   sessionStorage.setItem('startTS_662', startTimestamp);
-                }
+                var d = new Date(startTimestamp);
+                startTimeFormatted = (d.getHours() % 12 || 12) + ":" + (d.getMinutes()<10?'0':'')+d.getMinutes() + (d.getHours() >= 12 ? ' PM' : ' AM');
                 startTimer();
                 if(history.state !== 'quiz') { history.pushState('quiz', null, location.href); }
+                restoreAnswers();
+                if(isDone) window.submitQuiz(true);
             }
+
             function startTimer() {
                 var timer = setInterval(function() {
                     if(isDone) { clearInterval(timer); return; }
@@ -101,6 +116,7 @@
                     document.getElementById('clock').innerText = m + ":" + (s < 10 ? '0' : '') + s;
                 }, 1000);
             }
+
             window.setAnswer = function(q, a, btn) {
                 if(isDone) return;
                 userAns[q] = a;
@@ -110,6 +126,7 @@
                 btn.classList.add('selected');
                 document.getElementById('answered').innerText = Object.keys(userAns).length;
             };
+
             function restoreAnswers() {
                 for(var q in userAns) {
                     var card = document.getElementById('q'+q);
@@ -122,12 +139,15 @@
                 }
                 document.getElementById('answered').innerText = Object.keys(userAns).length;
             }
+
             window.submitQuiz = function(isAuto = false) {
                 if(isDone && !isAuto) return;
                 if(!isAuto && !confirm("আপনি কি নিশ্চিত সাবমিট করতে চান?")) return;
-                isDone = true; sessionStorage.setItem('isDone_662', 'true');
+                isDone = true; 
+                sessionStorage.setItem('isDone_662', 'true');
                 var score = 0, wrongQs = [];
                 var timeTaken = Math.floor((Date.now() - startTimestamp) / 1000);
+                if(timeTaken > totalSeconds) timeTaken = totalSeconds;
                 var minutesTaken = Math.floor(timeTaken / 60), secondsTaken = timeTaken % 60;
                 var durationStr = minutesTaken + ":" + (secondsTaken < 10 ? '0' : '') + secondsTaken;
                 
@@ -136,11 +156,12 @@
                     var buttons = card.getElementsByClassName('option-btn');
                     for(var j=0; j<buttons.length; j++) {
                         var char = buttons[j].innerText.trim().charAt(0);
-                        if(char === sol[i]) { buttons[j].classList.add('correct'); buttons[j].innerHTML += '<span class="tick">✔</span>'; }
+                        if(char === sol[i]) { buttons[j].classList.add('correct'); if(!buttons[j].querySelector('.tick')) buttons[j].innerHTML += '<span class="tick">✔</span>'; }
                         if(userAns[i] === char && char !== sol[i]) buttons[j].classList.add('wrong');
                     }
                     if(userAns[i] === sol[i]) score++; else wrongQs.push(i);
                 }
+
                 var resHTML = '<div class="res-box"><h3>ফলাফল</h3>' +
                     '<p><b>ব্যয়কৃত সময়:</b> ' + durationStr + '</p>' +
                     '<p><b>সঠিক হয়েছে:</b> ' + score + '/' + Object.keys(sol).length + '</p>' +
@@ -159,13 +180,13 @@
                     wrongList: wrongQs.join(', ') || "নাই"
                 };
                 if(window.parent) window.parent.postMessage({ type: 'QUIZ_SUBMITTED', data: resultData }, "*");
-                if(window.opener) window.opener.postMessage({ type: 'QUIZ_SUBMITTED', data: resultData }, "*");
             };
+
             document.getElementById('startBtn').addEventListener('click', function() {
-                sessionStorage.setItem('quizStarted_662', 'true'); showQuiz();
+                if (window.parent) window.parent.postMessage({ type: 'GET_START_TIME' }, "*");
             });
+
             document.getElementById('submitBtn').addEventListener('click', function() { window.submitQuiz(false); });
-            init();
         })();
     </script>
 </body>
