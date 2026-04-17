@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মডেল টেস্ট ২</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
+        .start-screen { position: fixed; inset: 0; background: white; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .header-fixed { position: sticky; top: 0; background: #2c3e50; color: white; padding: 10px; z-index: 1000; display: flex; justify-content: space-around; align-items: center; }
+        .container { max-width: 700px; margin: 10px auto; background: white; padding: 15px; border-radius: 12px; }
+        .question-card { margin-bottom: 20px; padding: 10px; border-bottom: 1px solid #eee; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .option-btn { border: 1.5px solid #ddd; padding: 10px; border-radius: 8px; cursor: pointer; position: relative; }
+        .selected { border-color: #3498db; background: #e3f2fd; }
+        .correct { background: #d4edda !important; border-color: #27ae60 !important; color: #155724; }
+        .wrong { background: #f8d7da !important; border-color: #e74c3c !important; color: #721c24; }
+        .tick { position: absolute; right: 10px; font-weight: bold; }
+        .btn-main { background: #27ae60; color: white; border: none; padding: 12px 25px; border-radius: 30px; cursor: pointer; }
+        .res-box { background: white; padding: 20px; border-radius: 15px; border: 2px solid #3498db; text-align: center; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div id="start-screen" class="start-screen">
+        <h1>মডেল টেস্ট ২</h1>
+        <button class="btn-main" id="startBtn">পরীক্ষা শুরু করুন</button>
+    </div>
+
+    <div id="quiz-content" style="display:none;">
+        <div class="header-fixed" id="quizHeader">
+            <div>সময়: <span id="clock">১:00</span></div>
+            <button class="btn-main" style="background:#e74c3c" id="submitBtn">সাবমিট</button>
+        </div>
+        <div class="container">
+            <div id="resDisplay"></div>
+            <div id="questions-wrapper">
+            <div class="question-card" id="q1">
+                
+                <div class="q-text">1. ক</div>
+                
+                <div class="options-grid" id="opt-grid-1">
+                    <div class="option-btn" data-opt="ক" onclick="window.setAnswer(1, 'ক', this)">ক) ক</div>
+                    <div class="option-btn" data-opt="খ" onclick="window.setAnswer(1, 'খ', this)">খ) ম</div>
+                    <div class="option-btn" data-opt="গ" onclick="window.setAnswer(1, 'গ', this)">গ) স</div>
+                    <div class="option-btn" data-opt="ঘ" onclick="window.setAnswer(1, 'ঘ', this)">ঘ) চ</div>
+                </div>
+            </div>
+            <div class="question-card" id="q2">
+                <div class="stem-box">চ</div>
+                <div class="q-text">2. ক
+</div>
+                
+                <div class="options-grid" id="opt-grid-2">
+                    <div class="option-btn" data-opt="ক" onclick="window.setAnswer(2, 'ক', this)">ক) জ</div>
+                    <div class="option-btn" data-opt="খ" onclick="window.setAnswer(2, 'খ', this)">খ) ব</div>
+                    <div class="option-btn" data-opt="গ" onclick="window.setAnswer(2, 'গ', this)">গ) ড</div>
+                    <div class="option-btn" data-opt="ঘ" onclick="window.setAnswer(2, 'ঘ', this)">ঘ) প</div>
+                </div>
+            </div></div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            var sol = {"1":"ঘ","2":"খ"};
+            var userAns = JSON.parse(sessionStorage.getItem('userAns_665')) || {}; 
+            var totalSeconds = parseInt("1") * 60;
+            var isDone = sessionStorage.getItem('isDone_665') === 'true';
+            var startTimestamp = 0;
+
+            window.addEventListener('message', function(e) {
+                if (e.data.type === 'SEND_START_TIME') {
+                    startTimestamp = e.data.startTime;
+                    checkAutoSubmit();
+                }
+            });
+
+            if (window.parent) window.parent.postMessage({ type: 'GET_START_TIME' }, "*");
+
+            function checkAutoSubmit() {
+                var elapsed = Math.floor((Date.now() - startTimestamp) / 1000);
+                if ((totalSeconds - elapsed) <= 0) { window.submitQuiz(true); }
+                else if (sessionStorage.getItem('quizStarted_665') === 'true') { showQuiz(); }
+            }
+
+            function showQuiz() {
+                document.getElementById('start-screen').style.display = 'none';
+                document.getElementById('quiz-content').style.display = 'block';
+                if(!isDone) startTimer(); else window.submitQuiz(true);
+            }
+
+            function startTimer() {
+                var timer = setInterval(function() {
+                    var elapsed = Math.floor((Date.now() - startTimestamp) / 1000);
+                    var remaining = totalSeconds - elapsed;
+                    if(remaining <= 0 || isDone) { clearInterval(timer); window.submitQuiz(true); return; }
+                    var m = Math.floor(remaining/60), s = remaining%60;
+                    document.getElementById('clock').innerText = m + ":" + (s < 10 ? '0' : '') + s;
+                }, 1000);
+            }
+
+            window.setAnswer = function(q, a, btn) {
+                if(isDone) return;
+                userAns[q] = a;
+                sessionStorage.setItem('userAns_665', JSON.stringify(userAns));
+                btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            };
+
+            window.submitQuiz = function(isAuto = false) {
+                if(isDone && !isAuto) return;
+                isDone = true;
+                sessionStorage.setItem('isDone_665', 'true');
+                document.getElementById('start-screen').style.display = 'none';
+                document.getElementById('quiz-content').style.display = 'block';
+                document.getElementById('quizHeader').style.display = 'none';
+
+                let score = 0;
+                for(let i in sol) {
+                    let grid = document.getElementById('opt-grid-'+i);
+                    grid.querySelectorAll('.option-btn').forEach(btn => {
+                        let opt = btn.getAttribute('data-opt');
+                        btn.onclick = null;
+                        if(opt === sol[i]) { btn.classList.add('correct'); btn.innerHTML += ' <span class="tick">✔</span>'; }
+                        if(userAns[i] === opt && opt !== sol[i]) { btn.classList.add('wrong'); btn.innerHTML += ' <span class="tick">✖</span>'; }
+                    });
+                    if(userAns[i] === sol[i]) score++;
+                }
+
+                document.getElementById('resDisplay').innerHTML = '<div class="res-box"><h2>পরীক্ষা শেষ</h2><h3>স্কোর: '+score+'/'+Object.keys(sol).length+'</h3></div>';
+                
+                const resultData = {
+                    quizName: "665",
+                    quizTitle: "মডেল টেস্ট ২",
+                    score: score + "/" + Object.keys(sol).length,
+                    fullResultHtml: document.getElementById('questions-wrapper').innerHTML
+                };
+                if(window.parent) window.parent.postMessage({ type: 'QUIZ_SUBMITTED', data: resultData }, "*");
+            };
+
+            document.getElementById('startBtn').addEventListener('click', function() {
+                sessionStorage.setItem('quizStarted_665', 'true');
+                showQuiz();
+            });
+            document.getElementById('submitBtn').addEventListener('click', function() { window.submitQuiz(false); });
+        })();
+    </script>
+</body>
+</html>
