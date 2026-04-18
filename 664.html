@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCQ টেস্ট - ০২</title>
+    <title>MCQ টেস্ট - ০৪</title>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; font-size: 14px; }
@@ -25,7 +25,7 @@
 </head>
 <body>
     <div id="start-screen" class="start-screen">
-        <h1>MCQ টেস্ট - ০২</h1>
+        <h1>MCQ টেস্ট - ০৪</h1>
         <p>শ্রেণি: ৮ম | বিষয়: বিজ্ঞান  | অধ্যায়: ৩য়</p>
         <p>পূর্ণমান: ৩০ | সময়: ৩০ মিনিট</p>
         <button class="btn-main" id="startBtn">পরীক্ষা শুরু করুন</button>
@@ -374,13 +374,11 @@
     <script>
         (function() {
             var sol = {"1":"খ","2":"ক","3":"খ","4":"গ","5":"ক","6":"খ","7":"খ","8":"গ","9":"ক","10":"খ","11":"গ","12":"গ","13":"খ","14":"গ","15":"ক","16":"খ","17":"খ","18":"গ","19":"ক","20":"খ","21":"ক","22":"গ","23":"ক","24":"গ","25":"গ","26":"খ","27":"ঘ","28":"গ","29":"ক","30":"ঘ"};
-            var cTime = 1776530820476;
+            var cTime = 1776532762082;
             var storageKey = 'quiz_state_664';
             
             var savedData = JSON.parse(localStorage.getItem(storageKey));
             var state;
-
-            // Reset logic: If no saved data OR saved data time is different from current file creation time
             if(!savedData || savedData.creationTime !== cTime) {
                 state = {
                     creationTime: cTime,
@@ -394,9 +392,7 @@
             } else {
                 state = savedData;
             }
-
             var totalSeconds = parseInt("30") * 60;
-
             function init() {
                 if(state.quizStarted) {
                     showQuiz();
@@ -404,7 +400,6 @@
                     if(state.isDone) window.submitQuiz(true);
                 }
             }
-
             function showQuiz() {
                 document.getElementById('start-screen').style.display = 'none';
                 document.getElementById('quiz-content').style.display = 'block';
@@ -418,11 +413,9 @@
                 startTimer();
                 if(history.state !== 'quiz') { history.pushState('quiz', null, location.href); }
             }
-
             function saveState() {
                 localStorage.setItem(storageKey, JSON.stringify(state));
             }
-
             function startTimer() {
                 var timer = setInterval(function() {
                     if(state.isDone) { clearInterval(timer); return; }
@@ -433,7 +426,6 @@
                     document.getElementById('clock').innerText = m + ":" + (s < 10 ? '0' : '') + s;
                 }, 1000);
             }
-
             window.setAnswer = function(q, a, btn) {
                 if(state.isDone) return;
                 state.userAns[q] = a;
@@ -443,7 +435,6 @@
                 btn.classList.add('selected');
                 document.getElementById('answered').innerText = Object.keys(state.userAns).length;
             };
-
             function restoreAnswers() {
                 for(var q in state.userAns) {
                     var card = document.getElementById('q'+q);
@@ -456,16 +447,15 @@
                 }
                 document.getElementById('answered').innerText = Object.keys(state.userAns).length;
             }
-
             window.submitQuiz = function(isAuto = false) {
                 if(state.isDone && !isAuto) return;
                 if(!isAuto && !confirm("আপনি কি নিশ্চিত সাবমিট করতে চান?")) return;
-                state.isDone = true; 
-                saveState();
+
                 var score = 0, wrongQs = [];
                 var timeTakenSec = Math.floor((Date.now() - state.startTimestamp) / 1000);
                 var minutesTaken = Math.floor(timeTakenSec / 60), secondsTaken = timeTakenSec % 60;
                 var durationStr = minutesTaken + ":" + (secondsTaken < 10 ? '0' : '') + secondsTaken;
+
                 for(var i in sol) {
                     var card = document.getElementById('q'+i);
                     var buttons = card.getElementsByClassName('option-btn');
@@ -481,15 +471,20 @@
                     }
                     if(state.userAns[i] === sol[i]) score++; else wrongQs.push(i);
                 }
+
                 var resHTML = '<div class="res-box"><h3>ফলাফল</h3>' +
                     '<p><b>ব্যয়কৃত সময়:</b> ' + durationStr + '</p>' +
                     '<p><b>সঠিক হয়েছে:</b> ' + score + '/' + Object.keys(sol).length + '</p>' +
                     '<p><b>ভুল নং:</b> ' + (wrongQs.length > 0 ? wrongQs.join(', ') : 'নাই') + '</p></div>';
+
                 document.getElementById('resDisplay').innerHTML = resHTML;
                 document.getElementById('submitBtn').style.display = 'none';
                 window.scrollTo({top:0, behavior:'smooth'});
-            };
 
+                // অটোমেটিক ডাটা মুছে ফেলা যাতে পুনরায় প্রবেশ করলে কুইজ রিসেট থাকে
+                state.isDone = true; 
+                localStorage.removeItem(storageKey); 
+            };
             document.getElementById('startBtn').addEventListener('click', function() {
                 showQuiz();
             });
