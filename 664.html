@@ -30,7 +30,6 @@
         <p>পূর্ণমান: ৩০ | সময়: ৩০ মিনিট</p>
         <button class="btn-main" id="startBtn">পরীক্ষা শুরু করুন</button>
     </div>
-
     <div id="quiz-content" style="display:none;">
         <div class="header-fixed">
             <div>সময়: <span id="clock">৩০:00</span></div>
@@ -372,11 +371,10 @@
             </div>
         </div>
     </div>
-
     <script>
         (function() {
             var sol = {"1":"খ","2":"ক","3":"খ","4":"গ","5":"ক","6":"খ","7":"খ","8":"গ","9":"ক","10":"খ","11":"গ","12":"গ","13":"খ","14":"গ","15":"ক","16":"খ","17":"খ","18":"গ","19":"ক","20":"খ","21":"ক","22":"গ","23":"ক","24":"গ","25":"গ","26":"খ","27":"ঘ","28":"গ","29":"ক","30":"ঘ"};
-            var cTime = 1776535146318;
+            var cTime = 1776593469016;
             var storageKey = 'quiz_state_664';
             var savedData = JSON.parse(localStorage.getItem(storageKey));
             var state;
@@ -442,7 +440,10 @@
                     if(card){
                         var buttons = card.getElementsByClassName('option-btn');
                         for(var i=0; i<buttons.length; i++) {
-                            if(buttons[i].innerText.trim().charAt(0) === state.userAns[q]) buttons[i].classList.add('selected');
+                            // সংশোধিত লজিক: অপশনের প্রথম অক্ষর (ক/খ/গ/ঘ) চেক করা হচ্ছে
+                            if(buttons[i].textContent.trim().startsWith(state.userAns[q])) {
+                                buttons[i].classList.add('selected');
+                            }
                         }
                     }
                 }
@@ -455,7 +456,7 @@
                 
                 state.isDone = true;
                 saveState();
-                localStorage.removeItem(storageKey); // Clear data immediately after submit
+                localStorage.removeItem(storageKey); 
 
                 var score = 0, wrongQs = [];
                 var timeTakenSec = Math.floor((Date.now() - state.startTimestamp) / 1000);
@@ -467,7 +468,7 @@
                     var card = document.getElementById('q'+i);
                     var buttons = card.getElementsByClassName('option-btn');
                     for(var j=0; j<buttons.length; j++) {
-                        var char = buttons[j].innerText.trim().charAt(0);
+                        var char = buttons[j].textContent.trim().charAt(0);
                         if(char === sol[i]) { 
                             buttons[j].classList.add('correct'); 
                             buttons[j].innerHTML += '<span class="tick">✔</span>'; 
@@ -486,7 +487,7 @@
                 
                 document.getElementById('resDisplay').innerHTML = resHTML;
                 document.getElementById('submitBtn').style.display = 'none';
-                document.getElementById('clock').innerText = "সময় শেষ";
+                document.getElementById('clock').innerText = "সময় শেষ";
                 window.scrollTo({top:0, behavior:'smooth'});
             };
 
