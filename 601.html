@@ -28,7 +28,7 @@
     <div id="setup-page" class="card">
         <h2>মডেল টেস্ট ১</h2>
         <p>শ্রেণি: ৮ম | বিষয়: বিজ্ঞান </p>
-        <p>অধ্যায়: ২য় | পূর্ণমান: ২</p>
+        <p>অধ্যায়: ৫ম | পূর্ণমান: ২</p>
         <p>সময়: ২ মিনিট</p>
         <hr>
         <div id="user-info">
@@ -56,8 +56,8 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const quizInfo = {"title":"মডেল টেস্ট ১","cls":"৮ম","sub":"বিজ্ঞান ","chapter":"২য়","marks":"২","time":"২","fileName":"601"};
-        const questions = [{"num":1,"stimulus":"ক","q":"কক","o1":"চ","o2":"ক","o3":"ব","o4":"ট","ans":"খ"},{"num":2,"stimulus":"ম","q":"ট","o1":"ত","o2":"ম","o3":"র","o4":"ন","ans":"ক"}];
+        const quizInfo = {"title":"মডেল টেস্ট ১","cls":"৮ম","sub":"বিজ্ঞান ","chapter":"৫ম","marks":"২","time":"২","fileName":"601"};
+        const questions = [{"num":1,"stimulus":"ক","q":"ত","o1":"ক","o2":"ত","o3":"দ","o4":"স","ans":"ঘ"},{"num":2,"stimulus":"","q":"চ","o1":"ব","o2":"ক","o3":"জ","o4":"গ","ans":"গ"}];
         let userAnswers = {};
         let startTime;
         let timerInterval;
