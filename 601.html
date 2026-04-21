@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মডেল টেস্ট ১</title>
+    <title>মডেল</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -26,8 +26,8 @@
 <body>
 
     <div id="setup-page" class="card">
-        <h2>মডেল টেস্ট ১</h2>
-        <p>শ্রেণি: ৮ম | বিষয়: বিজ্ঞান </p>
+        <h2>মডেল</h2>
+        <p>শ্রেণি: ৮ম | বিষয়: ক</p>
         <p>অধ্যায়: ৫ম | পূর্ণমান: ২</p>
         <p>সময়: ২ মিনিট</p>
         <hr>
@@ -56,8 +56,8 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const quizInfo = {"title":"মডেল টেস্ট ১","cls":"৮ম","sub":"বিজ্ঞান ","chapter":"৫ম","marks":"২","time":"২","fileName":"601"};
-        const questions = [{"num":1,"stimulus":"ক","q":"ত","o1":"ক","o2":"ত","o3":"দ","o4":"স","ans":"ঘ"},{"num":2,"stimulus":"","q":"চ","o1":"ব","o2":"ক","o3":"জ","o4":"গ","ans":"গ"}];
+        const quizInfo = {"title":"মডেল","cls":"৮ম","sub":"ক","chapter":"৫ম","marks":"২","time":"২","fileName":"601"};
+        const questions = [{"num":1,"stimulus":" ক","q":"ত","o1":"চ","o2":"জ","o3":"হ","o4":"গ","ans":"ক"},{"num":2,"stimulus":"","q":"ব","o1":"ড","o2":"র","o3":"স","o4":"দ","ans":"গ"}];
         let userAnswers = {};
         let startTime;
         let timerInterval;
