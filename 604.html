@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মডেল টেস্ট ২</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --success: #27ae60; --danger: #e74c3c; }
+        body { font-family: sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 600px; margin: 20px auto; }
+        .student-info-box { background: #f8fafc; border: 1px dashed #cbd5e1; padding: 15px; border-radius: 10px; margin: 15px 0; }
+        .student-info-box p { margin: 5px 0; font-size: 15px; font-weight: bold; color: #475569; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .btn-start { background: var(--success); color: white; }
+        .timer-header { position: sticky; top: 0; background: var(--primary); color: white; padding: 12px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .btn-submit-nav { background: var(--success); color: white; padding: 8px 15px; border-radius: 5px; border: none; font-weight: bold; cursor: pointer; }
+        .q-box { margin-bottom: 25px; padding: 15px; border-bottom: 1px solid #eee; }
+        .option-label { display: block; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; }
+        .option-label.correct { background: #dcfce7 !important; border-color: #22c55e; }
+        .option-label.wrong { background: #fee2e2 !important; border-color: #ef4444; }
+        .stimulus { background: #f1f5f9; padding: 12px; border-left: 4px solid var(--accent); margin-bottom: 12px; font-style: italic; }
+        .result-badge { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px; border-radius: 12px; text-align: left; margin-bottom: 20px; }
+        .result-badge h3 { margin: 0 0 15px 0; color: #166534; text-align: center; border-bottom: 1px solid #bbf7d0; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div id="setup-page" class="card" style="text-align:center;">
+        <h2 style="color:var(--primary); margin-top:0;">মডেল টেস্ট ২</h2>
+        <p style="font-weight:bold;">শ্রেণি: ৮ম | বিষয়: বিজ্ঞান </p>
+        <div class="student-info-box">
+            <p><i class="fas fa-user"></i> নাম: <span id="studentName">--</span></p>
+            <p><i class="fas fa-graduation-cap"></i> শ্রেণি: <span id="studentClass">--</span> | শাখা: <span id="studentSection">--</span></p>
+            <p><i class="fas fa-id-badge"></i> রোল: <span id="studentRoll">--</span></p>
+        </div>
+        <button class="btn btn-start" onclick="startQuiz()">পরীক্ষা শুরু করুন</button>
+    </div>
+
+    <div id="exam-page" style="display:none">
+        <div class="timer-header">
+            <div><i class="fas fa-clock"></i> অবশিষ্ট সময়: <span id="time-left">00:00</span></div>
+            <button class="btn-submit-nav" onclick="submitQuiz()">সাবমিট করুন</button>
+        </div>
+        <div id="quiz-container" class="card"></div>
+    </div>
+
+    <div id="result-page" class="card" style="display:none">
+        <div style="text-align:center;">
+             <h2 style="margin:0;">মডেল টেস্ট</h2>
+             <p>বিষয়: বিজ্ঞান  | অধ্যায়: ৪র্থ | তারিখ: 4/22/2026 06:32 PM</p>
+        </div>
+        <div class="result-badge">
+            <h3>ফলাফল</h3>
+            <p>ব্যয়কৃত সময়: <span id="res-time">0:00</span></p>
+            <p>সঠিক হয়েছে: <span id="res-score">0</span>/২</p>
+            <p>ভুল নং: <span id="res-wrongs">নেই</span></p>
+        </div>
+        <div id="review-container"></div>
+        <button class="btn" style="background:#64748b; color:white; margin-top:20px;" onclick="exitQuiz()"><i class="fas fa-arrow-left"></i> ব্যাক</button>
+    </div>
+
+    <script>
+        const firebaseConfig = {"apiKey":"AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco","databaseURL":"https://quiz-storage-d8707-default-rtdb.firebaseio.com","projectId":"quiz-storage-d8707"};
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        const studentInfo = JSON.parse(localStorage.getItem('loggedUser')) || {};
+        const questions = [{"num":1,"stimulus":"ত","q":"কামাল","o1":"কাল","o2":"কত","o3":"দিন","o4":"গ","ans":"ঘ"},{"num":2,"stimulus":"","q":"জ","o1":"ত","o2":"দ","o3":"গ","o4":"চ","ans":"ক"}];
+        let totalSeconds = NaN;
+        let timerInterval;
+        let startTime;
+
+        window.onload = () => {
+            document.getElementById('studentName').innerText = studentInfo.name || "--";
+            document.getElementById('studentClass').innerText = studentInfo.cls || "--";
+            document.getElementById('studentSection').innerText = studentInfo.sec || "--";
+            document.getElementById('studentRoll').innerText = studentInfo.roll || "--";
+        };
+
+        function startQuiz() {
+            document.getElementById('setup-page').style.display = 'none';
+            document.getElementById('exam-page').style.display = 'block';
+            startTime = Date.now();
+            renderQuestions();
+            startTimer();
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = questions.map((q, i) => `
+                <div class="q-box" id="q-block-${i}">
+                    ${q.stimulus ? '<div class="stimulus">' + q.stimulus + '</div>' : ''}
+                    <b>${i + 1}. ${q.q}</b>
+                    <label class="option-label"><input type="radio" name="q${i}" value="ক"> ক) ${q.o1}</label>
+                    <label class="option-label"><input type="radio" name="q${i}" value="খ"> খ) ${q.o2}</label>
+                    <label class="option-label"><input type="radio" name="q${i}" value="গ"> গ) ${q.o3}</label>
+                    <label class="option-label"><input type="radio" name="q${i}" value="ঘ"> ঘ) ${q.o4}</label>
+                </div>
+            `).join('');
+        }
+
+        function startTimer() {
+            const display = document.getElementById('time-left');
+            timerInterval = setInterval(() => {
+                let mins = Math.floor(totalSeconds / 60);
+                let secs = totalSeconds % 60;
+                display.innerText = (mins < 10 ? '0' : '') + mins + ":" + (secs < 10 ? '0' : '') + secs;
+                if (totalSeconds <= 0) { clearInterval(timerInterval); submitQuiz(); }
+                totalSeconds--;
+            }, 1000);
+        }
+
+        async function submitQuiz() {
+            clearInterval(timerInterval);
+            let score = 0;
+            let wrongs = [];
+            const timeTakenSec = Math.floor((Date.now() - startTime) / 1000);
+            const timeStr = Math.floor(timeTakenSec / 60) + ":" + (timeTakenSec % 60 < 10 ? '0' : '') + (timeTakenSec % 60);
+
+            questions.forEach((q, i) => {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected && selected.value === q.ans) score++;
+                else wrongs.push(i + 1);
+            });
+
+            // Admin App Data Sending
+            const resultData = {
+                name: studentInfo.name || "Unknown",
+                roll: studentInfo.roll || "0",
+                cls: studentInfo.cls || "৮ম",
+                sec: studentInfo.sec || "N/A",
+                quizFile: "604.html",
+                score: score + "/২ / 0",
+                time: new Date().toLocaleString(),
+                duration: "(" + timeStr + ")",
+                wrongQuestions: wrongs.length > 0 ? wrongs.join(', ') : "সবগুলো সঠিক!"
+            };
+
+            try {
+                await db.ref('QuizResults').push(resultData);
+            } catch(e) { console.error(e); }
+
+            // Show Result Page
+            document.getElementById('exam-page').style.display = 'none';
+            document.getElementById('result-page').style.display = 'block';
+            document.getElementById('res-time').innerText = timeStr;
+            document.getElementById('res-score').innerText = score;
+            document.getElementById('res-wrongs').innerText = wrongs.length > 0 ? wrongs.join(', ') : "সবগুলো সঠিক!";
+            
+            showReview(wrongs);
+        }
+
+        function showReview(wrongs) {
+            const container = document.getElementById('review-container');
+            container.innerHTML = questions.map((q, i) => {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`)?.value;
+                return `
+                <div class="q-box">
+                    <b>${i + 1}. ${q.q}</b>
+                    <div class="option-label ${q.ans === 'ক' ? 'correct' : (selected === 'ক' ? 'wrong' : '')}">ক) ${q.o1} ${q.ans === 'ক' ? ' <i class="fas fa-check"></i>' : ''}</div>
+                    <div class="option-label ${q.ans === 'খ' ? 'correct' : (selected === 'খ' ? 'wrong' : '')}">খ) ${q.o2} ${q.ans === 'খ' ? ' <i class="fas fa-check"></i>' : ''}</div>
+                    <div class="option-label ${q.ans === 'গ' ? 'correct' : (selected === 'গ' ? 'wrong' : '')}">গ) ${q.o3} ${q.ans === 'গ' ? ' <i class="fas fa-check"></i>' : ''}</div>
+                    <div class="option-label ${q.ans === 'ঘ' ? 'correct' : (selected === 'ঘ' ? 'wrong' : '')}">ঘ) ${q.o4} ${q.ans === 'ঘ' ? ' <i class="fas fa-check"></i>' : ''}</div>
+                </div>`;
+            }).join('');
+        }
+
+        async function exitQuiz() {
+            // Delete request from GitHub can be triggered here if PAT is available
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
