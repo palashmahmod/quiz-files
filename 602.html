@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>মডেল টেস্ট </title>
+    <title>মডেল</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,7 +22,7 @@
 </head>
 <body>
     <div id="setup-page" class="card">
-        <h2 style="color:var(--primary); margin-top:0;">মডেল টেস্ট </h2>
+        <h2 style="color:var(--primary); margin-top:0;">মডেল</h2>
         <div style="background:var(--primary); color:white; padding:10px; border-radius:8px; font-size:14px; margin-bottom:10px;">
             শ্রেণি: ৮ম | বিষয়: বিজ্ঞান  | পূর্ণমান: ২
         </div>
@@ -53,7 +53,7 @@
         const firebaseConfig = {"apiKey":"AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco","databaseURL":"https://quiz-storage-d8707-default-rtdb.firebaseio.com","projectId":"quiz-storage-d8707"};
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
-        const questions = [{"num":1,"stimulus":"ক","q":"কার","o1":"ক","o2":"ত","o3":"দ","o4":"ম","ans":"ক"},{"num":2,"stimulus":"","q":"ব","o1":"য","o2":"প","o3":"ক","o4":"তা","ans":"ক"}];
+        const questions = [{"num":1,"stimulus":"ক","q":"ত","o1":"জ","o2":"গ","o3":"ত","o4":"দ","ans":"গ"},{"num":2,"stimulus":"","q":"জ","o1":"জ","o2":"ত","o3":"ম","o4":"দ","ans":"গ"}];
 
         function startQuiz() {
             document.getElementById('setup-page').style.display = 'none';
