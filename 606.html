@@ -3,142 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${quizData.title}</title>
+    <title>${qData.title}</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --success: #27ae60; --danger: #e74c3c; }
-        body { font-family: sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 600px; margin: 20px auto; }
-        .student-info-box { background: #f8fafc; border: 1px dashed #cbd5e1; padding: 15px; border-radius: 10px; margin: 15px 0; text-align: left;}
-        .student-info-box p { margin: 5px 0; font-size: 15px; font-weight: bold; color: #475569; }
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
-        .btn-start { background: var(--success); color: white; }
-        .timer-header { position: sticky; top: 0; background: var(--primary); color: white; padding: 12px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
-        .btn-submit-nav { background: var(--success); color: white; padding: 8px 15px; border-radius: 5px; border: none; font-weight: bold; cursor: pointer; }
-        .q-box { margin-bottom: 25px; padding: 15px; border-bottom: 1px solid #eee; text-align: left; }
-        .option-label { display: block; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; }
-        .option-label.correct { background: #dcfce7 !important; border-color: #22c55e; }
-        .option-label.wrong { background: #fee2e2 !important; border-color: #ef4444; }
-        .stimulus { background: #f1f5f9; padding: 12px; border-left: 4px solid var(--accent); margin-bottom: 12px; font-style: italic; }
-        .result-badge { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px; border-radius: 12px; text-align: left; }
+        :root { --p: #2c3e50; --a: #3498db; --s: #27ae60; --d: #e74c3c; }
+        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding: 15px; }
+        .card { background: white; padding: 20px; border-radius: 15px; max-width: 600px; margin: 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .info-box { background: #f8fafc; border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin: 15px 0; text-align: left; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; }
+        .timer { position: sticky; top: 0; background: var(--p); color: white; padding: 10px; display: flex; justify-content: space-between; z-index: 100; }
+        .q-box { border-bottom: 1px solid #eee; padding: 15px 0; text-align: left; }
+        .opt { display: block; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; }
+        .correct { background: #dcfce7 !important; border-color: #22c55e; }
+        .wrong { background: #fee2e2 !important; border-color: #ef4444; }
     </style>
 </head>
 <body>
-    <div id="setup-page" class="card" style="text-align:center;">
-        <h2 style="color:var(--primary); margin-top:0;">মডেল টেস্ট ৮</h2>
-        <p style="font-weight:bold;">শ্রেণি: ৮ম | বিষয়: বিজ্ঞান </p>
-        <div class="student-info-box">
-            <p><i class="fas fa-user"></i> নাম: <span id="studentName">লোড হচ্ছে...</span></p>
-            <p><i class="fas fa-graduation-cap"></i> শ্রেণি: <span id="studentClass">--</span> | শাখা: <span id="studentSection">--</span></p>
-            <p><i class="fas fa-id-badge"></i> রোল: <span id="studentRoll">--</span></p>
+    <div id="setup">
+        <div class="card" style="text-align:center;">
+            <h2>${qData.title}</h2>
+            <p>শ্রেণি: ${qData.cls} | বিষয়: ${qData.sub}</p>
+            <div class="info-box">
+                <p>নাম: <span id="sName">...</span></p>
+                <p>রোল: <span id="sRoll">...</span></p>
+                <p>শ্রেণি: <span id="sCls">...</span> | শাখা: <span id="sSec">...</span></p>
+            </div>
+            <button class="btn" style="background:var(--s); color:white;" onclick="start()">পরীক্ষা শুরু করুন</button>
+            <button class="btn" style="background:#ddd;" onclick="window.location.href='index.html'">ফিরে যান</button>
         </div>
-        <button class="btn btn-start" onclick="startQuiz()">পরীক্ষা শুরু করুন</button>
-        <button class="btn" style="background:#eee; margin-top:10px;" onclick="history.back()">ফিরে যান</button>
     </div>
 
-    <div id="exam-page" style="display:none">
-        <div class="timer-header">
-            <div><i class="fas fa-clock"></i> সময়: <span id="time-left">00:00</span></div>
-            <button class="btn-submit-nav" onclick="submitQuiz()">সাবমিট</button>
+    <div id="exam" style="display:none">
+        <div class="timer">
+            <span>সময়: <span id="t-left">00:00</span></span>
+            <button onclick="finish()" style="background:var(--s); color:white; border:none; padding:5px 10px; border-radius:4px;">সাবমিট</button>
         </div>
-        <div id="quiz-container" class="card"></div>
+        <div id="q-list" class="card"></div>
     </div>
 
-    <div id="result-page" class="card" style="display:none; text-align:center;">
-        <h2>ফলাফল</h2>
-        <div class="result-badge">
-            <p>ব্যয়কৃত সময়: <span id="res-time"></span></p>
-            <p>প্রাপ্ত নম্বর: <span id="res-score"></span> / ২</p>
-            <p>ভুল প্রশ্ন নং: <span id="res-wrongs"></span></p>
-        </div>
-        <div id="review-container"></div>
-        <button class="btn" style="background:var(--primary); color:white; margin-top:20px;" onclick="history.back()">হোমে ফিরুন</button>
+    <div id="result" style="display:none" class="card">
+        <h2 style="text-align:center;">ফলাফল</h2>
+        <div class="info-box" id="res-badge"></div>
+        <div id="review"></div>
+        <button class="btn" style="background:var(--p); color:white;" onclick="window.location.href='index.html'">হোমে ফিরুন</button>
     </div>
 
     <script>
-        const firebaseConfig = {"apiKey":"AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco","databaseURL":"https://quiz-storage-d8707-default-rtdb.firebaseio.com","projectId":"quiz-storage-d8707"};
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const conf = {"apiKey":"AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco","databaseURL":"https://quiz-storage-d8707-default-rtdb.firebaseio.com","projectId":"quiz-storage-d8707"};
+        if(!firebase.apps.length) firebase.initializeApp(conf);
         const db = firebase.database();
-        const questions = [{"num":1,"stimulus":"ক","q":"কাল","o1":"ক","o2":"ত","o3":"দ","o4":"ম","ans":"ক"},{"num":2,"stimulus":"","q":"চা","o1":"হ","o2":"গ","o3":"ট","o4":"ড","ans":"গ"}];
-        const studentInfo = JSON.parse(localStorage.getItem('loggedUser')) || {};
-        let totalSeconds = NaN;
-        let timerInterval, startTime;
+        const qs = [{"num":1,"stim":"ত","q":"কামাল","o1":"কাল","o2":"কত","o3":"দিন","o4":"গ","ans":"ঘ"},{"num":2,"stim":"","q":"জ","o1":"ত","o2":"দ","o3":"গ","o4":"চ","ans":"ক"}];
+        const user = JSON.parse(localStorage.getItem('loggedUser')) || {};
+        let timeLeft = NaN, timer, startTime;
 
         window.onload = () => {
-            if(studentInfo.name) {
-                document.getElementById('studentName').innerText = studentInfo.name;
-                document.getElementById('studentClass').innerText = studentInfo.cls;
-                document.getElementById('studentSection').innerText = studentInfo.sec;
-                document.getElementById('studentRoll').innerText = studentInfo.roll;
-            } else {
-                alert("ইউজার তথ্য পাওয়া যায়নি! অ্যাপ থেকে আবার প্রবেশ করুন।");
-            }
+            if(user.name){
+                document.getElementById('sName').innerText = user.name;
+                document.getElementById('sRoll').innerText = user.roll;
+                document.getElementById('sCls').innerText = user.cls;
+                document.getElementById('sSec').innerText = user.sec;
+            } else { alert("অনুগ্রহ করে লগইন করুন!"); window.location.href='index.html'; }
         };
 
-        function startQuiz() {
-            document.getElementById('setup-page').style.display = 'none';
-            document.getElementById('exam-page').style.display = 'block';
+        function start() {
+            document.getElementById('setup').style.display='none';
+            document.getElementById('exam').style.display='block';
             startTime = Date.now();
-            renderQuestions();
-            startTimer();
-        }
-
-        function renderQuestions() {
-            const container = document.getElementById('quiz-container');
-            container.innerHTML = questions.map((q, i) => `
+            const list = document.getElementById('q-list');
+            list.innerHTML = qs.map((q, i) => `
                 <div class="q-box">
-                    ${q.stimulus ? '<div class="stimulus">' + q.stimulus + '</div>' : ''}
-                    <b>${i + 1}. ${q.q}</b>
-                    <label class="option-label"><input type="radio" name="q${i}" value="ক"> ক) ${q.o1}</label>
-                    <label class="option-label"><input type="radio" name="q${i}" value="খ"> খ) ${q.o2}</label>
-                    <label class="option-label"><input type="radio" name="q${i}" value="গ"> গ) ${q.o3}</label>
-                    <label class="option-label"><input type="radio" name="q${i}" value="ঘ"> ঘ) ${q.o4}</label>
+                    ${q.stim ? '<div style="background:#f0f0f0;padding:10px;margin-bottom:10px;border-left:4px solid #3498db;">'+q.stim+'</div>' : ''}
+                    <b>${i+1}. ${q.q}</b>
+                    <label class="opt"><input type="radio" name="q${i}" value="ক"> ক) ${q.o1}</label>
+                    <label class="opt"><input type="radio" name="q${i}" value="খ"> খ) ${q.o2}</label>
+                    <label class="opt"><input type="radio" name="q${i}" value="গ"> গ) ${q.o3}</label>
+                    <label class="opt"><input type="radio" name="q${i}" value="ঘ"> ঘ) ${q.o4}</label>
                 </div>
             `).join('');
-        }
-
-        function startTimer() {
-            timerInterval = setInterval(() => {
-                let mins = Math.floor(totalSeconds / 60);
-                let secs = totalSeconds % 60;
-                document.getElementById('time-left').innerText = (mins < 10 ? '0':'')+mins+":"+(secs < 10 ? '0':'')+secs;
-                if (totalSeconds <= 0) submitQuiz();
-                totalSeconds--;
+            timer = setInterval(() => {
+                let m = Math.floor(timeLeft/60), s = timeLeft%60;
+                document.getElementById('t-left').innerText = (m<10?'0':'')+m+":"+(s<10?'0':'')+s;
+                if(timeLeft <= 0) finish();
+                timeLeft--;
             }, 1000);
         }
 
-        async function submitQuiz() {
-            clearInterval(timerInterval);
-            let score = 0, wrongs = [];
-            const timeTakenSec = Math.floor((Date.now() - startTime) / 1000);
-            const timeStr = Math.floor(timeTakenSec / 60) + ":" + (timeTakenSec % 60).toString().padStart(2, '0');
-
-            questions.forEach((q, i) => {
-                const selected = document.querySelector(`input[name="q${i}"]:checked`);
-                if (selected && selected.value === q.ans) score++;
-                else wrongs.push(i + 1);
+        async function finish() {
+            clearInterval(timer);
+            let score = 0, wr = [];
+            qs.forEach((q, i) => {
+                const sel = document.querySelector('input[name="q'+i+'"]:checked');
+                if(sel && sel.value === q.ans) score++; else wr.push(i+1);
             });
-
-            const resultData = {
-                name: studentInfo.name || "Unknown",
-                roll: studentInfo.roll || "0",
-                cls: studentInfo.cls || "N/A",
-                sec: studentInfo.sec || "N/A",
-                quizFile: "606",
-                score: score + "/২",
+            const dur = Math.floor((Date.now()-startTime)/1000);
+            const res = {
+                name: user.name, roll: user.roll, cls: user.cls, sec: user.sec,
+                quiz: "606", score: score + "/২",
                 time: new Date().toLocaleString('bn-BD'),
-                duration: timeStr,
-                wrongQuestions: wrongs.length > 0 ? wrongs.join(', ') : "সব সঠিক"
+                duration: Math.floor(dur/60)+":"+(dur%60)
             };
-
-            await db.ref('QuizResults').push(resultData);
-            document.getElementById('exam-page').style.display = 'none';
-            document.getElementById('result-page').style.display = 'block';
-            document.getElementById('res-time').innerText = timeStr + " মিনিট";
-            document.getElementById('res-score').innerText = score;
-            document.getElementById('res-wrongs').innerText = resultData.wrongQuestions;
+            await db.ref('QuizResults').push(res);
+            document.getElementById('exam').style.display='none';
+            document.getElementById('result').style.display='block';
+            document.getElementById('res-badge').innerHTML = "<b>প্রাপ্ত নম্বর:</b> "+score+"<br><b>সময় লেগেছে:</b> "+res.duration+" মিনিট<br><b>ভুল প্রশ্ন:</b> "+(wr.length?wr.join(', '):'সব সঠিক');
         }
     </script>
 </body>
