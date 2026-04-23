@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<title>মডেল টেস্ট ২</title>
+<title>মডেল টেস্ট ৮</title>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <style>
@@ -15,11 +15,11 @@ body { font-family: sans-serif; background: #f0f2f5; text-align: center; padding
 </style>
 </head>
 <body>
-<div id="setup"><div class="card"><h2>মডেল টেস্ট ২</h2><p>শ্রেণি: ৮ম | বিষয়: বিজ্ঞান </p><div style="background:#f9f9f9;padding:10px;margin:15px 0;text-align:left;"><p>নাম: <span id="sName">...</span></p><p>রোল: <span id="sRoll">...</span></p></div><button class="btn" style="background:var(--s);color:white;" onclick="start()">পরীক্ষা শুরু করুন</button><button class="btn" style="background:#ddd;" onclick="location.href='index.html'">ফিরে যান</button></div></div><div id="exam" style="display:none;"><div class="card"><div id="q-list"></div><button class="btn" style="background:var(--s);color:white;" onclick="finish()">সাবমিট করুন</button></div></div><div id="result" style="display:none;" class="card"><h2>ফলাফল</h2><div id="res-badge"></div><button class="btn" style="background:var(--p);color:white;" onclick="location.href='index.html'">হোমে ফিরুন</button></div><script>
+<div id="setup"><div class="card"><h2>মডেল টেস্ট ৮</h2><p>শ্রেণি: ৮ম | বিষয়: বিজ্ঞান </p><div style="background:#f9f9f9;padding:10px;margin:15px 0;text-align:left;"><p>নাম: <span id="sName">...</span></p><p>রোল: <span id="sRoll">...</span></p></div><button class="btn" style="background:var(--s);color:white;" onclick="start()">পরীক্ষা শুরু করুন</button><button class="btn" style="background:#ddd;" onclick="location.href='index.html'">ফিরে যান</button></div></div><div id="exam" style="display:none;"><div class="card"><div id="q-list"></div><button class="btn" style="background:var(--s);color:white;" onclick="finish()">সাবমিট করুন</button></div></div><div id="result" style="display:none;" class="card"><h2>ফলাফল</h2><div id="res-badge"></div><button class="btn" style="background:var(--p);color:white;" onclick="location.href='index.html'">হোমে ফিরুন</button></div><script>
 const conf = {"apiKey":"AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco","databaseURL":"https://quiz-storage-d8707-default-rtdb.firebaseio.com","projectId":"quiz-storage-d8707"};
 firebase.initializeApp(conf);
 const db = firebase.database();
-const qs = [{"stim":"ত","q":"কামাল","o1":"কাল","o2":"কত","o3":"দিন","o4":"গ","ans":"ঘ"},{"stim":"","q":"জ","o1":"ত","o2":"দ","o3":"গ","o4":"চ","ans":"ক"}];
+const qs = [{"stim":"ক","q":"কাল","o1":"ক","o2":"ত","o3":"দ","o4":"ম","ans":"ক"},{"stim":"","q":"চা","o1":"হ","o2":"গ","o3":"ট","o4":"ড","ans":"গ"}];
 const user = JSON.parse(localStorage.getItem("loggedUser")) || {};
 window.onload = () => {
   if(user.name) {
