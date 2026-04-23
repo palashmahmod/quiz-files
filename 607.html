@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${qData.title}</title>
+    <title>মডেল টেস্ট ২</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,31 +13,29 @@
         .card { background: white; padding: 20px; border-radius: 15px; max-width: 600px; margin: 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .info-box { background: #f8fafc; border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin: 15px 0; text-align: left; }
         .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; }
-        .timer { position: sticky; top: 0; background: var(--p); color: white; padding: 10px; display: flex; justify-content: space-between; z-index: 100; }
+        .timer { position: sticky; top: 0; background: var(--p); color: white; padding: 10px; display: flex; justify-content: space-between; z-index: 100; border-radius: 0 0 10px 10px; }
         .q-box { border-bottom: 1px solid #eee; padding: 15px 0; text-align: left; }
         .opt { display: block; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; }
-        .correct { background: #dcfce7 !important; border-color: #22c55e; }
-        .wrong { background: #fee2e2 !important; border-color: #ef4444; }
     </style>
 </head>
 <body>
     <div id="setup">
         <div class="card" style="text-align:center;">
-            <h2>${qData.title}</h2>
-            <p>শ্রেণি: ${qData.cls} | বিষয়: ${qData.sub}</p>
+            <h2>মডেল টেস্ট ২</h2>
+            <p>শ্রেণি: ৮ম | বিষয়: বিজ্ঞান </p>
             <div class="info-box">
                 <p>নাম: <span id="sName">...</span></p>
                 <p>রোল: <span id="sRoll">...</span></p>
                 <p>শ্রেণি: <span id="sCls">...</span> | শাখা: <span id="sSec">...</span></p>
             </div>
             <button class="btn" style="background:var(--s); color:white;" onclick="start()">পরীক্ষা শুরু করুন</button>
-            <button class="btn" style="background:#ddd;" onclick="window.location.href='index.html'">ফিরে যান</button>
+            <button class="btn" style="background:#ddd;" onclick="location.href='index.html'">ফিরে যান</button>
         </div>
     </div>
 
     <div id="exam" style="display:none">
         <div class="timer">
-            <span>সময়: <span id="t-left">00:00</span></span>
+            <span>সময়: <span id="t-left">00:00</span></span>
             <button onclick="finish()" style="background:var(--s); color:white; border:none; padding:5px 10px; border-radius:4px;">সাবমিট</button>
         </div>
         <div id="q-list" class="card"></div>
@@ -46,15 +44,14 @@
     <div id="result" style="display:none" class="card">
         <h2 style="text-align:center;">ফলাফল</h2>
         <div class="info-box" id="res-badge"></div>
-        <div id="review"></div>
-        <button class="btn" style="background:var(--p); color:white;" onclick="window.location.href='index.html'">হোমে ফিরুন</button>
+        <button class="btn" style="background:var(--p); color:white;" onclick="location.href='index.html'">হোমে ফিরুন</button>
     </div>
 
     <script>
         const conf = {"apiKey":"AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco","databaseURL":"https://quiz-storage-d8707-default-rtdb.firebaseio.com","projectId":"quiz-storage-d8707"};
         if(!firebase.apps.length) firebase.initializeApp(conf);
         const db = firebase.database();
-        const qs = [{"num":1,"stim":"ক","q":"কাল","o1":"ক","o2":"ত","o3":"দ","o4":"ম","ans":"ক"},{"num":2,"stim":"","q":"চা","o1":"হ","o2":"গ","o3":"ট","o4":"ড","ans":"গ"}];
+        const qs = [{"num":1,"stim":"ত","q":"কামাল","o1":"কাল","o2":"কত","o3":"দিন","o4":"গ","ans":"ঘ"},{"num":2,"stim":"","q":"জ","o1":"ত","o2":"দ","o3":"গ","o4":"চ","ans":"ক"}];
         const user = JSON.parse(localStorage.getItem('loggedUser')) || {};
         let timeLeft = NaN, timer, startTime;
 
@@ -64,7 +61,10 @@
                 document.getElementById('sRoll').innerText = user.roll;
                 document.getElementById('sCls').innerText = user.cls;
                 document.getElementById('sSec').innerText = user.sec;
-            } else { alert("অনুগ্রহ করে লগইন করুন!"); window.location.href='index.html'; }
+            } else { 
+                alert("অনুগ্রহ করে লগইন করুন!"); 
+                location.href='index.html'; 
+            }
         };
 
         function start() {
@@ -74,7 +74,7 @@
             const list = document.getElementById('q-list');
             list.innerHTML = qs.map((q, i) => `
                 <div class="q-box">
-                    ${q.stim ? '<div style="background:#f0f0f0;padding:10px;margin-bottom:10px;border-left:4px solid #3498db;">'+q.stim+'</div>' : ''}
+                    ${q.stim ? '<div style="background:#f0f0f0;padding:10px;margin-bottom:10px;border-left:4px solid #3498db;">' + q.stim + '</div>' : ''}
                     <b>${i+1}. ${q.q}</b>
                     <label class="opt"><input type="radio" name="q${i}" value="ক"> ক) ${q.o1}</label>
                     <label class="opt"><input type="radio" name="q${i}" value="খ"> খ) ${q.o2}</label>
@@ -82,6 +82,7 @@
                     <label class="opt"><input type="radio" name="q${i}" value="ঘ"> ঘ) ${q.o4}</label>
                 </div>
             `).join('');
+
             timer = setInterval(() => {
                 let m = Math.floor(timeLeft/60), s = timeLeft%60;
                 document.getElementById('t-left').innerText = (m<10?'0':'')+m+":"+(s<10?'0':'')+s;
@@ -92,22 +93,22 @@
 
         async function finish() {
             clearInterval(timer);
-            let score = 0, wr = [];
+            let score = 0;
             qs.forEach((q, i) => {
                 const sel = document.querySelector('input[name="q'+i+'"]:checked');
-                if(sel && sel.value === q.ans) score++; else wr.push(i+1);
+                if(sel && sel.value === q.ans) score++;
             });
             const dur = Math.floor((Date.now()-startTime)/1000);
             const res = {
-                name: user.name, roll: user.roll, cls: user.cls, sec: user.sec,
-                quiz: "607", score: score + "/২",
+                name: user.name, roll: user.roll, quiz: "607", 
+                score: score + "/২", 
                 time: new Date().toLocaleString('bn-BD'),
                 duration: Math.floor(dur/60)+":"+(dur%60)
             };
             await db.ref('QuizResults').push(res);
             document.getElementById('exam').style.display='none';
             document.getElementById('result').style.display='block';
-            document.getElementById('res-badge').innerHTML = "<b>প্রাপ্ত নম্বর:</b> "+score+"<br><b>সময় লেগেছে:</b> "+res.duration+" মিনিট<br><b>ভুল প্রশ্ন:</b> "+(wr.length?wr.join(', '):'সব সঠিক');
+            document.getElementById('res-badge').innerHTML = "<b>প্রাপ্ত নম্বর:</b> "+score+"<br><b>সময় লেগেছে:</b> "+res.duration+" মিনিট";
         }
     </script>
 </body>
