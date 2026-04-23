@@ -1,20 +1,51 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <title>মডেল টেস্ট ১</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <style>body{font-family:sans-serif; background:#f0f2f5; padding:15px;} .q-box{background:white; padding:15px; margin-bottom:10px; border-radius:10px; shadow: 0 2px 5px rgba(0,0,0,0.1);}</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>মডেল টেস্ট ১</title>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>body{font-family:sans-serif; background:#f4f7f6; padding:15px; margin:0;} .card{background:white; padding:20px; border-radius:15px; max-width:600px; margin:10px auto; box-shadow:0 4px 10px rgba(0,0,0,0.1);} .info-box{background:#e3f2fd; padding:15px; border-radius:10px; margin-bottom:20px; border:1px solid #bbdefb;} .q-box{border-bottom:1px solid #eee; padding:15px 0;} .opt{display:block; padding:10px; background:#f9f9f9; margin:5px 0; border-radius:8px; cursor:pointer;} input[type="radio"]{margin-right:10px;} .btn{width:100%; padding:15px; background:#27ae60; color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer; font-size:18px;}</style>
 </head>
 <body>
-    <div id="quiz-container">
-        <h2>মডেল টেস্ট ১</h2>
-        <div id="questions"></div>
-    </div>
-    <script>
-        const quizData = {"title":"মডেল টেস্ট ১","cls":"৮ম","sub":"বিজ্ঞান ","chap":"২য়","time":"2","marks":"2","fName":"602","questions":[{"stim":"ক","ques":"কালো","img":"","o1":"আমাদের","o2":"দেশ","o3":"না","o4":"হা","ans":"ঘ"},{"stim":"","ques":"চা","img":"","o1":"না","o2":"তক","o3":"সা","o4":"দক","ans":"খ"}]};
-        // এখানে ইউজার অ্যাপের লজিক কাজ করবে
-    </script>
+<div class="card">
+<h2>মডেল টেস্ট ১</h2>
+<div class="info-box">
+<b>নাম:</b> <span id="stName">--</span><br>
+<b>রোল:</b> <span id="stRoll">--</span> | <b>শ্রেণি:</b> ৮ম<br>
+<b>বিষয়:</b> বিজ্ঞান  | <b>সময়:</b> 2 মিনিট
+</div>
+<div id="quiz-area"></div>
+<button class="btn" id="subBtn" onclick="submitQuiz()">পরীক্ষা জমা দিন</button>
+</div>
+<script>
+const firebaseConfig = { apiKey: "AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco", databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com/", projectId: "quiz-storage-d8707" };
+firebase.initializeApp(firebaseConfig);
+const urlParams = new URLSearchParams(window.location.search);
+const uData = { name: urlParams.get("name"), roll: urlParams.get("roll"), cls: urlParams.get("cls"), sec: urlParams.get("sec") };
+document.getElementById("stName").innerText = uData.name || "অজানা";
+document.getElementById("stRoll").innerText = uData.roll || "--";
+const questions = [{"stim":"ক","ques":"কালো","img":"","o1":"আমাদের","o2":"দেশ","o3":"না","o4":"হা","ans":"ঘ"},{"stim":"","ques":"চা","img":"","o1":"না","o2":"তক","o3":"সা","o4":"দক","ans":"খ"}];
+const qArea = document.getElementById("quiz-area");
+questions.forEach((q, i) => {
+ let h = `<div class="q-box"><b>${i+1}. ${q.ques}</b>`;
+ if(q.img) h += `<img src="${q.img}" style="max-width:100%; display:block; margin:10px 0;">`;
+ ["ক","খ","গ","ঘ"].forEach((opt, j) => {
+  h += `<label class="opt"><input type="radio" name="q${i}" value="${opt}"> ${opt}) ${q["o"+(j+1)]}</label>`;
+ });
+ h += `</div>`; qArea.innerHTML += h;
+});
+function submitQuiz() {
+ let score = 0; let wrong = [];
+ questions.forEach((q, i) => {
+  const selected = document.querySelector(`input[name="q${i}"]:checked`);
+  if(selected && selected.value === q.ans) score++; else wrong.push(i+1);
+ });
+ const res = { ...uData, correct: score, total: questions.length, wrongIndices: wrong.join(", "), quizTitle: "মডেল টেস্ট ১", subject: "বিজ্ঞান ", timestamp: Date.now() };
+ firebase.database().ref("QuizResults").push(res).then(() => { alert("আপনার স্কোর: " + score); window.close(); });
+}
+</script>
 </body>
 </html>
