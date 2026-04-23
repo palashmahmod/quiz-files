@@ -54,7 +54,7 @@
         const conf = {"apiKey":"AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco","databaseURL":"https://quiz-storage-d8707-default-rtdb.firebaseio.com","projectId":"quiz-storage-d8707"};
         if(!firebase.apps.length) firebase.initializeApp(conf);
         const db = firebase.database();
-        const qs = [{"num":1,"stim":"ত","q":"কামাল","o1":"কাল","o2":"কত","o3":"দিন","o4":"গ","ans":"ঘ"},{"num":2,"stim":"","q":"জ","o1":"ত","o2":"দ","o3":"গ","o4":"চ","ans":"ক"}];
+        const qs = [{"num":1,"stim":"ক","q":"কাল","o1":"ক","o2":"ত","o3":"দ","o4":"ম","ans":"ক"},{"num":2,"stim":"","q":"চা","o1":"হ","o2":"গ","o3":"ট","o4":"ড","ans":"গ"}];
         const user = JSON.parse(localStorage.getItem('loggedUser')) || {};
         let timeLeft = NaN, timer, startTime;
 
