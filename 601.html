@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মডেল টেস্ট </title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --p: #2c3e50; --s: #27ae60; --d: #e74c3c; --bg: #f4f7f6; }
+        body { font-family: sans-serif; background: var(--bg); margin: 0; padding: 15px; user-select: none; }
+        .card { background: white; padding: 20px; border-radius: 15px; max-width: 600px; margin: 10px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .page { display: none; }
+        .active-page { display: block; }
+        .info-box { background: #e3f2fd; padding: 15px; border-radius: 10px; margin: 15px 0; border: 1px solid #bbdefb; line-height: 1.6; }
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; transition: 0.3s; }
+        .btn-start { background: var(--s); color: white; }
+        .btn-submit { background: var(--p); color: white; }
+        .btn-home { background: var(--a); color: white; }
+        .timer { position: fixed; top: 0; left: 0; width: 100%; background: var(--d); color: white; text-align: center; padding: 8px 0; font-weight: bold; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .q-box { border-bottom: 1px solid #eee; padding: 15px 0; }
+        .opt { display: block; padding: 12px; background: #f9f9f9; margin: 8px 0; border-radius: 8px; cursor: pointer; border: 1px solid #ddd; }
+        .correct { background: #d4edda !important; border-color: #28a745 !important; }
+        .wrong { background: #f8d7da !important; border-color: #dc3545 !important; }
+        input[type="radio"] { transform: scale(1.2); margin-right: 10px; }
+        img { max-width: 100%; border-radius: 8px; margin: 10px 0; }
+    </style>
+</head>
+<body oncontextmenu="return false">
+
+    <div id="page1" class="card page active-page">
+        <h2 style="text-align:center; color:var(--p);">মডেল টেস্ট </h2>
+        <div class="info-box">
+            <b>শিক্ষার্থীর তথ্য:</b><br>
+            নাম: <span id="stName">...</span><br>
+            রোল: <span id="stRoll">...</span> | আইডি: <span id="stID">...</span><br><br>
+            <b>কুইজ তথ্য:</b><br>
+            বিষয়: বিজ্ঞান | শ্রেণি: ৮ম<br>
+            পূর্ণমান: 2 | সময়: 2 মিনিট
+        </div>
+        <button class="btn btn-start" onclick="startExam()">পরিক্ষা শুরু করুন</button>
+        <button class="btn" style="background:#888; color:white;" onclick="exitApp()">ব্যাক</button>
+    </div>
+
+    <div id="page2" class="page">
+        <div class="timer" id="timerDisp">সময় বাকি: --:--</div>
+        <div class="card" style="margin-top: 50px;">
+            <div id="quizArea"></div>
+            <button class="btn btn-submit" onclick="confirmSubmit()">পরিক্ষা জমা দিন</button>
+        </div>
+    </div>
+
+    <div id="page3" class="card page">
+        <h2 style="text-align:center; color:var(--s);">ফলাফল বিবরণী</h2>
+        <div id="resultSummary" class="info-box"></div>
+        <div id="reviewArea"></div>
+        <button class="btn btn-home" onclick="exitAndCleanup()">হোম পেইজে ফিরে যান</button>
+    </div>
+
+<script>
+    const firebaseConfig = { apiKey: "AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco", databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com/", projectId: "quiz-storage-d8707" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const uID = urlParams.get('id');
+    const uName = urlParams.get('name');
+    const uRoll = urlParams.get('roll');
+    const uCls = urlParams.get('cls');
+    const uSec = urlParams.get('sec');
+
+    document.getElementById('stName').innerText = uName;
+    document.getElementById('stRoll').innerText = uRoll;
+    document.getElementById('stID').innerText = uID;
+
+    const questions = [{"stim":"ক","ques":"কা","img":"","o1":"ক","o2":"ত","o3":"দ","o4":"ম","ans":"খ"},{"stim":"","ques":"কা","img":"","o1":"ট","o2":"গ","o3":"ড়","o4":"ক্ষা","ans":"ঘ"}];
+    let examStarted = false;
+    let timerInt;
+    let endTime;
+
+    // ১. ব্যাক বাটন লক করা
+    window.history.pushState(null, null, window.location.href);
+    window.onpopstate = function() { window.history.go(1); };
+
+    // ২. রিলোড রিকভারি লজিক
+    window.onload = function() {
+        const savedEndTime = localStorage.getItem('endTime_' + uID);
+        if(savedEndTime) {
+            startExam(true); // অটো রিজুমে
+        }
+    };
+
+    function startExam(isResume = false) {
+        examStarted = true;
+        document.getElementById('page1').classList.remove('active-page');
+        document.getElementById('page2').classList.add('active-page');
+
+        renderQuestions();
+
+        if(!isResume) {
+            endTime = Date.now() + (2 * 60 * 1000);
+            localStorage.setItem('endTime_' + uID, endTime);
+            db.ref('LiveTimers/' + uID).set(endTime);
+        } else {
+            endTime = parseInt(localStorage.getItem('endTime_' + uID));
+        }
+
+        timerInt = setInterval(updateTimer, 1000);
+    }
+
+    function renderQuestions() {
+        let html = '';
+        questions.forEach((q, i) => {
+            const savedAns = localStorage.getItem('ans_' + uID + '_' + i);
+            html += `<div class="q-box">
+                <b>${i+1}. ${q.stim ? q.stim + '<br>' : ''} ${q.ques}</b>
+                ${q.img ? '<img src="'+q.img+'">' : ''}
+                ${['ক','খ','গ','ঘ'].map((opt, j) => `
+                    <label class="opt">
+                        <input type="radio" name="q${i}" value="${opt}" 
+                        onchange="saveProgress(${i}, '${opt}')" ${savedAns === opt ? 'checked' : ''}> 
+                        ${opt}) ${q['o'+(j+1)]}
+                    </label>
+                `).join('')}
+            </div>`;
+        });
+        document.getElementById('quizArea').innerHTML = html;
+    }
+
+    function saveProgress(qIdx, val) {
+        localStorage.setItem('ans_' + uID + '_' + qIdx, val);
+    }
+
+    function updateTimer() {
+        const now = Date.now();
+        const diff = endTime - now;
+        if(diff <= 0) {
+            clearInterval(timerInt);
+            submitQuiz(true); // অটো সাবমিট
+            return;
+        }
+        let m = Math.floor(diff / 60000);
+        let s = Math.floor((diff % 60000) / 1000);
+        document.getElementById('timerDisp').innerText = "সময় বাকি: " + m + ":" + (s < 10 ? '0' : '') + s;
+    }
+
+    function confirmSubmit() {
+        if(confirm("আপনি কি নিশ্চিতভাবে জমা দিতে চান?")) submitQuiz();
+    }
+
+    function submitQuiz(isAuto = false) {
+        clearInterval(timerInt);
+        let correctCount = 0;
+        let wrongIndices = [];
+        let results = [];
+
+        questions.forEach((q, i) => {
+            const selected = localStorage.getItem('ans_' + uID + '_' + i);
+            const isCorrect = selected === q.ans;
+            if(isCorrect) correctCount++;
+            else wrongIndices.push(i + 1);
+            results.push({ selected, isCorrect });
+        });
+
+        const timeTaken = Math.floor((2 * 60) - ((endTime - Date.now()) / 1000));
+        const resData = {
+            userId: uID, name: uName, roll: uRoll, cls: uCls, sec: uSec,
+            quizTitle: "মডেল টেস্ট ", subject: "বিজ্ঞান",
+            total: questions.length, correct: correctCount,
+            wrongIndices: wrongIndices.join(', '),
+            timeSpent: Math.floor(timeTaken/60) + "m " + (timeTaken%60) + "s",
+            timestamp: new Date().toLocaleString('bn-BD')
+        };
+
+        // ১. এডমিনকে ডাটা পাঠানো
+        db.ref('QuizResults').push(resData);
+        
+        // ২. ইউজার আইডি থেকে কুইজ মুছে ফেলা (এডমিন বাটন অফ করার জন্য)
+        db.ref('IndividualQuizzes/' + uID).remove();
+        db.ref('LiveTimers/' + uID).remove();
+
+        showResultPage(resData, results);
+    }
+
+    function showResultPage(data, results) {
+        document.getElementById('page2').classList.remove('active-page');
+        document.getElementById('page3').classList.add('active-page');
+
+        document.getElementById('resultSummary').innerHTML = `
+            <b>পরিক্ষা অংশগ্রহণ:</b> ${data.timestamp}<br>
+            <b>ব্যয়িত সময়:</b> ${data.timeSpent}<br>
+            <b>সঠিক উত্তর:</b> ${data.correct} টি | <b>ভুল উত্তর:</b> ${questions.length - data.correct} টি
+        `;
+
+        let reviewHtml = '<h3>প্রশ্নের বিশ্লেষণ:</h3>';
+        questions.forEach((q, i) => {
+            const res = results[i];
+            reviewHtml += `<div class="q-box">
+                <b>${i+1}. ${q.ques}</b>
+                ${['ক','খ','গ','ঘ'].map((opt, j) => {
+                    let cls = '';
+                    if(opt === q.ans) cls = 'correct';
+                    else if(opt === res.selected) cls = 'wrong';
+                    return `<div class="opt ${cls}">${opt}) ${q['o'+(j+1)]}</div>`;
+                }).join('')}
+            </div>`;
+        });
+        document.getElementById('reviewArea').innerHTML = reviewHtml;
+    }
+
+    function exitAndCleanup() {
+        // লোকাল ডাটা ক্লিনআপ
+        Object.keys(localStorage).forEach(key => {
+            if(key.includes(uID)) localStorage.removeItem(key);
+        });
+        exitApp();
+    }
+
+    function exitApp() {
+        window.location.href = "index.html"; // এটি আপনার ইউজার অ্যাপের হোম পেজ
+    }
+</script>
+</body>
+</html>
