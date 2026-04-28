@@ -33,7 +33,7 @@
         <h2 style="text-align:center;">মডেল টেস্ট ৬</h2>
         <div class="info-box">
             <b>শিক্ষার্থী:</b> <span id="stName">...</span> (ID: <span id="stID">...</span>)<br>
-            <b>বিষয়:</b> বিজ্ঞান | <b>সময়:</b> 3 মিনিট
+            <b>বিষয়:</b> বিজ্ঞান | <b>সময়:</b> 1 মিনিট
         </div>
         <button class="btn btn-start" onclick="startExam()">পরীক্ষা শুরু করুন</button>
         <button class="btn" style="background:#888; color:white;" onclick="exitApp()">ব্যাক</button>
@@ -78,7 +78,7 @@
         document.getElementById('page2').classList.add('active-page');
         renderQuestions();
         if(!isResume) {
-            endTime = Date.now() + (Number(3) * 60 * 1000);
+            endTime = Date.now() + (Number(1) * 60 * 1000);
             localStorage.setItem('end_' + uID + '_' + fName, endTime);
         } else {
             endTime = parseInt(localStorage.getItem('end_' + uID + '_' + fName));
@@ -120,7 +120,7 @@
             if(sel === q.ans) { correct++; } else { wrongQ.push(i + 1); }
             results.push({ sel, correct: sel === q.ans });
         });
-        const timeSpentRaw = Math.floor((Number(3) * 60) - ((endTime - Date.now()) / 1000));
+        const timeSpentRaw = Math.floor((Number(1) * 60) - ((endTime - Date.now()) / 1000));
         const finalData = {
             userId: uID, name: uName, roll: uRoll || "N/A", section: uSec || "N/A", 
             quizTitle: "মডেল টেস্ট ৬", class: uCls || "৮ম", subject: "বিজ্ঞান",
