@@ -63,7 +63,7 @@
     const fName = "601";
     document.getElementById('stName').innerText = uName || '...';
     document.getElementById('stID').innerText = uID || '...';
-    const questions = [{"stim":"Xy","ques":"\\( \\frac {1}{x} \\) = 2 হলে, \n","img":"","o1":"ট","o2":"গ","o3":"ড়","o4":"ক্ষা","ans":"ক"},{"stim":"নিচের সংখ্যা তিনটি লক্ষ করো এবং (১৩ ও ১৪) নং প্রশ্নের উত্তর দাও:","ques":"নিচের কোনটি দ্বিতীয় সংখ্যাটির গুণিতক?","img":"","o1":"৬১০","o2":"৭২০","o3":"৭৮০","o4":"৮৭৫","ans":"খ"}];
+    const questions = [{"stim":"Xy","ques":"\\( \\frac {1}{x} \\) = 2 হলে, \n","img":"","o1":"ট","o2":"গ","o3":"ড়","o4":"ক্ষা","ans":"ক"},{"stim":"নিচের সংখ্যা তিনটি লক্ষ করো এবং ২ নং প্রশ্নের উত্তর দাও:","ques":"নিচের কোনটি দ্বিতীয় সংখ্যাটির গুণিতক?","img":"","o1":"৬১০","o2":"৭২০","o3":"৭৮০","o4":"৮৭৫","ans":"খ"}];
     let timerInt, endTime;
     window.onload = function() {
         if(localStorage.getItem('done_' + uID + '_' + fName)) { exitApp(); return; }
