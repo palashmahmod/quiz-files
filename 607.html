@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মডেল টেস্ট ৩</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        body{font-family:sans-serif;background:#f4f7f6;padding:15px;margin:0;}
+        .card{background:white;padding:20px;border-radius:12px;max-width:500px;margin:10px auto;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+        .timer{position:fixed;top:0;width:100%;background:red;color:white;text-align:center;padding:8px;z-index:100;font-weight:bold;}
+        .opt{display:block;padding:12px;background:#f0f0f0;margin:8px 0;border-radius:8px;cursor:pointer;border:1px solid #ddd;}
+        input[type="radio"]{margin-right:10px;}
+        button{width:100%;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
+        #login-box{margin-top:50px;}
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div class="card" id="login-box">
+            <h2 style="text-align:center">মডেল টেস্ট ৩</h2>
+            <p style="text-align:center">বিষয়: বিজ্ঞান </p>
+            <input type="number" id="uId" placeholder="আপনার আইডি দিন" style="width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;">
+            <button onclick="checkUser()">শুরু করুন</button>
+        </div>
+    </div>
+
+    <script>
+        
+        var firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com",
+            projectId: "quiz-storage-d8707",
+            storageBucket: "quiz-storage-d8707.appspot.com",
+            messagingSenderId: "YOUR_ID",
+            appId: "YOUR_APP_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.database();
+    
+        var questions = [{"stim":"ক","ques":"ককক","img":"","o1":"দ","o2":"গ","o3":"ব","o4":"ন","ans":"খ"}];
+        var fName = "607";
+        var userData = {};
+        var startTime;
+
+        function checkUser(){
+            var id = document.getElementById("uId").value;
+            if(!id) return alert("আইডি দিন!");
+            
+            db.ref("users/" + id).once("value", function(snap){
+                if(snap.exists()){
+                    userData = snap.val();
+                    // কুইজ স্ট্যাটাস চেক (এডমিন কন্ট্রোল)
+                    db.ref("QuizStatus/" + id + "/" + fName).once("value", function(statusSnap){
+                        if(statusSnap.val() === "off"){
+                            document.getElementById("main").innerHTML = "<div class='card'><h2>দুঃখিত!</h2><p>আপনি এই পরীক্ষাটি ইতিমধ্যে দিয়েছেন।</p></div>";
+                        } else {
+                            startQuiz();
+                        }
+                    });
+                } else {
+                    alert("ভুল আইডি!");
+                }
+            });
+        }
+
+        function startQuiz(){
+            startTime = Date.now();
+            var h = "<div class='timer' id='t'>সময় বাকি: 1:00</div><div class='card' style='margin-top:50px'>";
+            questions.forEach(function(q, i){
+                h += "<div style='margin-bottom:25px;'><p><b>"+(i+1)+". "+q.ques+"</b></p>";
+                if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক'> ক) "+q.o1+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='খ'> খ) "+q.o2+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='গ'> গ) "+q.o3+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ঘ'> ঘ) "+q.o4+"</label></div>";
+            });
+            h += "<button onclick='submitQuiz()'>জমা দিন</button></div>";
+            document.getElementById("main").innerHTML = h;
+            startTimer();
+        }
+
+        function startTimer(){
+            var sec = 1 * 60;
+            var countdown = setInterval(function(){
+                var m=Math.floor(sec/60), s=sec%60;
+                document.getElementById("t").innerText="সময় বাকি: "+m+":"+(s<10?"0":"")+s;
+                if(sec<=0){ clearInterval(countdown); submitQuiz(); }
+                sec--;
+            },1000);
+        }
+
+        function submitQuiz(){
+            var correctCount = 0;
+            var wrongCount = 0;
+            questions.forEach(function(q, i){
+                var selected = document.querySelector('input[name="q'+i+'"]:checked');
+                if(selected && selected.value === q.ans) correctCount++;
+                else wrongCount++;
+            });
+
+            var timeSpentSec = Math.floor((Date.now() - startTime) / 1000);
+            var mSpent = Math.floor(timeSpentSec/60), sSpent = timeSpentSec%60;
+            var now = new Date();
+
+            var finalData = {
+                chapter: "২য়", class: userData.cls || "", correct: correctCount,
+                date: now.toLocaleDateString('bn-BD'), name: userData.name,
+                quizTitle: "মডেল টেস্ট ৩", roll: userData.roll, section: userData.section,
+                subject: "বিজ্ঞান ", time: now.toLocaleTimeString('en-US'),
+                timeSpent: mSpent + "m " + sSpent + "s", timestamp: Date.now(),
+                total: questions.length, userId: userData.userId, wrongQuestions: wrongCount.toString()
+            };
+
+            // রেজাল্ট সেভ করা এবং স্ট্যাটাস 'off' করা
+            db.ref("QuizResults").push(finalData).then(() => {
+                return db.ref("QuizStatus/" + userData.userId + "/" + fName).set("off");
+            }).then(() => {
+                alert("সফলভাবে জমা হয়েছে!");
+                location.reload();
+            }).catch(err => alert("Error: " + err.message));
+        }
+    </script>
+</body>
+</html>
