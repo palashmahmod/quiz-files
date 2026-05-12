@@ -47,7 +47,7 @@
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         var db = firebase.database();
     
-        var questions = [{"stim":"কামাল সাহেব ","ques":"রহমত","img":"https://i.postimg.cc/9f4SRgPY/photo1.jpg","o1":"ক","o2":"ত","o3":"দ","o4":"ব","ans":"খ"},{"stim":"","ques":"আমি","img":"","o1":"কা","o2":"দ","o3":"ম","o4":"প","ans":"ঘ"}];
+        var questions = [{"stim":"কামাল সাহেব ","ques":"$a^2$","img":"https://i.postimg.cc/9f4SRgPY/photo1.jpg","o1":"ক","o2":"ত","o3":"দ","o4":"ব","ans":"খ"},{"stim":"","ques":"আমি","img":"","o1":"কা","o2":"দ","o3":"ম","o4":"প","ans":"ঘ"}];
         var fName = "606";
         var timerInterval;
         
@@ -59,10 +59,12 @@
             cls: urlParams.get('cls'),
             sec: urlParams.get('sec')
         };
+
         if(user.id){
             document.getElementById('uName').innerText = user.name;
             document.getElementById('uIdDisplay').innerText = user.id;
         }
+
         window.onload = function() {
             var savedTime = localStorage.getItem("timer_" + fName + "_" + user.id);
             if(savedTime) {
@@ -101,12 +103,10 @@
                 var s = savedAns["q"+i] || "";
                 h += "<div style='margin-bottom:35px;'>";
                 
-                // উদ্দীপকটি (Stimulus) সবার উপরে বসানো হলো
                 if(q.stim && q.stim.trim() !== "") {
                     h += "<div class='stim-box'>"+q.stim.replace(/\n/g, '<br>')+"</div>";
                 }
                 
-                // উদ্দীপকের নিচে ক্রমিক নম্বর ও প্রশ্ন
                 h += "<p><b>"+(i+1)+". "+q.ques+"</b></p>";
                 
                 if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
@@ -116,22 +116,27 @@
                 h += "<label class='opt'><input type='radio' name='q"+i+"' value='ঘ' onchange='saveAns(\"q"+i+"\", \"ঘ\")' "+(s=='ঘ'?'checked':'')+"> ঘ) "+q.o4+"</label></div>";
             });
             list.innerHTML = h;
+
             var totalSec = existingSec || (2 * 60);
-            
             if(!existingSec) {
                 var expiry = Math.floor(Date.now()/1000) + totalSec;
                 localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
             }
             runTimer(totalSec);
         }
+
         function runTimer(sec) {
             timerInterval = setInterval(function(){
                 var m = Math.floor(sec/60), s = sec%60;
                 document.getElementById("t").innerText = "সময় বাকি: " + m + ":" + (s < 10 ? "0" : "") + s;
-                if(sec <= 0){ clearInterval(timerInterval); submitQuiz(); }
+                if(sec <= 0){ 
+                    clearInterval(timerInterval); 
+                    submitQuiz(); 
+                }
                 sec--;
             }, 1000);
         }
+
         function submitQuiz() {
             clearInterval(timerInterval);
             var startTime = localStorage.getItem("start_time_" + fName + "_" + user.id) || Date.now();
@@ -172,8 +177,9 @@
                 timestamp: firebase.database.ServerValue.TIMESTAMP,
                 total: questions.length,
                 userId: user.id,
-                wrongQuestions: wrongNums.join(", ")
+                wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই"
             };
+
             var resKey = fName + "_" + Date.now();
             db.ref("QuizResults/" + resKey).set(resData).then(() => {
                 return db.ref("IndividualQuizzes/" + user.id).once('value');
