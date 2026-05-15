@@ -29,7 +29,7 @@
             <hr>
             <p class="info-p"><b>বিষয়:</b> গণিত </p>
             <p class="info-p"><b>অধ্যায়:</b> পাটিগণিত</p>
-            <p class="info-p"><b>মোট প্রশ্ন:</b> 1টি</p>
+            <p class="info-p"><b>মোট প্রশ্ন:</b> 2টি</p>
             <p class="info-p"><b>সময়:</b> 30 মিনিট</p>
             <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
             <br>
@@ -51,7 +51,7 @@
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         var db = firebase.database();
     
-        var questions = [{"stim":"","ques":"১৩০ কে দুটি বর্গের সমষ্টিরূপে প্রকাশ করলে হবে—\ni. \\(৩^২ + ১১^২\\)\t\nii.  \\(৭^২+ ৯^২\\)   \t\niii.  \\(৫^২+১০^২\\)   \nনিচের কোনটি সঠিক ?\n","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"}];
+        var questions = [{"stim":"নিচের\nদেওয়া আছে \\(x^{2+x}\\)","ques":"১৩০ কে দুটি বর্গের সমষ্টিরূপে প্রকাশ করলে হবে—\ni. \\(৩^২ + ১১^২\\)\t\nii.  \\(৭^২+ ৯^২\\)   \t\niii.  \\(৫^২+১০^২\\)   \nনিচের কোনটি সঠিক ?\n","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"কা\n\\(\\frac {আমার}{দেশ}\\) ","img":"","o1":"ত","o2":"দ","o3":"ট","o4":"গ","ans":"খ"}];
         var fName = "616";
         var timerInterval;
         var urlParams = new URLSearchParams(window.location.search);
