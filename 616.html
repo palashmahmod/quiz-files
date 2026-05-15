@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মডেল টেস্ট ১</title>
+    <title>${d.title}</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
@@ -19,18 +19,19 @@
         button{width:100%;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
         .info-p { margin: 5px 0; font-size: 15px; }
         #exam-box { display:none; margin-top:50px; }
-        .stim-box { background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; margin-bottom: 10px; font-style: italic; color: #555; }
+        .stim-box { background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; margin-bottom: 10px; font-style: italic; color: #555; white-space: pre-wrap; }
+        .q-text { white-space: pre-wrap; }
     </style>
 </head>
 <body>
     <div id="main">
         <div class="card" id="preview-box">
-            <h2 style="text-align:center; color:#2c3e50;">মডেল টেস্ট ১</h2>
+            <h2 style="text-align:center; color:#2c3e50;">${d.title}</h2>
             <hr>
-            <p class="info-p"><b>বিষয়:</b> গণিত </p>
-            <p class="info-p"><b>অধ্যায়:</b> পাটিগণিত</p>
-            <p class="info-p"><b>মোট প্রশ্ন:</b> 2টি</p>
-            <p class="info-p"><b>সময়:</b> 30 মিনিট</p>
+            <p class="info-p"><b>বিষয়:</b> ${d.sub}</p>
+            <p class="info-p"><b>অধ্যায়:</b> ${d.chapter}</p>
+            <p class="info-p"><b>মোট প্রশ্ন:</b> ${d.questions.length}টি</p>
+            <p class="info-p"><b>সময়:</b> ${d.time} মিনিট</p>
             <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
             <br>
             <button onclick="startExam()">পরিক্ষা শুরু করুন</button>
@@ -42,17 +43,9 @@
         </div>
     </div>
     <script>
-        
-        var firebaseConfig = {
-            apiKey: "AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco",
-            databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com",
-            projectId: "quiz-storage-d8707"
-        };
-        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-        var db = firebase.database();
-    
-        var questions = [{"stim":"নিচের\nদেওয়া আছে \\(x^{2+x}\\)","ques":"১৩০ কে দুটি বর্গের সমষ্টিরূপে প্রকাশ করলে হবে—\ni. \\(৩^২ + ১১^২\\)\t\nii.  \\(৭^২+ ৯^২\\)   \t\niii.  \\(৫^২+১০^২\\)   \nনিচের কোনটি সঠিক ?\n","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"কা\n\\(\\frac {আমার}{দেশ}\\) ","img":"","o1":"ত","o2":"দ","o3":"ট","o4":"গ","ans":"খ"}];
-        var fName = "616";
+        ${firebaseConfigRaw}
+        var questions = ${qJson};
+        var fName = "${d.fName}";
         var timerInterval;
         var urlParams = new URLSearchParams(window.location.search);
         var user = {
@@ -98,8 +91,7 @@
                 if(q.stim && q.stim.trim() !== "") {
                     h += "<div class='stim-box'>"+q.stim.replace(/\\n/g, '<br>')+"</div>";
                 }
-                // এখানে আউটপুট ফাইলে ques এর নিউলাইন হ্যান্ডেল করা হয়েছে
-                h += "<p><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
+                h += "<p class='q-text'><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
                 if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
                 h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক' onchange='saveAns(\"q"+i+"\", \"ক\")' "+(s=='ক'?'checked':'')+"> ক) "+q.o1+"</label>";
                 h += "<label class='opt'><input type='radio' name='q"+i+"' value='খ' onchange='saveAns(\"q"+i+"\", \"খ\")' "+(s=='খ'?'checked':'')+"> খ) "+q.o2+"</label>";
@@ -108,7 +100,7 @@
             });
             list.innerHTML = h;
             if(window.MathJax) window.MathJax.typeset();
-            var totalSec = existingSec || (30 * 60);
+            var totalSec = existingSec || (${d.time} * 60);
             if(!existingSec) {
                 var expiry = Math.floor(Date.now()/1000) + totalSec;
                 localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
@@ -141,10 +133,10 @@
             });
             var now = new Date();
             var resData = {
-                chapter: "পাটিগণিত", class: user.cls, correct: correct,
+                chapter: "${d.chapter}", class: user.cls, correct: correct,
                 date: now.toLocaleDateString('bn-BD'), name: user.name,
-                quizTitle: "মডেল টেস্ট ১", roll: user.roll, section: user.sec,
-                subject: "গণিত ", time: now.toLocaleTimeString(),
+                quizTitle: "${d.title}", roll: user.roll, section: user.sec,
+                subject: "${d.sub}", time: now.toLocaleTimeString(),
                 timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
                 total: questions.length, userId: user.id,
                 wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই"
