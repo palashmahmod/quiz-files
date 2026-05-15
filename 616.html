@@ -6,15 +6,10 @@
     <title>মডেল টেস্ট ১</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    
-    <!-- Added MathJax for Formula Support in Final Quiz File -->
     <script>
-        window.MathJax = { 
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } 
-        };
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
-
     <style>
         body{font-family:sans-serif;background:#f4f7f6;padding:15px;margin:0;user-select:none;}
         .card{background:white;padding:20px;border-radius:12px;max-width:500px;margin:10px auto;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
@@ -56,10 +51,9 @@
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         var db = firebase.database();
     
-        var questions = [{"stim":"","ques":"১৩০ কে দুটি বর্গের সমষ্টিরূপে প্রকাশ করলে হবে—\n\ni. \\(৩^২ + ১১^২\\)\t\nii.  \\(৭^২+ ৯^২\\)   \tiii.  \\(৫^২+১০^২\\)   \nনিচের কোনটি সঠিক ?\n","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"}];
+        var questions = [{"stim":"","ques":"১৩০ কে দুটি বর্গের সমষ্টিরূপে প্রকাশ করলে হবে—\ni. \\(৩^২ + ১১^২\\)\t\nii.  \\(৭^২+ ৯^২\\)   \t\niii.  \\(৫^২+১০^২\\)   \nনিচের কোনটি সঠিক ?\n","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"}];
         var fName = "616";
         var timerInterval;
-        
         var urlParams = new URLSearchParams(window.location.search);
         var user = {
             id: urlParams.get('id'),
@@ -77,10 +71,7 @@
             if(savedTime) {
                 var remaining = parseInt(savedTime) - Math.floor(Date.now()/1000);
                 if(remaining > 0) startExam(remaining);
-                else {
-                    alert("সময় শেষ হয়ে গেছে!");
-                    submitQuiz();
-                }
+                else { alert("সময় শেষ হয়ে গেছে!"); submitQuiz(); }
             }
         };
         function saveAns(qIdx, val) {
@@ -98,20 +89,17 @@
             }
             document.getElementById('preview-box').style.display = 'none';
             document.getElementById('exam-box').style.display = 'block';
-            
             var list = document.getElementById('q-list');
             var savedAns = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
             var h = "";
             questions.forEach(function(q, i){
                 var s = savedAns["q"+i] || "";
                 h += "<div style='margin-bottom:35px;'>";
-                
                 if(q.stim && q.stim.trim() !== "") {
                     h += "<div class='stim-box'>"+q.stim.replace(/\\n/g, '<br>')+"</div>";
                 }
-                
-                h += "<p><b>"+(i+1)+". "+q.ques+"</b></p>";
-                
+                // এখানে আউটপুট ফাইলে ques এর নিউলাইন হ্যান্ডেল করা হয়েছে
+                h += "<p><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
                 if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
                 h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক' onchange='saveAns(\"q"+i+"\", \"ক\")' "+(s=='ক'?'checked':'')+"> ক) "+q.o1+"</label>";
                 h += "<label class='opt'><input type='radio' name='q"+i+"' value='খ' onchange='saveAns(\"q"+i+"\", \"খ\")' "+(s=='খ'?'checked':'')+"> খ) "+q.o2+"</label>";
@@ -119,9 +107,7 @@
                 h += "<label class='opt'><input type='radio' name='q"+i+"' value='ঘ' onchange='saveAns(\"q"+i+"\", \"ঘ\")' "+(s=='ঘ'?'checked':'')+"> ঘ) "+q.o4+"</label></div>";
             });
             list.innerHTML = h;
-            
             if(window.MathJax) window.MathJax.typeset();
-
             var totalSec = existingSec || (30 * 60);
             if(!existingSec) {
                 var expiry = Math.floor(Date.now()/1000) + totalSec;
@@ -133,10 +119,7 @@
             timerInterval = setInterval(function(){
                 var m = Math.floor(sec/60), s = sec%60;
                 document.getElementById("t").innerText = "সময় বাকি: " + m + ":" + (s < 10 ? "0" : "") + s;
-                if(sec <= 0){ 
-                    clearInterval(timerInterval); 
-                    submitQuiz(); 
-                }
+                if(sec <= 0){ clearInterval(timerInterval); submitQuiz(); }
                 sec--;
             }, 1000);
         }
@@ -150,46 +133,27 @@
             var btn = document.getElementById('submitBtn');
             btn.disabled = true;
             btn.innerText = "জমা হচ্ছে...";
-            
             var correct = 0;
             var wrongNums = [];
-            
             questions.forEach(function(q, i){
                 var sel = document.querySelector('input[name="q'+i+'"]:checked');
-                if(sel && sel.value === q.ans) {
-                    correct++;
-                } else {
-                    wrongNums.push(i + 1);
-                }
+                if(sel && sel.value === q.ans) { correct++; } else { wrongNums.push(i + 1); }
             });
-            
             var now = new Date();
             var resData = {
-                chapter: "পাটিগণিত",
-                class: user.cls,
-                correct: correct,
-                date: now.toLocaleDateString('bn-BD'),
-                name: user.name,
-                quizTitle: "মডেল টেস্ট ১",
-                roll: user.roll,
-                section: user.sec,
-                subject: "গণিত ",
-                time: now.toLocaleTimeString(),
-                timeSpent: timeSpentStr,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                total: questions.length,
-                userId: user.id,
+                chapter: "পাটিগণিত", class: user.cls, correct: correct,
+                date: now.toLocaleDateString('bn-BD'), name: user.name,
+                quizTitle: "মডেল টেস্ট ১", roll: user.roll, section: user.sec,
+                subject: "গণিত ", time: now.toLocaleTimeString(),
+                timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
+                total: questions.length, userId: user.id,
                 wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই"
             };
             var resKey = fName + "_" + Date.now();
             db.ref("QuizResults/" + resKey).set(resData).then(() => {
                 return db.ref("IndividualQuizzes/" + user.id).once('value');
             }).then(snap => {
-                if(snap.exists()){
-                    snap.forEach(child => {
-                        if(child.val().file === fName) child.ref.remove();
-                    });
-                }
+                if(snap.exists()){ snap.forEach(child => { if(child.val().file === fName) child.ref.remove(); }); }
                 localStorage.removeItem("timer_" + fName + "_" + user.id);
                 localStorage.removeItem("start_time_" + fName + "_" + user.id);
                 localStorage.removeItem("ans_" + fName + "_" + user.id);
