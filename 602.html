@@ -7,7 +7,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
-        window.MathJax = { loader: { load: ['[tex]/textmacros'] }, tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], packages: { '[+]': ['textmacros'] } } };
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
     <style>
@@ -20,7 +20,7 @@
         .info-p { margin: 5px 0; font-size: 15px; }
         #exam-box { display:none; margin-top:50px; }
         .stim-box { background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; margin-bottom: 10px; font-style: italic; color: #555; }
-        mjx-utext, .mjx-utext { font-family: sans-serif !important; font-style: normal !important; display: inline-block !important; }
+        mjx-utext { font-family: 'Segoe UI', Tahoma, sans-serif !important; font-style: normal !important; display: inline !important; direction: ltr !important; }
     </style>
 </head>
 <body>
@@ -52,7 +52,7 @@
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         var db = firebase.database();
     
-        var questions = [{"stim":"\\( \\text{আমাদের} \\)","ques":"১৩০ কে দুটি বর্গের সমষ্টিরূপে প্রকাশ করলে হবে— \\( আমাদের \\) \ni. \\(৩^২ + ১১^২\\) <br>\t\nii.  \\(৭^২+ ৯^২\\) <br>  \t\niii.  \\(৫^২+১০^২\\) <br>  \nনিচের কোনটি সঠিক ?","img":"","o1":"দ","o2":"ম","o3":"জ","o4":"ড়","ans":"ক"},{"stim":"আম \nআমাদের","ques":"$ \\frac{\\text{আমাদের}}{\\text{কামাল}} $ <br> \nদেশ","img":"","o1":"\\( \\sqrt 5 \\) <br> আছে","o2":"ত","o3":"দ","o4":"ম","ans":"খ"},{"stim":"আদিবা","ques":"মা","img":"","o1":"দ","o2":"গ","o3":"চ","o4":"হ","ans":"খ"}];
+        var questions = [{"stim":"\\( \\text{আমাদের} \\)","ques":"১৩০ কে দুটি বর্গের সমষ্টিরূপে প্রকাশ করলে হবে— \\( \\text{আমাদের} \\) \ni. \\(৩^২ + ১১^২\\) <br>\t\nii.  \\(৭^২+ ৯^২\\) <br>  \t\niii.  \\(৫^২+১০^২\\) <br>  \nনিচের কোনটি সঠিক ?","img":"","o1":"দ","o2":"ম","o3":"জ","o4":"ড়","ans":"ক"},{"stim":"আম \nআমাদের","ques":"$ \\frac{\\text{আমাদের}}{\\text{কামাল}} $ <br> \nদেশ","img":"","o1":"\\( \\sqrt 5 \\) <br> আছে","o2":"ত","o3":"দ","o4":"ম","ans":"খ"},{"stim":"আদিবা","ques":"\\( \\text{গতিবেগ} = \\frac{\\text{দূরত্ব}}{\\text{সময়}} \\)","img":"","o1":"দ","o2":"গ","o3":"চ","o4":"হ","ans":"খ"}];
         var fName = "602";
         var timerInterval;
         var urlParams = new URLSearchParams(window.location.search);
