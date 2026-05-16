@@ -136,9 +136,17 @@
             var correct = 0;
             var wrongNums = [];
             questions.forEach(function(q, i){
-                var sel = document.querySelector('input[name="q'+i+'"]:checked');
-                if(sel && sel.value === q.ans) { correct++; } else { wrongNums.push(i + 1); }
-            });
+    var sel = document.querySelector('input[name="q'+i+'"]:checked');
+    if(sel && sel.value === q.ans) { 
+        correct++; 
+    } else { 
+        if(sel) {
+            wrongNums.push((i + 1) + "(" + sel.value + ")");
+        } else {
+            wrongNums.push(i + 1);
+        }
+    }
+});
             var now = new Date();
             var resData = {
                 chapter: "পাটিগণিত", class: user.cls, correct: correct,
