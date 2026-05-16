@@ -28,9 +28,9 @@
             <h2 style="text-align:center; color:#2c3e50;">মডেল টেস্ট ২</h2>
             <hr>
             <p class="info-p"><b>বিষয়:</b> গণিত</p>
-            <p class="info-p"><b>অধ্যায়:</b> পাটিগণিত </p>
+            <p class="info-p"><b>অধ্যায়:</b> পাটিগণিত</p>
             <p class="info-p"><b>মোট প্রশ্ন:</b> 1টি</p>
-            <p class="info-p"><b>সময়:</b> 30 মিনিট</p>
+            <p class="info-p"><b>সময়:</b> 29 মিনিট</p>
             <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
             <br>
             <button onclick="startExam()">পরিক্ষা শুরু করুন</button>
@@ -51,7 +51,7 @@
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         var db = firebase.database();
     
-        var questions = [{"stim":"\\( \\text{আমাদের} \\)","ques":"১৩০ কে দুটি বর্গের সমষ্টিরূপে প্রকাশ করলে হবে—\ni. \\(৩^২ + ১১^২\\) <br>\t\nii.  \\(৭^২+ ৯^২\\) <br>  \t\niii.  \\(৫^২+১০^২\\) <br>  \nনিচের কোনটি সঠিক ?","img":"","o1":"ত","o2":"দ","o3":"ম","o4":"ন","ans":"খ"}];
+        var questions = [{"stim":"\\( \\text{আমাদের} \\)","ques":"১৩০ কে দুটি বর্গের সমষ্টিরূপে প্রকাশ করলে হবে—\ni. \\(৩^২ + ১১^২\\) <br>\t\nii.  \\(৭^২+ ৯^২\\) <br>  \t\niii.  \\(৫^২+১০^২\\) <br>  \nনিচের কোনটি সঠিক ?","img":"","o1":"দ","o2":"ম","o3":"জ","o4":"ড়","ans":"ক"}];
         var fName = "602";
         var timerInterval;
         var urlParams = new URLSearchParams(window.location.search);
@@ -108,7 +108,7 @@
             });
             list.innerHTML = h;
             if(window.MathJax) window.MathJax.typeset();
-            var totalSec = existingSec || (30 * 60);
+            var totalSec = existingSec || (29 * 60);
             if(!existingSec) {
                 var expiry = Math.floor(Date.now()/1000) + totalSec;
                 localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
@@ -141,7 +141,7 @@
             });
             var now = new Date();
             var resData = {
-                chapter: "পাটিগণিত ", class: user.cls, correct: correct,
+                chapter: "পাটিগণিত", class: user.cls, correct: correct,
                 date: now.toLocaleDateString('bn-BD'), name: user.name,
                 quizTitle: "মডেল টেস্ট ২", roll: user.roll, section: user.sec,
                 subject: "গণিত", time: now.toLocaleTimeString(),
