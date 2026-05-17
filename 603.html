@@ -150,10 +150,10 @@
 });
             var now = new Date();
             var resData = {
-                chapter: "${d.chapter}", class: user.cls, correct: correct,
-                date: now.toLocaleDateString('en-GB'), name: user.name,
-                quizTitle: "${d.title}", roll: user.roll, section: user.sec,
-                subject: "${d.sub}", time: now.toLocaleTimeString('en-US'),
+                chapter: "পাটিগণিত", class: user.cls, correct: correct,
+                date: now.toLocaleDateString('bn-BD'), name: user.name,
+                quizTitle: "মডেল টেস্ট ৩", roll: user.roll, section: user.sec,
+                subject: "গণিত", time: now.toLocaleTimeString(),
                 timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
                 total: questions.length, userId: user.id,
                 wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই"
