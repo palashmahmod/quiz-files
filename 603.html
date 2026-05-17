@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মডেল টেস্ট ২</title>
+    <title>মডেল টেস্ট ৩</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
@@ -26,7 +26,7 @@
 <body>
     <div id="main">
         <div class="card" id="preview-box">
-            <h2 style="text-align:center; color:#2c3e50;">মডেল টেস্ট ২</h2>
+            <h2 style="text-align:center; color:#2c3e50;">মডেল টেস্ট ৩</h2>
             <hr>
             <p class="info-p"><b>বিষয়:</b> গণিত</p>
             <p class="info-p"><b>অধ্যায়:</b> পাটিগণিত</p>
@@ -152,7 +152,7 @@
             var resData = {
                 chapter: "পাটিগণিত", class: user.cls, correct: correct,
                 date: now.toLocaleDateString('bn-BD'), name: user.name,
-                quizTitle: "মডেল টেস্ট ২", roll: user.roll, section: user.sec,
+                quizTitle: "মডেল টেস্ট ৩", roll: user.roll, section: user.sec,
                 subject: "গণিত", time: now.toLocaleTimeString(),
                 timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
                 total: questions.length, userId: user.id,
