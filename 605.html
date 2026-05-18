@@ -82,7 +82,7 @@
         }
         function startExam(existingSec) {
             if(!existingSec) {
-                localStorage.removeItem("ans_" + fName + "_" + user.id);
+ localStorage.clear();               localStorage.removeItem("ans_" + fName + "_" + user.id);
                 localStorage.removeItem("start_time_" + fName + "_" + user.id);
             }
             if(!localStorage.getItem("start_time_" + fName + "_" + user.id)){
