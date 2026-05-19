@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বিজ্ঞান ৮ম অধ্যায়, টেস্ট: (০১)</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        body{font-family:sans-serif;background:#f4f7f6;padding:15px;margin:0;user-select:none;}
+        .card{background:white;padding:20px;border-radius:12px;max-width:500px;margin:10px auto;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+        .timer{position:fixed;top:0;left:0;width:100%;background:red;color:white;text-align:center;padding:8px;z-index:100;font-weight:bold;}
+        .opt{display:block;padding:12px;background:#f0f0f0;margin:8px 0;border-radius:8px;cursor:pointer;border:1px solid #ddd;}
+        input[type="radio"]{margin-right:10px;}
+        button{width:100%;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
+        .info-p { margin: 5px 0; font-size: 15px; }
+        #exam-box { display:none; margin-top:50px; }
+        .stim-box { background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; margin-bottom: 10px; font-style: italic; color: #555; }
+        mjx-utext { font-family: 'Segoe UI', Tahoma, sans-serif !important; font-style: normal !important; display: inline !important; direction: ltr !important; }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div class="card" id="preview-box">
+            <h2 style="text-align:center; color:#2c3e50;">বিজ্ঞান ৮ম অধ্যায়, টেস্ট: (০১)</h2>
+            <hr>
+            <p class="info-p"><b>বিষয়:</b> বিজ্ঞান </p>
+            <p class="info-p"><b>অধ্যায়:</b> রাসায়নিক বিক্রিয়া </p>
+            <p class="info-p"><b>মোট প্রশ্ন:</b> 30টি</p>
+            <p class="info-p"><b>সময়:</b> 2 মিনিট</p>
+            <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
+            <br>
+            <button onclick="startExam()">পরিক্ষা শুরু করুন</button>
+        </div>
+        <div id="exam-box">
+            <div class="timer" id="t">সময় বাকি: --:--</div>
+            <div id="q-list"></div>
+            <div class="card"><button id="submitBtn" onclick="submitQuiz()">জমা দিন</button></div>
+        </div>
+    </div>
+    <script>
+        
+        var firebaseConfig = {
+            apiKey: "AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco",
+            databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com",
+            projectId: "quiz-storage-d8707"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        var db = firebase.database();
+    
+        var questions = [{"stim":"","ques":"যে রাসায়নিক বিক্রিয়ায় একাধিক পদার্থ একত্রিত হয়ে সম্পূর্ণ নতুন একটি পদার্থ তৈরি করে, তাকে কী বলে?","img":"","o1":"বিয়োজন বিক্রিয়া","o2":"প্রতিস্থাপন বিক্রিয়া","o3":"সংযোজন বিক্রিয়া","o4":"দহন বিক্রিয়া","ans":"গ"},{"stim":"","ques":"আয়রন এবং সালফার উত্তপ্ত করে ফেরাস সালফাইড তৈরি করা কোন ধরনের বিক্রিয়া?","img":"","o1":"দহন","o2":"সংযোজন","o3":"বিয়োজন","o4":"প্রতিস্থাপন","ans":"খ"},{"stim":"নিচের তথ্যের আলোকে ( 3 ও 4 ) নং প্রশ্নের উত্তর দাও: <br>  $CaCO_3  \\xrightarrow{\\text{তাপ}}  CaO + CO_2$","ques":"উদ্দীপকের বিক্রিয়াটি কী নির্দেশ করে?","img":"","o1":"দহন বিক্রিয়া","o2":"বিয়োজন বিক্রিয়া","o3":"সংযোজন বিক্রিয়া","o4":"তড়িৎ বিশ্লেষণ","ans":"খ"},{"stim":"","ques":"বিক্রিয়ায় উৎপন্ন প্রথম পদার্থটির নাম কী?","img":"","o1":"ক্যালসিয়াম অক্সাইড","o2":"ক্যালসিয়াম কার্বনেট","o3":"কার্বন ডাই-অক্সাইড","o4":"চুন","ans":"ক"},{"stim":"","ques":"জিংক এবং সালফার এর বিক্রিয়ায় জিংক সালফাইড তৈরি হলে, এটি একটি—","img":"","o1":"সংযোজন বিক্রিয়া","o2":"বিয়োজন বিক্রিয়া","o3":"দহন বিক্রিয়া","o4":"প্রতিস্থাপন বিক্রিয়া","ans":"ক"},{"stim":"","ques":"শুষ্ক কোষের গঠন উপাদান হলো—  <br> i. অ্যামোনিয়াম ক্লোরাইড ($NH_4Cl$) <br>  ii. কার্বন দণ্ড <br>  iii. দস্তার পাত্র <br> নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"তড়িৎ বিশ্লেষণ প্রক্রিয়ায়— <br>  i. বিদ্যুৎ শক্তি রাসায়নিক শক্তিতে রূপান্তরিত হয় <br>  ii. অ্যানোড ধনাত্মক আধানযুক্ত হয় <br>  iii. চিনির শরবত তড়িৎ বিশ্লেষ্য হিসেবে কাজ করে <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"কয়লা বা কার্বন বাতাসে পোড়ালে কোন গ্যাসটি তৈরি হয়?","img":"","o1":"অক্সিজেন","o2":"নাইট্রোজেন","o3":"কার্বন ডাই-অক্সাইড","o4":"হাইড্রোজেন","ans":"গ"},{"stim":"","ques":"আয়রন ও কপার সালফেটের বিক্রিয়ায় নিচের কোনটি উৎপন্ন হয়?","img":"","o1":"$FeSO_4 + Cu$","o2":"$FeCu + SO_4$","o3":"$Fe_2O_3 + Cu$","o4":"$CuSO_4 + Fe$","ans":"ক"},{"stim":"","ques":"জিংক ও সালফিউরিক অ্যাসিডের বিক্রিয়ায় কোন গ্যাসটি মুক্ত হয়?","img":"","o1":"অক্সিজেন","o2":"নাইট্রোজেন","o3":"হাইড্রোজেন","o4":"ক্লোরিন","ans":"গ"},{"stim":"","ques":"কপার সালফেট দ্রবণে লোহার পেরেক ডুবালে দ্রবণের নীল রং পরিবর্তিত হয়ে কেমন হয়?","img":"","o1":"লালচে","o2":"হালকা সবুজ","o3":"হলুদ","o4":"বর্ণহীন","ans":"খ"},{"stim":"","ques":"বেকিং সোডা ও লেবুর রসের বিক্রিয়ায় টেস্টটিউবের তাপমাত্রা কেমন হয়?","img":"","o1":"কমে যায় বা ঠাণ্ডা হয়","o2":"অনেক বেড়ে যায়","o3":"একই থাকে","o4":"প্রথমে বাড়ে পরে কমে","ans":"ক"},{"stim":"","ques":"ড্রাই সেলের বা শুষ্ক কোষে কোন শক্তি বিদ্যুৎ শক্তিতে রূপান্তরিত হয়?","img":"","o1":"সৌরশক্তি","o2":"রাসায়নিক শক্তি","o3":"পারমাণবিক শক্তি","o4":"চুম্বক শক্তি","ans":"খ"},{"stim":"","ques":"পানির তড়িৎ বিশ্লেষণের সময় ক্যাথোডে কোন গ্যাস জমা হয়?","img":"","o1":"অক্সিজেন","o2":"ক্লোরিন","o3":"হাইড্রোজেন","o4":"নাইট্রোজেন","ans":"গ"},{"stim":"","ques":"সোডিয়াম ক্লোরাইডের জলীয় দ্রবণের তড়িৎ বিশ্লেষণে অ্যানোডে কোন গ্যাস উৎপন্ন হয়?","img":"","o1":"হাইড্রোজেন","o2":"ক্লোরিন","o3":"অক্সিজেন","o4":"নাইট্রোজেন","ans":"খ"},{"stim":"নিচের তথ্যের আলোকে ( 16 ও 17 ) নং প্রশ্নের উত্তর দাও: <br>  রাসায়নিক সমীকরণ: $A + B \\rightarrow C$ (যেখানে $A = H_2, B = Cl_2$)","ques":"সমতাকৃত সমীকরণটি কোনটি হবে?","img":"","o1":"$H_2 + Cl_2 \\rightarrow HCl$","o2":"$H_2 + Cl_2 \\rightarrow 2HCl$","o3":"$2H + 2Cl \\rightarrow 2HCl$","o4":"$H + Cl \\rightarrow HCl$","ans":"খ"},{"stim":"","ques":"বিক্রিয়াটিতে হাইড্রোজেন ও ক্লোরিনের যোজনী কত?","img":"","o1":"১","o2":"২","o3":"৩","o4":"৪","ans":"ক"},{"stim":"","ques":"কোনো মৌলিক বা যৌগিক পদার্থের অণুর সংক্ষিপ্ত প্রকাশকে কী বলা হয়?","img":"","o1":"যোজনী","o2":"সংকেত","o3":"প্রতীক","o4":"পারমাণবিক সংখ্যা","ans":"খ"},{"stim":"","ques":"গলিত বা দ্রবীভূত অবস্থায় যেসকল পদার্থের মধ্য দিয়ে বিদ্যুৎ প্রবাহিত হতে পারে এবং রাসায়নিক পরিবর্তন ঘটে, তাদের কী বলে?","img":"","o1":"পরিবাহী","o2":"তড়িৎ বিশ্লেষ্য","o3":"অপরিবাহী","o4":"অর্ধপরিবাহী","ans":"খ"},{"stim":"","ques":"তড়িৎ বিশ্লেষণের সময় ধনাত্মক আধানযুক্ত আয়ন বা ক্যাটায়ন কোন দিকে আকৃষ্ট হয়?","img":"","o1":"অ্যানোড বা ধনাত্মক পাতের দিকে","o2":"ক্যাথোড বা ঋণাত্মক পাতের দিকে","o3":"কোনো দিকেই যায় না","o4":"পাত্রের তলায় জমা হয়","ans":"খ"},{"stim":"নিচের তথ্যের আলোকে ( 21 ও 22 ) নং প্রশ্নের উত্তর দাও: <br>  বেকিং সোডা ও লেবুর রস মিশালে বুদবুদসহ গ্যাস নির্গত হয় এবং পাত্রটি ঠান্ডা হয়ে যায়।","ques":"এখানে নির্গত গ্যাসটি কোনটি?","img":"","o1":"$O_2$","o2":"$CO_2$","o3":"$H_2$","o4":"$N_2$","ans":"খ"},{"stim":"","ques":"পাত্রটি ঠান্ডা হওয়ার কারণ কী?","img":"","o1":"তাপ উৎপন্ন হয়েছে","o2":"তাপ শোষিত হয়েছে","o3":"তাপ অপরিবর্তিত আছে","o4":"বিক্রিয়াটি দ্রুত হয়েছে","ans":"খ"},{"stim":"","ques":"রাসায়নিক বিক্রিয়ায় তাপের পরিবর্তন ঘটে কারণ— <br>  i. নতুন বন্ধন তৈরি হয় <br>  ii. পুরাতন বন্ধন ভেঙে যায় <br>  iii. পরমাণুর সংখ্যা হ্রাস পায় <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"নিচের কোনটি ফসফেট যৌগমূলকের সঠিক সংকেত?","img":"","o1":"$SO_4^{2-}$","o2":"$PO_4^{3-}$","o3":"$NO_3^-$","o4":"$CO_3^{2-}$","ans":"খ"},{"stim":"","ques":"সমীকরণে বিক্রিয়াজাত বা উৎপন্ন পদার্থ বলতে কোনটিকে বোঝায়?","img":"","o1":"বিক্রিয়ার আগের পদার্থ","o2":"বিক্রিয়ার ফলে নতুন উৎপন্ন পদার্থ","o3":"প্রভাবক","o4":"কোনোটিই নয়","ans":"খ"},{"stim":"","ques":"$C + O_2 \\rightarrow CO_2$ এই রাসায়নিক সমীকরণটিতে বিক্রিয়ক পদার্থ কোনগুলো?","img":"","o1":"শুধু $C$","o2":"শুধু $O_2$","o3":"$C$ এবং $O_2$","o4":"$CO_2$","ans":"গ"},{"stim":"","ques":"সমতাকরণের নিয়ম অনুযায়ী নিচের কোন সমীকরণটি সঠিক ও সমতাকৃত?","img":"","o1":"$Zn + HCl \\rightarrow ZnCl_2 + H_2$","o2":"$Zn + 2HCl \\rightarrow ZnCl_2 + H_2$","o3":"$2Zn + HCl \\rightarrow ZnCl_2 + H_2$","o4":"$Zn + 2HCl \\rightarrow ZnCl + H_2$","ans":"খ"},{"stim":"","ques":"প্রতীকের ক্ষেত্রে সঠিক তথ্য হলো— <br>  i. এটি মৌলের নামের সংক্ষিপ্ত রূপ <br>  ii. এটি ইংরেজি বা ল্যাটিন নাম থেকে আসে <br>  iii. এটি অণুর সংখ্যা প্রকাশ করে <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"নিচের কোনটি সংযোজন বিক্রিয়ার উদাহরণ?","img":"","o1":"$2H_2 + O_2 \\rightarrow 2H_2O$","o2":"$CaCO_3 \\rightarrow CaO + CO_2$","o3":"$Zn + H_2SO_4 \\rightarrow ZnSO_4 + H_2$","o4":"$HCl + NaOH \\rightarrow NaCl + H_2O$","ans":"ক"},{"stim":"","ques":"কোনো রাসায়নিক বিক্রিয়াকে প্রতীক, সংকেত ও বিভিন্ন চিহ্নের সাহায্যে সংক্ষেপে প্রকাশ করাকে কী বলে?","img":"","o1":"রাসায়নিক সমীকরণ","o2":"রাসায়নিক সূত্র","o3":"রাসায়নিক বন্ধন","o4":"রাসায়নিক পরিবর্তন","ans":"ক"}];
+        var fName = "8201";
+        var timerInterval;
+        var urlParams = new URLSearchParams(window.location.search);
+        var user = {
+            id: urlParams.get('id'),
+            name: urlParams.get('name'),
+            roll: urlParams.get('roll'),
+            cls: urlParams.get('cls'),
+            sec: urlParams.get('sec')
+        };
+        if(user.id){
+            document.getElementById('uName').innerText = user.name;
+            document.getElementById('uIdDisplay').innerText = user.id;
+        }
+        window.onload = function() {
+            var savedTime = localStorage.getItem("timer_" + fName + "_" + user.id);
+            if(savedTime) {
+                var remaining = parseInt(savedTime) - Math.floor(Date.now()/1000);
+                if(remaining > 0) startExam(remaining);
+                else { alert("সময় শেষ হয়ে গেছে!"); submitQuiz(); }
+            }
+        };
+        function saveAns(qIdx, val) {
+            var saved = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            saved[qIdx] = val;
+            localStorage.setItem("ans_" + fName + "_" + user.id, JSON.stringify(saved));
+        }
+        function startExam(existingSec) {
+            if(!existingSec) {
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+            }
+            if(!localStorage.getItem("start_time_" + fName + "_" + user.id)){
+                localStorage.setItem("start_time_" + fName + "_" + user.id, Date.now());
+            }
+            document.getElementById('preview-box').style.display = 'none';
+            document.getElementById('exam-box').style.display = 'block';
+            var list = document.getElementById('q-list');
+            var savedAns = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            var h = "";
+            questions.forEach(function(q, i){
+                var s = savedAns["q"+i] || "";
+                h += "<div class='card'>";
+                if(q.stim && q.stim.trim() !== "") {
+                    h += "<div class='stim-box'>"+q.stim.replace(/\\n/g, '<br>')+"</div>";
+                }
+                // প্রশ্নপত্রের (generated file) জন্য এখানে নিউলাইন হ্যান্ডেল করা হয়েছে
+                h += "<p><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
+                if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক' onchange='saveAns(\"q"+i+"\", \"ক\")' "+(s=='ক'?'checked':'')+"> ক) "+q.o1+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='খ' onchange='saveAns(\"q"+i+"\", \"খ\")' "+(s=='খ'?'checked':'')+"> খ) "+q.o2+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='গ' onchange='saveAns(\"q"+i+"\", \"গ\")' "+(s=='গ'?'checked':'')+"> গ) "+q.o3+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ঘ' onchange='saveAns(\"q"+i+"\", \"ঘ\")' "+(s=='ঘ'?'checked':'')+"> ঘ) "+q.o4+"</label></div>";
+            });
+            list.innerHTML = h;
+            if(window.MathJax) window.MathJax.typeset();
+            var totalSec = existingSec || (2 * 60);
+            if(!existingSec) {
+                var expiry = Math.floor(Date.now()/1000) + totalSec;
+                localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
+            }
+            runTimer(totalSec);
+        }
+        function runTimer(sec) {
+            timerInterval = setInterval(function(){
+                var m = Math.floor(sec/60), s = sec%60;
+                document.getElementById("t").innerText = "সময় বাকি: " + m + ":" + (s < 10 ? "0" : "") + s;
+                if(sec <= 0){ clearInterval(timerInterval); submitQuiz(); }
+                sec--;
+            }, 1000);
+        }
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            var startTime = localStorage.getItem("start_time_" + fName + "_" + user.id) || Date.now();
+            var diff = Math.floor((Date.now() - startTime) / 1000);
+            var mSpent = Math.floor(diff / 60);
+            var sSpent = diff % 60;
+            var timeSpentStr = mSpent + "m " + sSpent + "s";
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "জমা হচ্ছে...";
+            var correct = 0;
+            var wrongNums = [];
+            questions.forEach(function(q, i){
+    var sel = document.querySelector('input[name="q'+i+'"]:checked');
+    if(sel && sel.value === q.ans) { 
+        correct++; 
+    } else { 
+        if(sel) {
+            wrongNums.push((i + 1) + "(" + sel.value + ")");
+        } else {
+            wrongNums.push(i + 1);
+        }
+    }
+});
+            var now = new Date();
+            var resData = {
+                chapter: "রাসায়নিক বিক্রিয়া ", class: user.cls, correct: correct,
+                date: now.toLocaleDateString('en-GB'), name: user.name,
+                quizTitle: "বিজ্ঞান ৮ম অধ্যায়, টেস্ট: (০১)", roll: user.roll, section: user.sec,
+                subject: "বিজ্ঞান ", time: now.toLocaleTimeString(),
+                timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
+                total: questions.length, userId: user.id,
+                wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই"
+            };
+            var resKey = fName + "_" + Date.now();
+            db.ref("QuizResults/" + resKey).set(resData).then(() => {
+                return db.ref("IndividualQuizzes/" + user.id).once('value');
+            }).then(snap => {
+                if(snap.exists()){ snap.forEach(child => { if(child.val().file === fName) child.ref.remove(); }); }
+                localStorage.removeItem("timer_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                alert("পরীক্ষা সফলভাবে জমা হয়েছে!");
+                
+                // রিয়েল-টাইম ফলাফল বিশ্লেষণ ও ডাইনামিক রিভিউ পেজ জেনারেশন
+                var reviewHtml = "<div class='card' style='border-top: 5px solid #27ae60;'>";
+                reviewHtml += "<h2 style='text-align:center; color:#27ae60; margin-bottom:5px;'>🎉 পরীক্ষা সম্পন্ন হয়েছে!</h2>";
+                reviewHtml += "<p style='text-align:center; color:#7f8c8d; margin-top:0;'>আপনার উত্তরপত্র সফলভাবে ডাটাবেসে জমা হয়েছে।</p><hr>";
+                
+                // ১ ও ২ নং নির্দেশনার তথ্য (পরীক্ষার্থী ও পরীক্ষার বিবরণ)
+                reviewHtml += "<table style='width:100%; border-collapse:collapse; margin-bottom:15px; font-size:14px;'>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>পরীক্ষার্থী:</b> "+user.name+"</td><td style='padding:5px; color:#555;'><b>পরীক্ষা:</b> "+document.title+"</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>শ্রেণী-শাখা:</b> "+user.cls+" ("+user.sec+")</td><td style='padding:5px; color:#555;'><b>বিষয়:</b> বিজ্ঞান </td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>রোল নং:</b> "+user.roll+"</td><td style='padding:5px; color:#555;'><b>অধ্যায়:</b> রাসায়নিক বিক্রিয়া </td></tr>";
+                reviewHtml += "</table><hr>";
+                
+                // ৩ ও ৪ নং নির্দেশনার তথ্য (পরিসংখ্যান ও সময়)
+                reviewHtml += "<div style='background:#f8f9fa; padding:12px; border-radius:8px; margin-bottom:20px; font-size:14px; border-left:4px solid #3498db;'>";
+                reviewHtml += "<p style='margin:4px 0;'>📊 <b>মোট প্রশ্ন:</b> "+questions.length+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#27ae60;'>✅ <b>সঠি উত্তর:</b> "+correct+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#e74c3c;'>❌ <b>ভুল ও উত্তরহীন:</b> "+(wrongNums.length > 0 ? wrongNums.join(', ') : 'নাই')+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#7f8c8d;'>📅 <b>তারিখ ও সময়:</b> "+resData.date+" | "+resData.time+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#8e44ad;'>⏱️ <b>ব্যয়কৃত সময়:</b> "+timeSpentStr+"</p>";
+                reviewHtml += "</div>";
+                
+                reviewHtml += "<h3 style='color:#2c3e50; border-bottom:2px solid #eee; padding-bottom:8px;'>📝 প্রশ্নপত্র ও উত্তরপত্র পর্যালোচনা (Review):</h3>";
+                
+                // ৫ নং নির্দেশনার তথ্য (অপশনের ব্যাকগ্রাউন্ড কালার সহ সম্পূর্ণ রিভিউ কার্ড)
+                questions.forEach(function(q, idx){
+                    var selectedRadio = document.querySelector('input[name="q'+idx+'"]:checked');
+                    var selectedVal = selectedRadio ? selectedRadio.value : null;
+                    
+                    reviewHtml += "<div style='margin-bottom:25px; padding-bottom:15px; border-bottom:1px dashed #ddd;'>";
+                    
+                    if(q.stim && q.stim.trim() !== "") {
+                        reviewHtml += "<div class='stim-box'>"+q.stim.replace(/\n/g, '<br>')+"</div>";
+                    }
+                    
+                    reviewHtml += "<p><b>"+(idx+1)+". "+q.ques.replace(/\n/g, '<br>')+"</b></p>";
+                    if(q.img) reviewHtml += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                    
+                    // ৪টি অপশনের কাস্টম ব্যাকগ্রাউন্ড রেন্ডারিং লজিক
+                    var opts = [{k:'ক', v:q.o1}, {k:'খ', v:q.o2}, {k:'গ', v:q.o3}, {k:'ঘ', v:q.o4}];
+                    opts.forEach(function(opt) {
+                        var bgStyle = "background:#f0f0f0; color:#000;";
+                        var tickMark = "";
+                        
+                        if (opt.k === q.ans) {
+                            tickMark = " <span style='color:#27ae60; font-weight:bold;'>✔ (সঠিক উত্তর)</span>";
+                            if (selectedVal === q.ans) {
+                                bgStyle = "background:#d4edda; color:#155724; font-weight:bold; border-color:#c3e6cb;"; // সঠিক উত্তর দিলে সবুজ
+                            }
+                        } else if (selectedVal === opt.k) {
+                            bgStyle = "background:#f8d7da; color:#721c24; border-color:#f5c6cb;"; // ভুল উত্তর দিলে লাল
+                        }
+                        
+                        reviewHtml += "<div style='padding:10px; margin:5px 0; border-radius:6px; border:1px solid #ddd; "+bgStyle+"'>"+opt.k+") "+opt.v+tickMark+"</div>";
+                    });
+                    
+                    reviewHtml += "</div>";
+                });
+                
+                reviewHtml += "</div>";
+                document.getElementById("main").innerHTML = reviewHtml;
+                if(window.MathJax) window.MathJax.typeset();
+            }).catch(e => alert(e.message));
+        }
+    </script>
+</body>
+</html>
