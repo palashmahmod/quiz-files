@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বিজ্ঞান ৫ম অধ্যায়, টেস্ট: (০১)</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        body{font-family:sans-serif;background:#f4f7f6;padding:15px;margin:0;user-select:none;}
+        .card{background:white;padding:20px;border-radius:12px;max-width:500px;margin:10px auto;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+        .timer{position:fixed;top:0;left:0;width:100%;background:red;color:white;text-align:center;padding:8px;z-index:100;font-weight:bold;}
+        .opt{display:block;padding:12px;background:#f0f0f0;margin:8px 0;border-radius:8px;cursor:pointer;border:1px solid #ddd;}
+        input[type="radio"]{margin-right:10px;}
+        button{width:100%;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
+        .info-p { margin: 5px 0; font-size: 15px; }
+        #exam-box { display:none; margin-top:50px; }
+        .stim-box { background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; margin-bottom: 10px; font-style: italic; color: #555; }
+        mjx-utext { font-family: 'Segoe UI', Tahoma, sans-serif !important; font-style: normal !important; display: inline !important; direction: ltr !important; }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div class="card" id="preview-box">
+            <h2 style="text-align:center; color:#2c3e50;">বিজ্ঞান ৫ম অধ্যায়, টেস্ট: (০১)</h2>
+            <hr>
+            <p class="info-p"><b>বিষয়:</b> বিজ্ঞান </p>
+            <p class="info-p"><b>অধ্যায়:</b> দেখতে হলে আলো চায় </p>
+            <p class="info-p"><b>মোট প্রশ্ন:</b> 30টি</p>
+            <p class="info-p"><b>সময়:</b> 20 মিনিট</p>
+            <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
+            <br>
+            <button onclick="startExam()">পরিক্ষা শুরু করুন</button>
+        </div>
+        <div id="exam-box">
+            <div class="timer" id="t">সময় বাকি: --:--</div>
+            <div id="q-list"></div>
+            <div class="card"><button id="submitBtn" onclick="submitQuiz()">জমা দিন</button></div>
+        </div>
+    </div>
+    <script>
+        
+        var firebaseConfig = {
+            apiKey: "AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco",
+            databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com",
+            projectId: "quiz-storage-d8707"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        var db = firebase.database();
+    
+        var questions = [{"stim":"","ques":"যে মসৃণ তলে আলোর নিয়মিত প্রতিফলন ঘটে তাকে কী বলে?","img":"","o1":"লেন্স","o2":"প্রিজম","o3":"দর্পণ","o4":"কাচ","ans":"গ"},{"stim":"","ques":"সমতল দর্পণে গঠিত প্রতিবিম্ব কেমন হয়?","img":"","o1":"বাস্তব ও সোজা","o2":"অবাস্তব ও উল্টো","o3":"বাস্তব ও উল্টো","o4":"অবাস্তব ও সোজা","ans":"ঘ"},{"stim":"","ques":"গোলীয় দর্পণ কত প্রকার?","img":"","o1":"দুই","o2":"তিন","o3":"চার","o4":"পাঁচ","ans":"ক"},{"stim":"","ques":"নিরাপদ ড্রাইভিংয়ের জন্য গাড়িতে কোন দর্পণ ব্যবহার করা হয়?","img":"","o1":"অবতল দর্পণ","o2":"উত্তল দর্পণ","o3":"সমতল দর্পণ","o4":"সিলিন্ডার দর্পণ","ans":"খ"},{"stim":"নিচের তথ্যের আলোকে (5  ও  6) নং প্রশ্নের উত্তর দাও:  <br>  রানা একটি স্টিলের নতুন চামচ নিয়ে তার ভেতরের মসৃণ অংশে নিজের মুখ দেখল। সে দেখল তার চেহারা উল্টো দেখাচ্ছে। এরপর চামচটি উল্টে বাইরের অংশে দেখতেই চেহারা সোজা কিন্তু ছোট দেখাল।","ques":"চামচের ভেতরের অংশটি কোন ধরনের দর্পণের মতো কাজ করে?","img":"","o1":"সমতল দর্পণ","o2":"অবতল দর্পণ","o3":"উত্তল দর্পণ","o4":"নলাকার দর্পণ","ans":"খ"},{"stim":"","ques":"চামচের বাইরের অংশে রানার চেহারা ছোট ও সোজা দেখার কারণ কী?","img":"","o1":"এটি উত্তল দর্পণ হিসেবে কাজ করেছে","o2":"এটি অবতল দর্পণ হিসেবে কাজ করেছে","o3":"এটি সমতল দর্পণ হিসেবে কাজ করেছে","o4":"আলোকরশ্মি শোষিত হয়েছে","ans":"ক"},{"stim":"","ques":"পাহাড়ি রাস্তার বিপজ্জনক বাঁকে কোন দর্পণ ব্যবহার করা হয়?","img":"","o1":"উত্তল দর্পণ","o2":"অবতল দর্পণ","o3":"সমতল দর্পণ","o4":"গোলীয় দর্পণ","ans":"গ"},{"stim":"","ques":"সমতল দর্পণে আলোর প্রতিফলনের ক্ষেত্রে— <br>   i. আপতন কোণ ও প্রতিফলন কোণ সর্বদা সমান হয় <br>  ii. আপতিত রশ্মি, প্রতিফলিত রশ্মি ও অভিলম্ব একই সমতলে থাকে <br>   iii. প্রতিবিম্বের আকার লক্ষ্যের বস্তুর আকারের চেয়ে বড় হয় <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"অবতল দর্পণ ব্যবহার করা হয়— <br>   i. দাঁতের ডাক্তারদের চিকিৎসায় <br>   ii. টর্চ লাইটের প্রতিফলক হিসেবে <br>   iii. গাড়ির পেছনের দৃশ্য দেখার ভিউ মিরর হিসেবে <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"আলোক রশ্মি হালকা মাধ্যম থেকে ঘন মাধ্যমে প্রবেশ করলে প্রতিসরিত রশ্মি অভিলম্বের—","img":"","o1":"কাছে চলে আসে","o2":"দূরে সরে যায়","o3":"একই সরলরেখায় থাকে","o4":"লম্বভাবে বেঁকে যায়","ans":"ক"},{"stim":"","ques":"আলোক রশ্মি ঘন মাধ্যম থেকে হালকা মাধ্যমে প্রবেশ করলে আপতন কোণ ও প্রতিসরণ কোণের সম্পর্ক কেমন হয়?","img":"","o1":"আপতন কোণ > প্রতিসরণ কোণ","o2":"আপতন কোণ = প্রতিসরণ কোণ","o3":"আপতন কোণ < প্রতিসরণ কোণ","o4":"কোনো সম্পর্ক নেই","ans":"গ"},{"stim":"","ques":"নির্দিষ্ট রঙের আলোর জন্য আপতন কোণের সাইন ও প্রতিসরণ কোণের সাইনের অনুপাত সর্বদা কেমন থাকে?","img":"","o1":"শূন্য","o2":"ধ্রুব","o3":"পরিবর্তনশীল","o4":"অসীম","ans":"খ"},{"stim":"","ques":"পানিতে থাকা কোনো মাছকে বাইরে থেকে দেখলে— <br>   i. মাছটি তার প্রকৃত অবস্থানের চেয়ে কিছুটা ওপরে মনে হয় <br>   ii. মাছটি আকারে কিছুটা বড় মনে হয় <br>   iii. মাছটির প্রকৃত অবস্থান চেনা কঠিন হয় <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"আলোক রশ্মি এক মাধ্যম থেকে অন্য মাধ্যমে লম্বভাবে আপতিত হলে প্রতিসরণ কোণের মান কত হয়?","img":"","o1":"৯০ ডিগ্রি","o2":"৪৫ ডিগ্রি","o3":"০ ডিগ্রি","o4":"১৮০ ডিগ্রি","ans":"গ"},{"stim":"নিচের তথ্যের আলোকে (15  ও  16) নং প্রশ্নের উত্তর দাও:  <br>    অন্তুর চশমার লেন্সের ক্ষমতা হলো -২.৫ D এবং মিতুর চশমার লেন্সের ক্ষমতা হলো +১.৫ D.","ques":"অন্তুর চশমায় কোন লেন্স ব্যবহার করা হয়েছে?","img":"","o1":"উত্তল লেন্স","o2":"অবতল লেন্স","o3":"সিলিন্ডার লেন্স","o4":"বাইফোকাল লেন্স","ans":"খ"},{"stim":"","ques":"মিতুর চশমার লেন্সটির ফোকাস দূরত্ব কত হবে?","img":"","o1":"০.৬৭ মিটার","o2":"১.৫ মিটার","o3":"০.৪ মিটার","o4":"২.৫ মিটার","ans":"ক"},{"stim":"","ques":"পানি থেকে কোনো মাছকে দেখলে সেটি আসলে তার প্রকৃত অবস্থান থেকে কেমন দেখায়?","img":"","o1":"কিছুটা ওপরে","o2":"কিছুটা নিচে","o3":"একই স্থানে","o4":"অনেক দূরে","ans":"ক"},{"stim":"","ques":"অবতল লেন্সকে কী লেন্স বলা হয়?","img":"","o1":"অভিসারী লেন্স","o2":"অপসারী লেন্স","o3":"সমতল লেন্স","o4":"যৌগিক লেন্স","ans":"খ"},{"stim":"","ques":"লেন্সের আলোর কেন্দ্রগামী সরলরেখাকে কী বলে?","img":"","o1":"প্রধান ফোকাস","o2":"প্রধান অক্ষ","o3":"বক্রতার ব্যাসার্ধ","o4":"ফোকাস দূরত্ব","ans":"খ"},{"stim":"","ques":"একটি উত্তল লেন্সের ফোকাস দূরত্ব ০.৫ মিটার হলে এর ক্ষমতা কত?","img":"","o1":"+2 D","o2":"-2 D","o3":"+0.5 D","o4":"-0.5 D","ans":"ক"},{"stim":"","ques":"অবতল লেন্সের ক্ষমতা সবসময় কেমন হয়?","img":"","o1":"ধনাত্মক +","o2":"ঋণাত্মক -","o3":"শূন্য","o4":"অসীম","ans":"খ"},{"stim":"","ques":"চোখের রেটিনায় গঠিত প্রতিবিম্ব কেমন হয়?","img":"","o1":"বাস্তব ও উল্টো","o2":"অবাস্তব ও সোজা","o3":"বাস্তব ও সোজা","o4":"অবাস্তব ও উল্টো","ans":"ক"},{"stim":"","ques":"সুস্থ চোখের জন্য স্পষ্ট দর্শনের ন্যূনতম দূরত্ব কত?","img":"","o1":"২৫ মিটার","o2":"২৫ সেন্টিমিটার","o3":"৫ সেন্টিমিটার","o4":"অসীম","ans":"খ"},{"stim":"","ques":"একটি লেন্সের ক্ষমতা +১০ D হলে, এর ফোকাস দূরত্ব কত সেন্টিমিটার?","img":"","o1":"১০ সে.মি.","o2":"১০০ সে.মি.","o3":"১ সে.মি.","o4":"০.১ সে.মি.","ans":"ক"},{"stim":"","ques":"হ্রস্বদৃষ্টি বা মায়োপিয়া ত্রুটি দূর করার জন্য চশমায় কোন লেন্স ব্যবহার করা হয়?","img":"","o1":"উত্তল লেন্স","o2":"অবতল লেন্স","o3":"বেলনাকার লেন্স","o4":"বাইফোকাল লেন্স","ans":"খ"},{"stim":"","ques":"দীর্ঘদৃষ্টি বা হাইপারমেট্রোপিয়া ত্রুটি দূর করতে কোন লেন্সের চশমা ব্যবহার করা হয়?","img":"","o1":"অবতল লেন্স","o2":"উত্তল লেন্স","o3":"সমতল লেন্স","o4":"কোনোটিই নয়","ans":"খ"},{"stim":"","ques":"লেন্সের ফোকাস দূরত্ব (f) এবং ক্ষমতার (P) মধ্যে সঠিক সম্পর্ক কোনটি?","img":"","o1":"P = f","o2":"$ P = \\frac{1}{f} $","o3":"f = P + 1","o4":"P = 2f","ans":"খ"},{"stim":"","ques":"চোখ ভালো রাখার জন্য আমাদের করণীয়— <br>   i. পর্যাপ্ত পরিমাণে ভিটামিন 'এ' যুক্ত খাবার খাওয়া <br>   ii. কম আলোতে বা খুব কড়া আলোতে পড়াশোনা না করা <br>   iii. একটানা মোবাইল বা কম্পিউটারের স্ক্রিনের দিকে তাকিয়ে না থাকা <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"হ্রস্বদৃষ্টি বা মায়োপিয়া ত্রুটি হওয়ার কারণ— <br>   i. অক্ষিগোলকের ব্যাসার্ধ বৃদ্ধি পেলে <br>   ii. চোখের লেন্সের ফোকাস দূরত্ব কমে গেলে <br>   iii. চোখের লেন্সের ক্ষমতা হ্রাস পেলে <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"কোনো লেন্সের ফোকাস দূরত্ব ০.২ মিটার হলে এর ক্ষমতা কত?","img":"","o1":"+৫ D","o2":"+২ D","o3":"+১০ D","o4":"+০.৫ D","ans":"ক"}];
+        var fName = "90101";
+        var timerInterval;
+        var urlParams = new URLSearchParams(window.location.search);
+        var user = {
+            id: urlParams.get('id'),
+            name: urlParams.get('name'),
+            roll: urlParams.get('roll'),
+            cls: urlParams.get('cls'),
+            sec: urlParams.get('sec')
+        };
+        if(user.id){
+            document.getElementById('uName').innerText = user.name;
+            document.getElementById('uIdDisplay').innerText = user.id;
+        }
+        window.onload = function() {
+            var savedTime = localStorage.getItem("timer_" + fName + "_" + user.id);
+            if(savedTime) {
+                var remaining = parseInt(savedTime) - Math.floor(Date.now()/1000);
+                if(remaining > 0) startExam(remaining);
+                else { alert("সময় শেষ হয়ে গেছে!"); submitQuiz(); }
+            }
+        };
+        function saveAns(qIdx, val) {
+            var saved = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            saved[qIdx] = val;
+            localStorage.setItem("ans_" + fName + "_" + user.id, JSON.stringify(saved));
+        }
+        function startExam(existingSec) {
+            if(!existingSec) {
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+            }
+            if(!localStorage.getItem("start_time_" + fName + "_" + user.id)){
+                localStorage.setItem("start_time_" + fName + "_" + user.id, Date.now());
+            }
+            document.getElementById('preview-box').style.display = 'none';
+            document.getElementById('exam-box').style.display = 'block';
+            var list = document.getElementById('q-list');
+            var savedAns = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            var h = "";
+            questions.forEach(function(q, i){
+                var s = savedAns["q"+i] || "";
+                h += "<div class='card'>";
+                if(q.stim && q.stim.trim() !== "") {
+                    h += "<div class='stim-box'>"+q.stim.replace(/\\n/g, '<br>')+"</div>";
+                }
+                // প্রশ্নপত্রের (generated file) জন্য এখানে নিউলাইন হ্যান্ডেল করা হয়েছে
+                h += "<p><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
+                if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক' onchange='saveAns(\"q"+i+"\", \"ক\")' "+(s=='ক'?'checked':'')+"> ক) "+q.o1+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='খ' onchange='saveAns(\"q"+i+"\", \"খ\")' "+(s=='খ'?'checked':'')+"> খ) "+q.o2+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='গ' onchange='saveAns(\"q"+i+"\", \"গ\")' "+(s=='গ'?'checked':'')+"> গ) "+q.o3+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ঘ' onchange='saveAns(\"q"+i+"\", \"ঘ\")' "+(s=='ঘ'?'checked':'')+"> ঘ) "+q.o4+"</label></div>";
+            });
+            list.innerHTML = h;
+            if(window.MathJax) window.MathJax.typeset();
+            var totalSec = existingSec || (20 * 60);
+            if(!existingSec) {
+                var expiry = Math.floor(Date.now()/1000) + totalSec;
+                localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
+            }
+            runTimer(totalSec);
+        }
+        function runTimer(sec) {
+            timerInterval = setInterval(function(){
+                var m = Math.floor(sec/60), s = sec%60;
+                document.getElementById("t").innerText = "সময় বাকি: " + m + ":" + (s < 10 ? "0" : "") + s;
+                if(sec <= 0){ clearInterval(timerInterval); submitQuiz(); }
+                sec--;
+            }, 1000);
+        }
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            var startTime = localStorage.getItem("start_time_" + fName + "_" + user.id) || Date.now();
+            var diff = Math.floor((Date.now() - startTime) / 1000);
+            var mSpent = Math.floor(diff / 60);
+            var sSpent = diff % 60;
+            var timeSpentStr = mSpent + "m " + sSpent + "s";
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "জমা হচ্ছে...";
+            var correct = 0;
+            var wrongNums = [];
+            questions.forEach(function(q, i){
+    var sel = document.querySelector('input[name="q'+i+'"]:checked');
+    if(sel && sel.value === q.ans) { 
+        correct++; 
+    } else { 
+        if(sel) {
+            wrongNums.push((i + 1) + "(" + sel.value + ")");
+        } else {
+            wrongNums.push(i + 1);
+        }
+    }
+});
+            var now = new Date();
+            var resData = {
+                chapter: "দেখতে হলে আলো চায় ", class: user.cls, correct: correct,
+                date: now.toLocaleDateString('en-GB'), name: user.name,
+                quizTitle: "বিজ্ঞান ৫ম অধ্যায়, টেস্ট: (০১)", roll: user.roll, section: user.sec,
+                subject: "বিজ্ঞান ", time: now.toLocaleTimeString(),
+                timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
+                total: questions.length, userId: user.id,
+                wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই"
+            };
+            var resKey = fName + "_" + Date.now();
+            db.ref("QuizResults/" + resKey).set(resData).then(() => {
+                return db.ref("IndividualQuizzes/" + user.id).once('value');
+            }).then(snap => {
+                if(snap.exists()){ snap.forEach(child => { if(child.val().file === fName) child.ref.remove(); }); }
+                localStorage.removeItem("timer_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                alert("পরীক্ষা সফলভাবে জমা হয়েছে!");
+                
+                // রিয়েল-টাইম ফলাফল বিশ্লেষণ ও ডাইনামিক রিভিউ পেজ জেনারেশন
+                var reviewHtml = "<div class='card' style='border-top: 5px solid #27ae60;'>";
+                reviewHtml += "<h2 style='text-align:center; color:#27ae60; margin-bottom:5px;'>🎉 পরীক্ষা সম্পন্ন হয়েছে!</h2>";
+                reviewHtml += "<p style='text-align:center; color:#7f8c8d; margin-top:0;'>আপনার উত্তরপত্র সফলভাবে ডাটাবেসে জমা হয়েছে।</p><hr>";
+                
+                // ১ ও ২ নং নির্দেশনার তথ্য (পরীক্ষার্থী ও পরীক্ষার বিবরণ)
+                reviewHtml += "<table style='width:100%; border-collapse:collapse; margin-bottom:15px; font-size:14px;'>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>পরীক্ষার্থী:</b> "+user.name+"</td><td style='padding:5px; color:#555;'><b>পরীক্ষা:</b> "+document.title+"</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>শ্রেণী-শাখা:</b> "+user.cls+" ("+user.sec+")</td><td style='padding:5px; color:#555;'><b>বিষয়:</b> বিজ্ঞান </td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>রোল নং:</b> "+user.roll+"</td><td style='padding:5px; color:#555;'><b>অধ্যায়:</b> দেখতে হলে আলো চায় </td></tr>";
+                reviewHtml += "</table><hr>";
+                
+                // ৩ ও ৪ নং নির্দেশনার তথ্য (পরিসংখ্যান ও সময়)
+                reviewHtml += "<div style='background:#f8f9fa; padding:12px; border-radius:8px; margin-bottom:20px; font-size:14px; border-left:4px solid #3498db;'>";
+                reviewHtml += "<p style='margin:4px 0;'>📊 <b>মোট প্রশ্ন:</b> "+questions.length+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#27ae60;'>✅ <b>সঠি উত্তর:</b> "+correct+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#e74c3c;'>❌ <b>ভুল ও উত্তরহীন:</b> "+(wrongNums.length > 0 ? wrongNums.join(', ') : 'নাই')+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#7f8c8d;'>📅 <b>তারিখ ও সময়:</b> "+resData.date+" | "+resData.time+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#8e44ad;'>⏱️ <b>ব্যয়কৃত সময়:</b> "+timeSpentStr+"</p>";
+                reviewHtml += "</div>";
+                
+                reviewHtml += "<h3 style='color:#2c3e50; border-bottom:2px solid #eee; padding-bottom:8px;'>📝 প্রশ্নপত্র ও উত্তরপত্র পর্যালোচনা (Review):</h3>";
+                
+                // ৫ নং নির্দেশনার তথ্য (অপশনের ব্যাকগ্রাউন্ড কালার সহ সম্পূর্ণ রিভিউ কার্ড)
+                questions.forEach(function(q, idx){
+                    var selectedRadio = document.querySelector('input[name="q'+idx+'"]:checked');
+                    var selectedVal = selectedRadio ? selectedRadio.value : null;
+                    
+                    reviewHtml += "<div style='margin-bottom:25px; padding-bottom:15px; border-bottom:1px dashed #ddd;'>";
+                    
+                    if(q.stim && q.stim.trim() !== "") {
+                        reviewHtml += "<div class='stim-box'>"+q.stim.replace(/\n/g, '<br>')+"</div>";
+                    }
+                    
+                    reviewHtml += "<p><b>"+(idx+1)+". "+q.ques.replace(/\n/g, '<br>')+"</b></p>";
+                    if(q.img) reviewHtml += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                    
+                    // ৪টি অপশনের কাস্টম ব্যাকগ্রাউন্ড রেন্ডারিং লজিক
+                    var opts = [{k:'ক', v:q.o1}, {k:'খ', v:q.o2}, {k:'গ', v:q.o3}, {k:'ঘ', v:q.o4}];
+                    opts.forEach(function(opt) {
+                        var bgStyle = "background:#f0f0f0; color:#000;";
+                        var tickMark = "";
+                        
+                        if (opt.k === q.ans) {
+                            tickMark = " <span style='color:#27ae60; font-weight:bold;'>✔ (সঠিক উত্তর)</span>";
+                            if (selectedVal === q.ans) {
+                                bgStyle = "background:#d4edda; color:#155724; font-weight:bold; border-color:#c3e6cb;"; // সঠিক উত্তর দিলে সবুজ
+                            }
+                        } else if (selectedVal === opt.k) {
+                            bgStyle = "background:#f8d7da; color:#721c24; border-color:#f5c6cb;"; // ভুল উত্তর দিলে লাল
+                        }
+                        
+                        reviewHtml += "<div style='padding:10px; margin:5px 0; border-radius:6px; border:1px solid #ddd; "+bgStyle+"'>"+opt.k+") "+opt.v+tickMark+"</div>";
+                    });
+                    
+                    reviewHtml += "</div>";
+                });
+                
+                reviewHtml += "</div>";
+                document.getElementById("main").innerHTML = reviewHtml;
+                if(window.MathJax) window.MathJax.typeset();
+            }).catch(e => alert(e.message));
+        }
+    </script>
+</body>
+</html>
