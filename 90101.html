@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>বিজ্ঞান ৫ম অধ্যায়, টেস্ট: (০১)</title>
+    <title>বিজ্ঞান ৪র্থ অধ্যায়, টেস্ট: (০১)</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
@@ -26,12 +26,12 @@
 <body>
     <div id="main">
         <div class="card" id="preview-box">
-            <h2 style="text-align:center; color:#2c3e50;">বিজ্ঞান ৫ম অধ্যায়, টেস্ট: (০১)</h2>
+            <h2 style="text-align:center; color:#2c3e50;">বিজ্ঞান ৪র্থ অধ্যায়, টেস্ট: (০১)</h2>
             <hr>
-            <p class="info-p"><b>বিষয়:</b> বিজ্ঞান </p>
-            <p class="info-p"><b>অধ্যায়:</b> দেখতে হলে আলো চায় </p>
+            <p class="info-p"><b>বিষয়:</b> জীববিজ্ঞান</p>
+            <p class="info-p"><b>অধ্যায়:</b> জীবনীশক্তি</p>
             <p class="info-p"><b>মোট প্রশ্ন:</b> 30টি</p>
-            <p class="info-p"><b>সময়:</b> 20 মিনিট</p>
+            <p class="info-p"><b>সময়:</b> 30 মিনিট</p>
             <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
             <br>
             <button onclick="startExam()">পরিক্ষা শুরু করুন</button>
@@ -109,7 +109,7 @@
             });
             list.innerHTML = h;
             if(window.MathJax) window.MathJax.typeset();
-            var totalSec = existingSec || (20 * 60);
+            var totalSec = existingSec || (30 * 60);
             if(!existingSec) {
                 var expiry = Math.floor(Date.now()/1000) + totalSec;
                 localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
@@ -150,10 +150,10 @@
 });
             var now = new Date();
             var resData = {
-                chapter: "দেখতে হলে আলো চায় ", class: user.cls, correct: correct,
+                chapter: "জীবনীশক্তি", class: user.cls, correct: correct,
                 date: now.toLocaleDateString('en-GB'), name: user.name,
-                quizTitle: "বিজ্ঞান ৫ম অধ্যায়, টেস্ট: (০১)", roll: user.roll, section: user.sec,
-                subject: "বিজ্ঞান ", time: now.toLocaleTimeString(),
+                quizTitle: "বিজ্ঞান ৪র্থ অধ্যায়, টেস্ট: (০১)", roll: user.roll, section: user.sec,
+                subject: "জীববিজ্ঞান", time: now.toLocaleTimeString(),
                 timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
                 total: questions.length, userId: user.id,
                 wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই"
@@ -176,8 +176,8 @@
                 // ১ ও ২ নং নির্দেশনার তথ্য (পরীক্ষার্থী ও পরীক্ষার বিবরণ)
                 reviewHtml += "<table style='width:100%; border-collapse:collapse; margin-bottom:15px; font-size:14px;'>";
                 reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>পরীক্ষার্থী:</b> "+user.name+"</td><td style='padding:5px; color:#555;'><b>পরীক্ষা:</b> "+document.title+"</td></tr>";
-                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>শ্রেণী-শাখা:</b> "+user.cls+" ("+user.sec+")</td><td style='padding:5px; color:#555;'><b>বিষয়:</b> বিজ্ঞান </td></tr>";
-                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>রোল নং:</b> "+user.roll+"</td><td style='padding:5px; color:#555;'><b>অধ্যায়:</b> দেখতে হলে আলো চায় </td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>শ্রেণী-শাখা:</b> "+user.cls+" ("+user.sec+")</td><td style='padding:5px; color:#555;'><b>বিষয়:</b> জীববিজ্ঞান</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>রোল নং:</b> "+user.roll+"</td><td style='padding:5px; color:#555;'><b>অধ্যায়:</b> জীবনীশক্তি</td></tr>";
                 reviewHtml += "</table><hr>";
                 
                 // ৩ ও ৪ নং নির্দেশনার তথ্য (পরিসংখ্যান ও সময়)
