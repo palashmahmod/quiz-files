@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বিজ্ঞান ৩য় অধ্যায়, টেস্ট: (০২)</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        body{font-family:sans-serif;background:#f4f7f6;padding:15px;margin:0;user-select:none;}
+        .card{background:white;padding:20px;border-radius:12px;max-width:500px;margin:10px auto;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+        .timer{position:fixed;top:0;left:0;width:100%;background:red;color:white;text-align:center;padding:8px;z-index:100;font-weight:bold;}
+        .opt{display:block;padding:12px;background:#f0f0f0;margin:8px 0;border-radius:8px;cursor:pointer;border:1px solid #ddd;}
+        input[type="radio"]{margin-right:10px;}
+        button{width:100%;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
+        .info-p { margin: 5px 0; font-size: 15px; }
+        #exam-box { display:none; margin-top:50px; }
+        .stim-box { background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; margin-bottom: 10px; font-style: italic; color: #555; }
+        mjx-utext { font-family: 'Segoe UI', Tahoma, sans-serif !important; font-style: normal !important; display: inline !important; direction: ltr !important; }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div class="card" id="preview-box">
+            <h2 style="text-align:center; color:#2c3e50;">বিজ্ঞান ৩য় অধ্যায়, টেস্ট: (০২)</h2>
+            <hr>
+            <p class="info-p"><b>বিষয়:</b> বিজ্ঞান</p>
+            <p class="info-p"><b>অধ্যায়:</b> হৃদযন্ত্রের যত কথা </p>
+            <p class="info-p"><b>মোট প্রশ্ন:</b> 30টি</p>
+            <p class="info-p"><b>সময়:</b> 30 মিনিট</p>
+            <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
+            <br>
+            <button onclick="startExam()">পরিক্ষা শুরু করুন</button>
+        </div>
+        <div id="exam-box">
+            <div class="timer" id="t">সময় বাকি: --:--</div>
+            <div id="q-list"></div>
+            <div class="card"><button id="submitBtn" onclick="submitQuiz()">জমা দিন</button></div>
+        </div>
+    </div>
+    <script>
+        
+        var firebaseConfig = {
+            apiKey: "AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco",
+            databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com",
+            projectId: "quiz-storage-d8707"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        var db = firebase.database();
+    
+        var questions = [{"stim":"","ques":"যেসব রক্তনালীর মাধ্যমে রক্ত হৃদপিণ্ড থেকে দূরবর্তী সারা শরীরে পরিবাহিত হয়, তাদের কী বলে?","img":"","o1":"শিরা","o2":"ধমনী","o3":"কৈশিক জালিকা","o4":"লসিকা নালী","ans":"খ"},{"stim":"","ques":"নিচের কোন ধমনীটি ব্যতিক্রম, যা কার্বন ডাই-অক্সাইড যুক্ত রক্ত পরিবহন করে?","img":"","o1":"মহাধমনী","o2":"পালমোনারি বা ফুসফুসীয় ধমনী","o3":"রেনাল ধমনী","o4":"হেপাটিক ধমনী","ans":"খ"},{"stim":"","ques":"শিরার প্রাচীর ধমনীর তুলনায় কেমন হয়?","img":"","o1":"পুরু ও স্থিতিস্থাপক","o2":"পাতলা ও কম স্থিতিস্থাপক","o3":"শক্ত ও অস্থিতিস্থাপক","o4":"সমান পুরু","ans":"খ"},{"stim":"","ques":"হৃদপিণ্ডের বাম নিলয়ের প্রাচীর ডান নিলয়ের চেয়ে পুরু কেন?  <br>  i. বাম নিলয়কে সারা দেহে রক্ত পাঠাতে হয়  <br>  ii. বাম নিলয়ে বেশি চাপ সহ্য করতে হয়  <br>  iii. ডান নিলয় কেবল ফুসফুসে রক্ত পাঠায়  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"পেরিকার্ডিয়াম পর্দা কেন গুরুত্বপূর্ণ?  <br>  i. এটি হৃদপিণ্ডকে ঘর্ষণজনিত আঘাত থেকে রক্ষা করে  <br>  ii. এটি হৃদপিণ্ডের সংকোচন-প্রসারণে সহায়তা করে  <br>  iii. এটি রক্ত পরিশোধনে অংশ নেয়  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"কোন রক্তনালীতে সাধারণত কপাটিকা (Valve) থাকে?","img":"","o1":"ধমনী","o2":"শিরা","o3":"কৈশিক জালিকা","o4":"মহাধমনী","ans":"খ"},{"stim":"","ques":"ধমনী ও শিরার সংযোগস্থলে অবস্থিত এক স্তরবিশিষ্ট সূক্ষ্ম রক্তনালীগুলোকে কী বলে?","img":"","o1":"মহাধমনী","o2":"মহাশিরা","o3":"কৈশিক জালিকা","o4":"লসিকা নালী","ans":"গ"},{"stim":"","ques":"নিচের কোন শিরাটি ব্যতিক্রমীভাবে অক্সিজেনযুক্ত রক্ত ফুসফুস থেকে হৃদপিণ্ডে নিয়ে আসে?","img":"","o1":"ফুসফুসীয় বা পালমোনারি শিরা","o2":"ঊর্ধ্ব মহাশিরা","o3":"নিম্ন মহাশিরা","o4":"পোর্টাল শিরা","ans":"ক"},{"stim":"","ques":"ধমনীর লুমেন বা ভেতরের গহ্বরটি কেমন হয়?","img":"","o1":"চওড়া","o2":"সরু","o3":"কপাটিকাযুক্ত","o4":"অত্যন্ত চওড়া","ans":"খ"},{"stim":"","ques":"রক্তনালীর ভেতর রক্ত চলাচল করার সময় নালীর প্রাচীরে যে চাপ সৃষ্টি হয় তাকে কী বলে?","img":"","o1":"লসিকা চাপ","o2":"রক্তচাপ","o3":"অসমোটিক চাপ","o4":"বায়ুচাপ","ans":"খ"},{"stim":"","ques":"সুস্থ স্বাভাবিক মানুষের সিস্টোলিক রক্তচাপের আদর্শ মান কত?","img":"","o1":"$৮০\\text{ mm Hg}$","o2":"$১২০\\text{ mm Hg}$","o3":"$১০০\\text{ mm Hg}$","o4":"$১৪০\\text{ mm Hg}$","ans":"খ"},{"stim":"","ques":"সুস্থ স্বাভাবিক মানুষের ডায়াস্টোলিক রক্তচাপের আদর্শ মান কত?","img":"","o1":"$৬০\\text{ mm Hg}$","o2":"$৮০\\text{ mm Hg}$","o3":"$১০০\\text{ mm Hg}$","o4":"$১২০\\text{ mm Hg}$","ans":"ঘ"},{"stim":"নিচের তথ্যের আলোকে (13 ও 14) নং প্রশ্নের উত্তর দাও:    <br>  মানুষের হৃদপিণ্ড একটি পাম্পের মতো কাজ করে যা সারাদেহে রক্ত ছড়িয়ে দেয়। এর প্রকোষ্ঠগুলো পর্যায়ক্রমে সংকুচিত ও প্রসারিত হয়।","ques":"হৃদপিণ্ডের বাম নিলয় থেকে রক্ত কোথায় যায়?","img":"","o1":"ফুসফুসে","o2":"ডান অলিন্দে","o3":"মহাধমনীর মাধ্যমে সারা শরীরে","o4":"ফুসফুসীয় শিরায়","ans":"গ"},{"stim":"","ques":"হৃদপিণ্ডের সিস্টোল ও ডায়াস্টোল বলতে কী বোঝায়?  <br>  i. সিস্টোল হলো সংকোচন  <br>  ii. ডায়াস্টোল হলো প্রসারণ  <br>  iii. ডায়াস্টোল হলো সংকোচন  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"চিকিৎসাবিজ্ঞানের ভাষায় উচ্চ রক্তচাপকে কী বলা হয়?","img":"","o1":"হাইপোটেনশন","o2":"হাইপারটেনশন","o3":"অ্যানিমিয়া","o4":"লিউকেমিয়া","ans":"খ"},{"stim":"","ques":"হৃদপিণ্ডের নিজস্ব পেশিতে রক্ত সরবরাহকারী করোনারি ধমনী যখন ব্লক হয়ে যায়, তখন কোন রোগটি হয়?","img":"","o1":"স্ট্রোক","o2":"হার্ট অ্যাটাক","o3":"বাতজ্বর","o4":"অ্যানিমিয়া","ans":"খ"},{"stim":"","ques":"রক্তে গ্লুকোজের পরিমাণ স্বাভাবিকের চেয়ে স্থায়ীভাবে বৃদ্ধি পেলে তাকে কী বলে?","img":"","o1":"উচ্চ রক্তচাপ","o2":"ডায়াবেটিস","o3":"থ্যালাসেমিয়া","o4":"অ্যাথেরোস্কেলেরোসিস","ans":"খ"},{"stim":"","ques":"ডায়াবেটিস রোগ নিয়ন্ত্রণের প্রধান উপায় কোনটি?","img":"","o1":"বেশি করে ঘুমানো","o2":"থ্রি-ডি (Diet, Discipline, Dose)  নিয়ম মেনে চলা","o3":"চর্বিযুক্ত খাবার খাওয়া","o4":"পানি কম পান করা","ans":"খ"},{"stim":"","ques":"ডায়াবেটিস রোগীদের ইনসুলিন কেন প্রয়োজন?  <br>  i. রক্তে শর্করার মাত্রা নিয়ন্ত্রণ করতে  <br>  ii. গ্লুকোজকে কোষে প্রবেশ করতে সাহায্য করতে  <br>  iii. রক্তচাপ বৃদ্ধি করতে  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"এথেরোস্ক্লেরোসিস (Atherosclerosis) হওয়ার কারণ কী?  <br>  i. ধমনীর প্রাচীরে প্লাক জমা  <br>  ii. ধমনীর গহ্বর সরু হয়ে যাওয়া  <br>  iii. ধমনীর স্থিতিস্থাপকতা হ্রাস পাওয়া  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"রক্তে কোলেস্টেরলের মাত্রা বেড়ে গেলে রক্তনালীর দেয়ালে কী জমে চর্বির স্তর তৈরি করে?","img":"","o1":"প্লাক (Plaque) ","o2":"লসিকা","o3":"হিমোগ্লোবিন","o4":"ফাইব্রিন","ans":"ক"},{"stim":"","ques":"কোন ধরনের কোলেস্টেরলকে মানবদেহের জন্য 'উপকারী কোলেস্টেরল' বলা হয়?","img":"","o1":"LDL","o2":"HDL","o3":"Triglyceride","o4":"VLDL","ans":"খ"},{"stim":"","ques":"বুকে তীব্র ব্যথা, যা বাম হাত, গলা বা চোয়ালে ছড়িয়ে পড়ে—এটি প্রধানত কিসের লক্ষণ?","img":"","o1":"নিউমোনিয়া","o2":"গ্যাস্ট্রিক","o3":"হার্ট অ্যাটাক","o4":"অ্যাজমা","ans":"গ"},{"stim":"","ques":"নিচের কোনটি রক্তে ক্ষতিকর কোলেস্টেরলের (LDL) মাত্রা বাড়াতে ভূমিকা রাখে?","img":"","o1":"শাকসবজি","o2":"সামুদ্রিক মাছ","o3":"ট্রান্সফ্যাট বা চর্বিযুক্ত ফাস্টফুড","o4":"ফাইবার বা আঁশযুক্ত খাবার","ans":"গ"},{"stim":"নিচের তথ্যের আলোকে (25 ও 26) নং প্রশ্নের উত্তর দাও:    <br>   জনাব শফিক নিয়মিত ফাস্টফুড খান এবং অলস জীবনযাপন করেন। সম্প্রতি তার উচ্চ রক্তচাপের সমস্যা দেখা দিয়েছে এবং ডাক্তার তাকে খাবারে লবণের পরিমাণ কমাতে বলেছেন।","ques":"জনাব শফিকের উচ্চ রক্তচাপের সম্ভাব্য কারণ কী?","img":"","o1":"ব্যায়াম করা","o2":"রক্তে কোলেস্টেরল বেড়ে যাওয়া","o3":"প্রচুর পানি পান করা","o4":"লোহিত কণিকা বৃদ্ধি পাওয়া","ans":"খ"},{"stim":"","ques":"জনাব শফিকের হৃদযন্ত্র সুস্থ রাখতে করণীয়—  <br>  i. নিয়মিত কায়িক পরিশ্রম করা  <br>  ii. ধূমপান বর্জন করা  <br>  iii. ফ্যাট জাতীয় খাবার বেশি খাওয়া  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"রক্তে লোহিত রক্তকণিকার পরিমাণ স্বাভাবিকের চেয়ে কমে যাওয়াকে কী বলে?","img":"","o1":"লিউকেমিয়া","o2":"থ্যালাসেমিয়া","o3":"অ্যানিমিয়া বা রক্তস্বল্পতা","o4":"উচ্চ রক্তচাপ","ans":"গ"},{"stim":"","ques":"হৃদযন্ত্রকে ভালো রাখার জন্য নিচের কোনটি বর্জন করা অত্যন্ত জরুরি?","img":"","o1":"নিয়মিত ব্যায়াম","o2":"ধূমপান ও অতিরিক্ত লবণ খাওয়া","o3":"শাকসবজি খাওয়া","o4":"পরিমিত ঘুমানো","ans":"খ"},{"stim":"","ques":"পালমোনারি ধমনী কেন অন্য ধমনী থেকে আলাদা?  <br>  i. এটি অক্সিজেনহীন রক্ত বহন করে  <br>  ii. এটি হৃদপিণ্ড থেকে রক্ত বাইরে নিয়ে যায়  <br>  iii. এটি রক্তকে সরাসরি মহাধমনীতে পাঠায়  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i","o3":"ii ও iii","o4":"i, ii ও iii","ans":"খ"},{"stim":"","ques":"উচ্চ রক্তচাপকে কেন 'নীরব ঘাতক' বলা হয়?  <br>  i. এটি প্রাথমিক অবস্থায় কোনো লক্ষণ প্রকাশ নাও করতে পারে  <br>  ii. এটি হঠাৎ স্ট্রোক বা হার্ট অ্যাটাক ঘটাতে পারে  <br>  iii. এটি শরীরের অন্যান্য অঙ্গের ক্ষতি করে  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"}];
+        var fName = "90202";
+        var timerInterval;
+        var urlParams = new URLSearchParams(window.location.search);
+        var user = {
+            id: urlParams.get('id'),
+            name: urlParams.get('name'),
+            roll: urlParams.get('roll'),
+            cls: urlParams.get('cls'),
+            sec: urlParams.get('sec')
+        };
+        if(user.id){
+            document.getElementById('uName').innerText = user.name;
+            document.getElementById('uIdDisplay').innerText = user.id;
+        }
+        window.onload = function() {
+            var savedTime = localStorage.getItem("timer_" + fName + "_" + user.id);
+            if(savedTime) {
+                var remaining = parseInt(savedTime) - Math.floor(Date.now()/1000);
+                if(remaining > 0) startExam(remaining);
+                else { alert("সময় শেষ হয়ে গেছে!"); submitQuiz(); }
+            }
+        };
+        function saveAns(qIdx, val) {
+            var saved = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            saved[qIdx] = val;
+            localStorage.setItem("ans_" + fName + "_" + user.id, JSON.stringify(saved));
+        }
+        function startExam(existingSec) {
+            if(!existingSec) {
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+            }
+            if(!localStorage.getItem("start_time_" + fName + "_" + user.id)){
+                localStorage.setItem("start_time_" + fName + "_" + user.id, Date.now());
+            }
+            document.getElementById('preview-box').style.display = 'none';
+            document.getElementById('exam-box').style.display = 'block';
+            var list = document.getElementById('q-list');
+            var savedAns = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            var h = "";
+            questions.forEach(function(q, i){
+                var s = savedAns["q"+i] || "";
+                h += "<div class='card'>";
+                if(q.stim && q.stim.trim() !== "") {
+                    h += "<div class='stim-box'>"+q.stim.replace(/\\n/g, '<br>')+"</div>";
+                }
+                // প্রশ্নপত্রের (generated file) জন্য এখানে নিউলাইন হ্যান্ডেল করা হয়েছে
+                h += "<p><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
+                if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক' onchange='saveAns(\"q"+i+"\", \"ক\")' "+(s=='ক'?'checked':'')+"> ক) "+q.o1+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='খ' onchange='saveAns(\"q"+i+"\", \"খ\")' "+(s=='খ'?'checked':'')+"> খ) "+q.o2+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='গ' onchange='saveAns(\"q"+i+"\", \"গ\")' "+(s=='গ'?'checked':'')+"> গ) "+q.o3+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ঘ' onchange='saveAns(\"q"+i+"\", \"ঘ\")' "+(s=='ঘ'?'checked':'')+"> ঘ) "+q.o4+"</label></div>";
+            });
+            list.innerHTML = h;
+            if(window.MathJax) window.MathJax.typeset();
+            var totalSec = existingSec || (30 * 60);
+            if(!existingSec) {
+                var expiry = Math.floor(Date.now()/1000) + totalSec;
+                localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
+            }
+            runTimer(totalSec);
+        }
+        function runTimer(sec) {
+            timerInterval = setInterval(function(){
+                var m = Math.floor(sec/60), s = sec%60;
+                document.getElementById("t").innerText = "সময় বাকি: " + m + ":" + (s < 10 ? "0" : "") + s;
+                if(sec <= 0){ clearInterval(timerInterval); submitQuiz(); }
+                sec--;
+            }, 1000);
+        }
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            var startTime = localStorage.getItem("start_time_" + fName + "_" + user.id) || Date.now();
+            var diff = Math.floor((Date.now() - startTime) / 1000);
+            var mSpent = Math.floor(diff / 60);
+            var sSpent = diff % 60;
+            var timeSpentStr = mSpent + "m " + sSpent + "s";
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "জমা হচ্ছে...";
+            var correct = 0;
+            var wrongNums = [];
+            questions.forEach(function(q, i){
+    var sel = document.querySelector('input[name="q'+i+'"]:checked');
+    if(sel && sel.value === q.ans) { 
+        correct++; 
+    } else { 
+        if(sel) {
+            wrongNums.push((i + 1) + "(" + sel.value + ")");
+        } else {
+            wrongNums.push(i + 1);
+        }
+    }
+});
+            var now = new Date();
+            var resData = {
+                chapter: "হৃদযন্ত্রের যত কথা ", class: user.cls, correct: correct,
+                date: now.toLocaleDateString('en-GB'), name: user.name,
+                quizTitle: "বিজ্ঞান ৩য় অধ্যায়, টেস্ট: (০২)", roll: user.roll, section: user.sec,
+                subject: "বিজ্ঞান", time: now.toLocaleTimeString(),
+                timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
+                total: questions.length, userId: user.id,
+                wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই"
+            };
+            var resKey = fName + "_" + Date.now();
+            db.ref("QuizResults/" + resKey).set(resData).then(() => {
+                return db.ref("IndividualQuizzes/" + user.id).once('value');
+            }).then(snap => {
+                if(snap.exists()){ snap.forEach(child => { if(child.val().file === fName) child.ref.remove(); }); }
+                localStorage.removeItem("timer_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                alert("পরীক্ষা সফলভাবে জমা হয়েছে!");
+                
+                // রিয়েল-টাইম ফলাফল বিশ্লেষণ ও ডাইনামিক রিভিউ পেজ জেনারেশন
+                var reviewHtml = "<div class='card' style='border-top: 5px solid #27ae60;'>";
+                reviewHtml += "<h2 style='text-align:center; color:#27ae60; margin-bottom:5px;'>🎉 পরীক্ষা সম্পন্ন হয়েছে!</h2>";
+                reviewHtml += "<p style='text-align:center; color:#7f8c8d; margin-top:0;'>আপনার উত্তরপত্র সফলভাবে ডাটাবেসে জমা হয়েছে।</p><hr>";
+                
+                // ১ ও ২ নং নির্দেশনার তথ্য (পরীক্ষার্থী ও পরীক্ষার বিবরণ)
+                reviewHtml += "<table style='width:100%; border-collapse:collapse; margin-bottom:15px; font-size:14px;'>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>পরীক্ষার্থী:</b> "+user.name+"</td><td style='padding:5px; color:#555;'><b>পরীক্ষা:</b> "+document.title+"</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>শ্রেণী-শাখা:</b> "+user.cls+" ("+user.sec+")</td><td style='padding:5px; color:#555;'><b>বিষয়:</b> বিজ্ঞান</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>রোল নং:</b> "+user.roll+"</td><td style='padding:5px; color:#555;'><b>অধ্যায়:</b> হৃদযন্ত্রের যত কথা </td></tr>";
+                reviewHtml += "</table><hr>";
+                
+                // ৩ ও ৪ নং নির্দেশনার তথ্য (পরিসংখ্যান ও সময়)
+                reviewHtml += "<div style='background:#f8f9fa; padding:12px; border-radius:8px; margin-bottom:20px; font-size:14px; border-left:4px solid #3498db;'>";
+                reviewHtml += "<p style='margin:4px 0;'>📊 <b>মোট প্রশ্ন:</b> "+questions.length+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#27ae60;'>✅ <b>সঠি উত্তর:</b> "+correct+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#e74c3c;'>❌ <b>ভুল ও উত্তরহীন:</b> "+(wrongNums.length > 0 ? wrongNums.join(', ') : 'নাই')+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#7f8c8d;'>📅 <b>তারিখ ও সময়:</b> "+resData.date+" | "+resData.time+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#8e44ad;'>⏱️ <b>ব্যয়কৃত সময়:</b> "+timeSpentStr+"</p>";
+                reviewHtml += "</div>";
+                
+                reviewHtml += "<h3 style='color:#2c3e50; border-bottom:2px solid #eee; padding-bottom:8px;'>📝 প্রশ্নপত্র ও উত্তরপত্র পর্যালোচনা (Review):</h3>";
+                
+                // ৫ নং নির্দেশনার তথ্য (অপশনের ব্যাকগ্রাউন্ড কালার সহ সম্পূর্ণ রিভিউ কার্ড)
+                questions.forEach(function(q, idx){
+                    var selectedRadio = document.querySelector('input[name="q'+idx+'"]:checked');
+                    var selectedVal = selectedRadio ? selectedRadio.value : null;
+                    
+                    reviewHtml += "<div style='margin-bottom:25px; padding-bottom:15px; border-bottom:1px dashed #ddd;'>";
+                    
+                    if(q.stim && q.stim.trim() !== "") {
+                        reviewHtml += "<div class='stim-box'>"+q.stim.replace(/\n/g, '<br>')+"</div>";
+                    }
+                    
+                    reviewHtml += "<p><b>"+(idx+1)+". "+q.ques.replace(/\n/g, '<br>')+"</b></p>";
+                    if(q.img) reviewHtml += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                    
+                    // ৪টি অপশনের কাস্টম ব্যাকগ্রাউন্ড রেন্ডারিং লজিক
+                    var opts = [{k:'ক', v:q.o1}, {k:'খ', v:q.o2}, {k:'গ', v:q.o3}, {k:'ঘ', v:q.o4}];
+                    opts.forEach(function(opt) {
+                        var bgStyle = "background:#f0f0f0; color:#000;";
+                        var tickMark = "";
+                        
+                        if (opt.k === q.ans) {
+                            tickMark = " <span style='color:#27ae60; font-weight:bold;'>✔ (সঠিক উত্তর)</span>";
+                            if (selectedVal === q.ans) {
+                                bgStyle = "background:#d4edda; color:#155724; font-weight:bold; border-color:#c3e6cb;"; // সঠিক উত্তর দিলে সবুজ
+                            }
+                        } else if (selectedVal === opt.k) {
+                            bgStyle = "background:#f8d7da; color:#721c24; border-color:#f5c6cb;"; // ভুল উত্তর দিলে লাল
+                        }
+                        
+                        reviewHtml += "<div style='padding:10px; margin:5px 0; border-radius:6px; border:1px solid #ddd; "+bgStyle+"'>"+opt.k+") "+opt.v+tickMark+"</div>";
+                    });
+                    
+                    reviewHtml += "</div>";
+                });
+                
+                reviewHtml += "</div>";
+                document.getElementById("main").innerHTML = reviewHtml;
+                if(window.MathJax) window.MathJax.typeset();
+            }).catch(e => alert(e.message));
+        }
+    </script>
+</body>
+</html>
