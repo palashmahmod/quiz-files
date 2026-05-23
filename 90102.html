@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>জীববিজ্ঞান ৪র্থ অধ্যায়, টেস্ট: (০২)</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        body{font-family:sans-serif;background:#f4f7f6;padding:15px;margin:0;user-select:none;}
+        .card{background:white;padding:20px;border-radius:12px;max-width:500px;margin:10px auto;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+        .timer{position:fixed;top:0;left:0;width:100%;background:red;color:white;text-align:center;padding:8px;z-index:100;font-weight:bold;}
+        .opt{display:block;padding:12px;background:#f0f0f0;margin:8px 0;border-radius:8px;cursor:pointer;border:1px solid #ddd;}
+        input[type="radio"]{margin-right:10px;}
+        button{width:100%;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
+        .info-p { margin: 5px 0; font-size: 15px; }
+        #exam-box { display:none; margin-top:50px; }
+        .stim-box { background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; margin-bottom: 10px; font-style: italic; color: #555; }
+        mjx-utext { font-family: 'Segoe UI', Tahoma, sans-serif !important; font-style: normal !important; display: inline !important; direction: ltr !important; }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div class="card" id="preview-box">
+            <h2 style="text-align:center; color:#2c3e50;">জীববিজ্ঞান ৪র্থ অধ্যায়, টেস্ট: (০২)</h2>
+            <hr>
+            <p class="info-p"><b>বিষয়:</b> জীববিজ্ঞান</p>
+            <p class="info-p"><b>অধ্যায়:</b> জীবনীশক্তি</p>
+            <p class="info-p"><b>মোট প্রশ্ন:</b> 30টি</p>
+            <p class="info-p"><b>সময়:</b> 30 মিনিট</p>
+            <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
+            <br>
+            <button onclick="startExam()">পরিক্ষা শুরু করুন</button>
+        </div>
+        <div id="exam-box">
+            <div class="timer" id="t">সময় বাকি: --:--</div>
+            <div id="q-list"></div>
+            <div class="card"><button id="submitBtn" onclick="submitQuiz()">জমা দিন</button></div>
+        </div>
+    </div>
+    <script>
+        
+        var firebaseConfig = {
+            apiKey: "AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco",
+            databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com",
+            projectId: "quiz-storage-d8707"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        var db = firebase.database();
+    
+        var questions = [{"stim":"","ques":"সালোকসংশ্লেষণের জন্য সবচেয়ে অনুকূল তাপমাত্রা কত?","img":"","o1":"$0^\\circ\\text{C} - 10^\\circ\\text{C}$","o2":"$22^\\circ\\text{C} - 35^\\circ\\text{C}$","o3":"$40^\\circ\\text{C} - 45^\\circ\\text{C}$","o4":"$50^\\circ\\text{C} - 60^\\circ\\text{C}$","ans":"খ"},{"stim":"","ques":"নিচের কোনটি সালোকসংশ্লেষণের একটি অভ্যন্তরীণ প্রভাবক?","img":"","o1":"আলো","o2":"তাপমাত্রা","o3":"ক্লোরোফিলের পরিমাণ","o4":"কার্বন ডাইঅক্সাইড","ans":"গ"},{"stim":"","ques":"আলোর কোন তরঙ্গদৈর্ঘ্যে সালোকসংশ্লেষণ সবচেয়ে ভালো হয়?","img":"","o1":"লাল ও নীল","o2":"সবুজ ও হলুদ","o3":"বেগুনি ও কমলা","o4":"শুধু সবুজ","ans":"ক"},{"stim":"","ques":"বায়ুমণ্ডলে কার্বন ডাইঅক্সাইডের পরিমাণ খুব বেশি বেড়ে গেলে সালোকসংশ্লেষণের হারের কী পরিবর্তন ঘটে?","img":"","o1":"বৃদ্ধি পায়","o2":"কমে যায়","o3":"অপরিবর্তিত থাকে","o4":"প্রথমে বাড়ে পরে স্থির হয়","ans":"খ"},{"stim":"","ques":"কোন আলোতে সালোকসংশ্লেষণ একেবারেই হয় না বললেই চলে?","img":"","o1":"লাল আলো","o2":"নীল আলো","o3":"সবুজ আলো","o4":"সাদা আলো","ans":"গ"},{"stim":"","ques":"উদ্ভিদের পাতায় ক্লোরোফিলের পরিমাণ অতিরিক্ত কমে গেলে নিচের কোনটি ঘটবে?","img":"","o1":"সালোকসংশ্লেষণের হার বাড়বে","o2":"সালোকসংশ্লেষণের হার কমবে","o3":"শ্বসনের হার বাড়বে","o4":"কোনো পরিবর্তন হবে না","ans":"খ"},{"stim":"নিচের তথ্যের আলোকে (7 থেকে 9) নং প্রশ্নের উত্তর দাও:  <br>  সজীব কোষে প্রতিনিয়ত অসংখ্য জৈব রাসায়নিক বিক্রিয়া ঘটে চলে। এই বিক্রিয়াগুলোর জন্য যে শক্তির প্রয়োজন হয়, তা সরবরাহ করে কোষে থাকা বিশেষ এক ধরণের নিউক্লিওটাইড যৌগ। যৌগটি শক্তি গ্রহণ করে রিচার্জড ব্যাটারির মতো কাজ করে।","ques":"উদ্দীপকের রিচার্জড ব্যাটারির মতো কাজ করা নিউক্লিওটাইড যৌগটি কোনটি?","img":"","o1":"AMP","o2":"ADP","o3":"ATP","o4":"RNA","ans":"গ"},{"stim":"","ques":"উক্ত অণুর গঠনে নাইট্রোজেন বেস হিসেবে কোনটি উপস্থিত থাকে?","img":"","o1":"থায়ামিন","o2":"অ্যাডেনিন","o3":"ইউরাসিল","o4":"সাইটোসিন","ans":"খ"},{"stim":"","ques":"কোষে শক্তি কম থাকলে উদ্দীপকের অণুটি নিচের কোন যৌগে পরিণত হয়?","img":"","o1":"গ্লুকোজ","o2":"পাইরুভিক অ্যাসিড","o3":"ADP","o4":"পানি","ans":"গ"},{"stim":"","ques":"ATP অণুর গঠনে ফসফেট বন্ধনীগুলোর বৈশিষ্ট্য হলো—  <br>  i. এদের বন্ধনী ভাঙলে প্রচুর শক্তি নির্গত হয় <br>  ii. প্রতিটি বন্ধনী মুক্ত হলে সমান শক্তি পাওয়া যায় না <br>  iii. প্রান্তীয় বন্ধনীটি ভাঙলে ৭.৩ কিলোক্যালরি শক্তি পাওয়া যায় <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"গ"},{"stim":"","ques":"শ্বসন প্রক্রিয়ায় ১ অণু গ্লুকোজ সম্পূর্ণ জারিত হলে মোট কত অণু ATP উৎপন্ন হয়?","img":"","o1":"২ অণু","o2":"৪ অণু","o3":"৩৬ অণু বা ৩৮ অণু","o4":"৪০ অণু","ans":"গ"},{"stim":"","ques":"গ্লাইকোলাইসিস পর্যায়টি কোশের কোথায় সংঘটিত হয়?","img":"","o1":"মাইটোকন্ড্রিয়া","o2":"সাইটোপ্লাজম","o3":"ক্লোরোপ্লাস্ট","o4":"রাইবোজোম","ans":"খ"},{"stim":"","ques":"গ্লাইকোলাইসিস প্রক্রিয়ায় ১ অণু গ্লুকোজ ভেঙে কত অণু পাইরুভিক অ্যাসিড তৈরি হয়?","img":"","o1":"১ অণু","o2":"২ অণু","o3":"৩ অণু","o4":"৪ অণু","ans":"খ"},{"stim":"","ques":"পাইরুভিক অ্যাসিডের সংকেত কোনটি?","img":"","o1":"$CH_3COCOOH$","o2":"$C_6H_{12}O_6$","o3":"$CH_3CH_2OH$","o4":"$CH_3COOH$","ans":"ক"},{"stim":"","ques":"অ্যাসিটাইল কো-এ তৈরীর ধাপে কয় কার্বন বিশিষ্ট যৌগ উৎপন্ন হয়?","img":"","o1":"তিন কার্বন","o2":"দুই কার্বন","o3":"চার কার্বন","o4":"ছয় কার্বন","ans":"খ"},{"stim":"","ques":"গ্লাইকোলাইসিস প্রক্রিয়ায় নিট (Net) কত অণু ATP লাভ হয়?","img":"","o1":"২ অণু","o2":"৪ অণু","o3":"৬ অণু","o4":"৮ অণু","ans":"ক"},{"stim":"","ques":"১ অণু $NADH+H^+$ ইলেকট্রন ট্রান্সপোর্ট চেইনে জারিত হয়ে কত অণু ATP তৈরি করে?","img":"","o1":"১ অণু","o2":"২ অণু","o3":"৩ অণু","o4":"৪ অণু","ans":"গ"},{"stim":"নিচের তথ্যের আলোকে (18 ও 19) নং প্রশ্নের উত্তর দাও:  <br>  ল্যাবরেটরিতে একটি জলজ উদ্ভিদ ঝাঁঝি (Hydrilla)-কে পানিতে ডুবিয়ে তার ওপর একটি ফানেল ও টেস্টটিউব উল্টো করে রাখা হলো। সূর্যালোকের উপস্থিতিতে দেখা গেল টেস্টটিউবের ওপরের অংশে বুদবুদ আকারে একটি গ্যাস জমা হচ্ছে।","ques":"টেস্টটিউবে জমা হওয়া বুদবুদ গ্যাসটি আসলে কোনটি?","img":"","o1":"কার্বন ডাইঅক্সাইড","o2":"হাইড্রোজেন","o3":"অক্সিজেন","o4":"নাইট্রোজেন","ans":"গ"},{"stim":"","ques":"উদ্দীপকের এই গ্যাসটি সালোকসংশ্লেষণের কোন ধাপে উৎপন্ন হয়?","img":"","o1":"আলোক-নিরপেক্ষ পর্যায়","o2":"আলোক-নির্ভর পর্যায়","o3":"কেলভিন চক্র","o4":"হাচ ও স্লাক চক্র","ans":"খ"},{"stim":"","ques":"C4 উদ্ভিদের উচ্চ উৎপাদনশীলতার কারণ হলো— <br>  i. এরা তীব্র আলোতেও সালোকসংশ্লেষণ চালিয়ে যেতে পারে <br>  ii. এদের পাতায় আলোক শ্বসন বা ফটোরেসপিরেশন হয় না <br>  iii. এরা কম কার্বন ডাইঅক্সাইড ঘনত্বের পরিবেশেও খাদ্য তৈরি করতে পারে <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"সবাত শ্বসনের কোন ধাপে সবচেয়ে বেশি পরিমাণ শক্তি বা ATP উৎপন্ন হয়?","img":"","o1":"গ্লাইকোলাইসিস","o2":"অ্যাসিটাইল কো-এ সৃষ্টি","o3":"ক্র্যাবস চক্র","o4":"অবাত শ্বসন","ans":"গ"},{"stim":"","ques":"ক্র্যাবস চক্র কোশের কোন অঙ্গাণুতে সংঘটিত হয়?","img":"","o1":"সাইটোপ্লাজম","o2":"মাইটোকন্ড্রিয়া","o3":"গলজি বস্তু","o4":"লাইসোজোম","ans":"খ"},{"stim":"","ques":"১ অণু $FADH_2$ থেকে কত অণু ATP পাওয়া যায়?","img":"","o1":"১ অণু","o2":"২ অণু","o3":"৩ অণু","o4":"৪ অণু","ans":"খ"},{"stim":"","ques":"অবাত শ্বসনে ১ অণু গ্লুকোজ আংশিক জারিত হয়ে নিট কত অণু ATP তৈরি করে?","img":"","o1":"২ অণু","o2":"৪ অণু","o3":"৩৬ অণু","o4":"৩৮ অণু","ans":"ক"},{"stim":"","ques":"ক্র্যাবস চক্রের আবিষ্কারক স্যার হ্যানস ক্র্যাবস কত সালে নোবেল পুরস্কার পান?","img":"","o1":"১৯৫৩","o2":"১৯৬৩","o3":"১৯৪৭","o4":"১৯৩৩","ans":"ক"},{"stim":"","ques":"সবাত শ্বসনের সামগ্রিক সমীকরণে ১ অণু গ্লুকোজের সাথে কত অণু অক্সিজেন প্রয়োজন হয়?","img":"","o1":"৩ অণু","o2":"৬ অণু","o3":"১২ অণু","o4":"১ অণু","ans":"খ"},{"stim":"নিচের তথ্যের আলোকে (27 থেকে 29) নং প্রশ্নের উত্তর দাও:  <br>  একটি কাচের ফ্লাস্কে কিছু অঙ্কুরিত ছোলার বীজ রাখা হলো। ফ্লাস্কের মুখটি কর্ক দিয়ে বন্ধ করে একটি থার্মোমিটার ও চুন ভর্তি ড্রপার যুক্ত করা হলো। কিছুক্ষণ পর দেখা গেল থার্মোমিটারের পারদ স্তম্ভ উপরে উঠছে এবং চুনের পানি ঘোলা হয়ে যাচ্ছে।","ques":"চুনের পানি ঘোলা হওয়ার মাধ্যমে কোন গ্যাসের উপস্থিতি প্রমাণিত হয়?","img":"","o1":"অক্সিজেন","o2":"নাইট্রোজেন","o3":"কার্বন ডাইঅক্সাইড","o4":"ওজোন","ans":"গ"},{"stim":"","ques":"থার্মোমিটারের তাপমাত্রা বৃদ্ধির কারণ কী?","img":"","o1":"বাহ্যিক পরিবেশের তাপ বৃদ্ধি","o2":"শ্বসন প্রক্রিয়ায় তাপশক্তি নির্গত হওয়া","o3":"বীজের ভেতরের জলীয় বাষ্পের ঘনীভবন","o4":"ফ্লাস্কের কাচের বিক্রিয়া","ans":"খ"},{"stim":"","ques":"উদ্দীপকের ছোলার বীজগুলো যদি সিদ্ধ বা মৃত হতো, তবে পরীক্ষায় কী ফলাফল পাওয়া যেত?","img":"","o1":"তাপমাত্রা আরও দ্রুত বাড়ত","o2":"তাপমাত্রা ও গ্যাসের কোনো পরিবর্তন হতো না","o3":"বীজগুলো সবুজ হয়ে যেত","o4":"অক্সিজেন গ্যাস উৎপন্ন হতো","ans":"খ"},{"stim":"","ques":"শ্বসন প্রক্রিয়ার হার কিসের ওপর নির্ভর করে? <br>  i. কোষের বয়স ও কার্যকারিতা <br>  ii. পরিবেশের তাপমাত্রা ও অক্সিজেনের ঘনত্ব <br>  iii. কোষে সঞ্চিত শর্করার পরিমাণ <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"}];
+        var fName = "90102";
+        var timerInterval;
+        var urlParams = new URLSearchParams(window.location.search);
+        var user = {
+            id: urlParams.get('id'),
+            name: urlParams.get('name'),
+            roll: urlParams.get('roll'),
+            cls: urlParams.get('cls'),
+            sec: urlParams.get('sec')
+        };
+        if(user.id){
+            document.getElementById('uName').innerText = user.name;
+            document.getElementById('uIdDisplay').innerText = user.id;
+        }
+        window.onload = function() {
+            var savedTime = localStorage.getItem("timer_" + fName + "_" + user.id);
+            if(savedTime) {
+                var remaining = parseInt(savedTime) - Math.floor(Date.now()/1000);
+                if(remaining > 0) startExam(remaining);
+                else { alert("সময় শেষ হয়ে গেছে!"); submitQuiz(); }
+            }
+        };
+        function saveAns(qIdx, val) {
+            var saved = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            saved[qIdx] = val;
+            localStorage.setItem("ans_" + fName + "_" + user.id, JSON.stringify(saved));
+        }
+        function startExam(existingSec) {
+            if(!existingSec) {
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+            }
+            if(!localStorage.getItem("start_time_" + fName + "_" + user.id)){
+                localStorage.setItem("start_time_" + fName + "_" + user.id, Date.now());
+            }
+            document.getElementById('preview-box').style.display = 'none';
+            document.getElementById('exam-box').style.display = 'block';
+            var list = document.getElementById('q-list');
+            var savedAns = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            var h = "";
+            questions.forEach(function(q, i){
+                var s = savedAns["q"+i] || "";
+                h += "<div class='card'>";
+                if(q.stim && q.stim.trim() !== "") {
+                    h += "<div class='stim-box'>"+q.stim.replace(/\\n/g, '<br>')+"</div>";
+                }
+                // প্রশ্নপত্রের (generated file) জন্য এখানে নিউলাইন হ্যান্ডেল করা হয়েছে
+                h += "<p><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
+                if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক' onchange='saveAns(\"q"+i+"\", \"ক\")' "+(s=='ক'?'checked':'')+"> ক) "+q.o1+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='খ' onchange='saveAns(\"q"+i+"\", \"খ\")' "+(s=='খ'?'checked':'')+"> খ) "+q.o2+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='গ' onchange='saveAns(\"q"+i+"\", \"গ\")' "+(s=='গ'?'checked':'')+"> গ) "+q.o3+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ঘ' onchange='saveAns(\"q"+i+"\", \"ঘ\")' "+(s=='ঘ'?'checked':'')+"> ঘ) "+q.o4+"</label></div>";
+            });
+            list.innerHTML = h;
+            if(window.MathJax) window.MathJax.typeset();
+            var totalSec = existingSec || (30 * 60);
+            if(!existingSec) {
+                var expiry = Math.floor(Date.now()/1000) + totalSec;
+                localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
+            }
+            runTimer(totalSec);
+        }
+        function runTimer(sec) {
+            timerInterval = setInterval(function(){
+                var m = Math.floor(sec/60), s = sec%60;
+                document.getElementById("t").innerText = "সময় বাকি: " + m + ":" + (s < 10 ? "0" : "") + s;
+                if(sec <= 0){ clearInterval(timerInterval); submitQuiz(); }
+                sec--;
+            }, 1000);
+        }
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            var startTime = localStorage.getItem("start_time_" + fName + "_" + user.id) || Date.now();
+            var diff = Math.floor((Date.now() - startTime) / 1000);
+            var mSpent = Math.floor(diff / 60);
+            var sSpent = diff % 60;
+            var timeSpentStr = mSpent + "m " + sSpent + "s";
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "জমা হচ্ছে...";
+            var correct = 0;
+            var wrongNums = [];
+            questions.forEach(function(q, i){
+    var sel = document.querySelector('input[name="q'+i+'"]:checked');
+    if(sel && sel.value === q.ans) { 
+        correct++; 
+    } else { 
+        if(sel) {
+            wrongNums.push((i + 1) + "(" + sel.value + ")");
+        } else {
+            wrongNums.push(i + 1);
+        }
+    }
+});
+            var now = new Date();
+            var resData = {
+                chapter: "জীবনীশক্তি", class: user.cls, correct: correct,
+                date: now.toLocaleDateString('en-GB'), name: user.name,
+                quizTitle: "জীববিজ্ঞান ৪র্থ অধ্যায়, টেস্ট: (০২)", roll: user.roll, section: user.sec,
+                subject: "জীববিজ্ঞান", time: now.toLocaleTimeString(),
+                timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
+                total: questions.length, userId: user.id,
+                wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই"
+            };
+            var resKey = fName + "_" + Date.now();
+            db.ref("QuizResults/" + resKey).set(resData).then(() => {
+                return db.ref("IndividualQuizzes/" + user.id).once('value');
+            }).then(snap => {
+                if(snap.exists()){ snap.forEach(child => { if(child.val().file === fName) child.ref.remove(); }); }
+                localStorage.removeItem("timer_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                alert("পরীক্ষা সফলভাবে জমা হয়েছে!");
+                
+                // রিয়েল-টাইম ফলাফল বিশ্লেষণ ও ডাইনামিক রিভিউ পেজ জেনারেশন
+                var reviewHtml = "<div class='card' style='border-top: 5px solid #27ae60;'>";
+                reviewHtml += "<h2 style='text-align:center; color:#27ae60; margin-bottom:5px;'>🎉 পরীক্ষা সম্পন্ন হয়েছে!</h2>";
+                reviewHtml += "<p style='text-align:center; color:#7f8c8d; margin-top:0;'>আপনার উত্তরপত্র সফলভাবে ডাটাবেসে জমা হয়েছে।</p><hr>";
+                
+                // ১ ও ২ নং নির্দেশনার তথ্য (পরীক্ষার্থী ও পরীক্ষার বিবরণ)
+                reviewHtml += "<table style='width:100%; border-collapse:collapse; margin-bottom:15px; font-size:14px;'>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>পরীক্ষার্থী:</b> "+user.name+"</td><td style='padding:5px; color:#555;'><b>পরীক্ষা:</b> "+document.title+"</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>শ্রেণী-শাখা:</b> "+user.cls+" ("+user.sec+")</td><td style='padding:5px; color:#555;'><b>বিষয়:</b> জীববিজ্ঞান</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>রোল নং:</b> "+user.roll+"</td><td style='padding:5px; color:#555;'><b>অধ্যায়:</b> জীবনীশক্তি</td></tr>";
+                reviewHtml += "</table><hr>";
+                
+                // ৩ ও ৪ নং নির্দেশনার তথ্য (পরিসংখ্যান ও সময়)
+                reviewHtml += "<div style='background:#f8f9fa; padding:12px; border-radius:8px; margin-bottom:20px; font-size:14px; border-left:4px solid #3498db;'>";
+                reviewHtml += "<p style='margin:4px 0;'>📊 <b>মোট প্রশ্ন:</b> "+questions.length+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#27ae60;'>✅ <b>সঠি উত্তর:</b> "+correct+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#e74c3c;'>❌ <b>ভুল ও উত্তরহীন:</b> "+(wrongNums.length > 0 ? wrongNums.join(', ') : 'নাই')+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#7f8c8d;'>📅 <b>তারিখ ও সময়:</b> "+resData.date+" | "+resData.time+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#8e44ad;'>⏱️ <b>ব্যয়কৃত সময়:</b> "+timeSpentStr+"</p>";
+                reviewHtml += "</div>";
+                
+                reviewHtml += "<h3 style='color:#2c3e50; border-bottom:2px solid #eee; padding-bottom:8px;'>📝 প্রশ্নপত্র ও উত্তরপত্র পর্যালোচনা (Review):</h3>";
+                
+                // ৫ নং নির্দেশনার তথ্য (অপশনের ব্যাকগ্রাউন্ড কালার সহ সম্পূর্ণ রিভিউ কার্ড)
+                questions.forEach(function(q, idx){
+                    var selectedRadio = document.querySelector('input[name="q'+idx+'"]:checked');
+                    var selectedVal = selectedRadio ? selectedRadio.value : null;
+                    
+                    reviewHtml += "<div style='margin-bottom:25px; padding-bottom:15px; border-bottom:1px dashed #ddd;'>";
+                    
+                    if(q.stim && q.stim.trim() !== "") {
+                        reviewHtml += "<div class='stim-box'>"+q.stim.replace(/\n/g, '<br>')+"</div>";
+                    }
+                    
+                    reviewHtml += "<p><b>"+(idx+1)+". "+q.ques.replace(/\n/g, '<br>')+"</b></p>";
+                    if(q.img) reviewHtml += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                    
+                    // ৪টি অপশনের কাস্টম ব্যাকগ্রাউন্ড রেন্ডারিং লজিক
+                    var opts = [{k:'ক', v:q.o1}, {k:'খ', v:q.o2}, {k:'গ', v:q.o3}, {k:'ঘ', v:q.o4}];
+                    opts.forEach(function(opt) {
+                        var bgStyle = "background:#f0f0f0; color:#000;";
+                        var tickMark = "";
+                        
+                        if (opt.k === q.ans) {
+                            tickMark = " <span style='color:#27ae60; font-weight:bold;'>✔ (সঠিক উত্তর)</span>";
+                            if (selectedVal === q.ans) {
+                                bgStyle = "background:#d4edda; color:#155724; font-weight:bold; border-color:#c3e6cb;"; // সঠিক উত্তর দিলে সবুজ
+                            }
+                        } else if (selectedVal === opt.k) {
+                            bgStyle = "background:#f8d7da; color:#721c24; border-color:#f5c6cb;"; // ভুল উত্তর দিলে লাল
+                        }
+                        
+                        reviewHtml += "<div style='padding:10px; margin:5px 0; border-radius:6px; border:1px solid #ddd; "+bgStyle+"'>"+opt.k+") "+opt.v+tickMark+"</div>";
+                    });
+                    
+                    reviewHtml += "</div>";
+                });
+                
+                reviewHtml += "</div>";
+                document.getElementById("main").innerHTML = reviewHtml;
+                if(window.MathJax) window.MathJax.typeset();
+            }).catch(e => alert(e.message));
+        }
+    </script>
+</body>
+</html>
