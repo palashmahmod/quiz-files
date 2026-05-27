@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>গণিত টেস্ট - ০১</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        body{font-family:sans-serif;background:#f4f7f6;padding:15px;margin:0;user-select:none;}
+        .card{background:white;padding:20px;border-radius:12px;max-width:500px;margin:10px auto;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+        .timer{position:fixed;top:0;left:0;width:100%;background:red;color:white;text-align:center;padding:8px;z-index:100;font-weight:bold;}
+        .opt{display:block;padding:12px;background:#f0f0f0;margin:8px 0;border-radius:8px;cursor:pointer;border:1px solid #ddd;}
+        input[type="radio"]{margin-right:10px;}
+        button{width:100%;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
+        .info-p { margin: 5px 0; font-size: 15px; }
+        #exam-box { display:none; margin-top:50px; }
+        .stim-box { background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; margin-bottom: 10px; font-style: italic; color: #555; }
+        mjx-utext { font-family: 'Segoe UI', Tahoma, sans-serif !important; font-style: normal !important; display: inline !important; direction: ltr !important; }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div class="card" id="preview-box">
+            <h2 style="text-align:center; color:#2c3e50;">গণিত টেস্ট - ০১</h2>
+            <hr>
+            <p class="info-p"><b>বিষয়:</b> গণিত</p>
+            <p class="info-p"><b>অধ্যায়:</b> প্যাটার্ন, বীজ-৪.১, তথ্য ও উপাত্ত </p>
+            <p class="info-p"><b>মোট প্রশ্ন:</b> 30টি</p>
+            <p class="info-p"><b>সময়:</b> 30 মিনিট</p>
+            <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
+            <br>
+            <button onclick="startExam()">পরিক্ষা শুরু করুন</button>
+        </div>
+        <div id="exam-box">
+            <div class="timer" id="t">সময় বাকি: --:--</div>
+            <div id="q-list"></div>
+            <div class="card"><button id="submitBtn" onclick="submitQuiz()">জমা দিন</button></div>
+        </div>
+    </div>
+    <script>
+        
+        var firebaseConfig = {
+            apiKey: "AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco",
+            databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com",
+            projectId: "quiz-storage-d8707"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        var db = firebase.database();
+    
+        var questions = [{"stim":"","ques":"১, ৫, ১৩, ২৯, ৬১ ..... তালিকার পরবর্তী সংখ্যাটি কত?","img":"","o1":"৬৫","o2":"৭৭","o3":"৯৩","o4":"১২৫","ans":"ঘ"},{"stim":"","ques":"$- ১, ২, ১, ৩, ......$ তালিকার ৬ষ্ঠ পদ কত?","img":"","o1":"৯","o2":"১০","o3":"১১","o4":"১৪","ans":"গ"},{"stim":"","ques":"$(ক^২ - ১)$ বীজগাণিতিক রাশির-   <br>   i. প্রথম পদ শূন্য  <br>  ii. প্রথম চারটি পদের সমষ্টি ২৬  <br>  iii. পাশাপাশি দুটি পদের পার্থক্য ৩  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"$a - \\frac{1}{a} = \\sqrt{3}$ হলে $a^2 + \\frac{1}{a^2}$ এর মান কত?","img":"","o1":"1","o2":"$\\sqrt{5}$","o3":"$2\\sqrt{3}$","o4":"5","ans":"ঘ"},{"stim":"","ques":"$2x + \\frac{2}{x} = 8$ হলে, $x^2 + \\frac{1}{x^2} =$ কত?","img":"","o1":"14","o2":"16","o3":"8","o4":"2","ans":"ক"},{"stim":"","ques":"১৬৪ কে দুইটি বর্গের সমষ্টিরূপে প্রকাশ করা যায় কত উপায়ে?","img":"","o1":"১","o2":"২","o3":"৩","o4":"৪","ans":"ক"},{"stim":"","ques":"১৩০ কে দুটি বর্গের সমষ্টিরূপে প্রকাশ করলে হবে—  <br>  i. $৭^২ + ৮^২$  <br>  ii. $৩^২ + ১১^২$  <br>  iii. $৭^২ + ৯^২$  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"গ"},{"stim":"","ques":"রিফাতের অর্ধ বার্ষিক পরীক্ষায় বিভিন্ন বিষয়ে প্রাপ্ত নম্বর ৭৬, ৮২, ৮৩, ৮৪, ৯০ এর ক্ষেত্রে—    <br>  i.  গড় নম্বর ৮৩ \t  <br>  ii. মোট গণসংখ্যা ৫ \t  <br>  iii. উপাত্তটি বিন্যস্ত    <br> নিচের কোনটি সঠিক ?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"২, ৬, ১০, ১৪, ....তালিকাটির সংখ্যাগুলোকে কোনটি দ্বারা প্রকাশ করা যায়?","img":"","o1":"$৪ক - ১$","o2":"$৩ক + ১$","o3":"$২ক + ১$","o4":"$৪ক - ২$","ans":"ঘ"},{"stim":"","ques":"($৫ক - ৪$) বীজগাণিতীয় রাশিটির—  <br>  i. ৫ম পদ ২১  <br>  ii. প্রথম ২টি পদের সমষ্টি একটি মৌলিক সংখ্যা  <br>  iii. ২৫ তম পদ ১১ দ্বারা বিভাজ্য  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"৩৪০ সংখ্যাটি—  <br>  i. ৫ দ্বারা বিভাজ্য  <br>  ii. মৌলিক সংখ্যা  <br>  iii. $১৪^২ + ১২^২$ এর সমান  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"খ"},{"stim":"","ques":"$(ক^২ + ১)$ বীজগাণিতীয় রাশিটির কত তম পদ ১৪৫?","img":"","o1":"১০ তম","o2":"১২ তম","o3":"২০ তম","o4":"৭২ তম","ans":"খ"},{"stim":"","ques":"$m^4 - 36m^2 + 1 = 0$ হলে $m^2 + \\frac{1}{m^2} =$ কত?","img":"","o1":"32","o2":"34","o3":"36","o4":"38","ans":"গ"},{"stim":"","ques":"$a + b = \\sqrt{5}, a - b = \\sqrt{2}$ হলে, $4ab$ এর মান কত?","img":"","o1":"1","o2":"$\\sqrt{6}$","o3":"$\\sqrt{5}$","o4":"3","ans":"ঘ"},{"stim":"","ques":"$x + y = 2\\sqrt{6}, x - y = 2\\sqrt{5}$ হলে, $4xy$ এর মান কত?","img":"","o1":"0","o2":"4","o3":"8","o4":"12","ans":"খ"},{"stim":"","ques":"$x^2 + \\frac{1}{x^2} = 3$ হলে $x^8 + \\frac{1}{x^8}$ এর মান কত?","img":"","o1":"$\\sqrt{2}$","o2":"7","o3":"47","o4":"49","ans":"গ"},{"stim":"","ques":"$\\frac{x^4 + 1}{x^2} = 4$ হলে, $x + \\frac{1}{x}$ এর মান কত?","img":"","o1":"$\\sqrt{6}$","o2":"2","o3":"$\\sqrt{3}$","o4":"6","ans":"ক"},{"stim":"","ques":"$x^2 + \\frac{1}{x^2} = 5$ হলে $x - \\frac{1}{x}$ এর মান কত?","img":"","o1":"$-2$","o2":"0","o3":"2","o4":"$\\sqrt{3}$","ans":"ঘ"},{"stim":"নিচের তথ্যের আলোকে (19 ও 20) নং প্রশ্নের উত্তর দাও :   <br>  $$a^2 - 1 = 5a$$","ques":"$\\left(a + \\frac{1}{a}\\right)^2 =$ কত?","img":"","o1":"16","o2":"21","o3":"29","o4":"38","ans":"গ"},{"stim":"","ques":"$a^4 + \\frac{1}{a^4}$ এর মান কত?","img":"","o1":"721","o2":"723","o3":"725","o4":"727","ans":"ঘ"},{"stim":"","ques":"প্রথম ৫০টি স্বাভাবিক সংখ্যার যোগফল কত?","img":"","o1":"১২৫০","o2":"১২৭৫","o3":"৬৭৬","o4":"১৩২৬","ans":"খ"},{"stim":"","ques":"কোনো উপাত্তের পরিসর 26 এবং সর্বনিম্ন মান 17 হলে, সর্বোচ্চ মান কত?","img":"","o1":"42","o2":"26","o3":"16","o4":"9","ans":"ক"},{"stim":"","ques":"৫, ১১, ৬, ১১, ১০, ৬, ১০, ৬, ১০ এর প্রচুরক কোনটি?","img":"","o1":"৬ ও ১১","o2":"৫ ও ৬","o3":"১০ ও ১১","o4":"৬ ও ১০","ans":"ঘ"},{"stim":"","ques":"$a^4 + \\frac{1}{a^4} = 47$ হলে $a^2 + \\frac{1}{a^2} =$ কত?","img":"","o1":"6","o2":"$3\\sqrt{5}$","o3":"7","o4":"49","ans":"গ"},{"stim":"","ques":"$p^4 = 167 - \\frac{1}{p^4}$ হলে, $p + \\frac{1}{p} =$ কত?","img":"","o1":"9","o2":"$\\sqrt{15}$","o3":"11","o4":"13","ans":"খ"},{"stim":"","ques":"৩ থেকে ১৫ পর্যন্ত মৌলিক সংখ্যাগুলোর গড় কত?","img":"","o1":"৭.২","o2":"৫.৬","o3":"৭.৮","o4":"১৯.৫","ans":"গ"},{"stim":"","ques":"আয়তলেখের ক্ষেত্রে আয়তের—  <br>  i. ভূমি হয় শ্রেণিব্যাপ্তি  <br>  ii. উচ্চতা হয় গণসংখ্যা  <br>  iii. শ্রেণির মধ্যবিন্দুর প্রয়োজন হয়   <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"নিচের তথ্যের আলোকে (28 ও 29) নং প্রশ্নের উত্তর দাও : কোনো বিদ্যালয়ের অষ্টম শ্রেণির শিক্ষার্থীদের গণিতে প্রাপ্ত নম্বরের গণসংখ্যা সারণি নিম্নরূপ:  <br>  <table border=\"1\" style=\"width:100%; border-collapse: collapse; text-align: center;\">  <tr>    <td>শ্রেণিব্যাপ্তি</td> <td>৩১-৪০</td> <td>৪১-৫০</td> <td>৫১-৬০</td> <td>৬১-৭০</td><td>৭১-৮০</td>  </tr>  <tr>    <td> গণসংখ্যা</td> <td>৬</td> <td>৮</td> <td>১৩</td> <td>১৪</td><td>৭</td>  </tr> </table>","ques":"চতুর্থ শ্রেণির শ্রেণিব্যাপ্তি কত?","img":"","o1":"৯","o2":"১০","o3":"১১","o4":"১৪","ans":"খ"},{"stim":"","ques":"মধ্যক শ্রেণির ঊর্ধ্বসীমা কত?","img":"","o1":"৫১","o2":"৬০","o3":"৫৫.৫","o4":"৬৫.৫","ans":"খ"},{"stim":"","ques":"কেন্দ্রীয় প্রবণতা পরিমাপ করা হয়—    <br>  i.  মধ্যক দ্বারা    <br>  ii. গাণিতিক গড় দ্বারা \t  <br>  iii. প্রচুরক দ্বারা    <br>  নিচের কোনটি সঠিক ?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ঘ"}];
+        var fName = "8101";
+        var timerInterval;
+        var urlParams = new URLSearchParams(window.location.search);
+        var user = {
+            id: urlParams.get('id'),
+            name: urlParams.get('name'),
+            roll: urlParams.get('roll'),
+            cls: urlParams.get('cls'),
+            sec: urlParams.get('sec')
+        };
+        if(user.id){
+            document.getElementById('uName').innerText = user.name;
+            document.getElementById('uIdDisplay').innerText = user.id;
+        }
+        window.onload = function() {
+            var savedTime = localStorage.getItem("timer_" + fName + "_" + user.id);
+            if(savedTime) {
+                var remaining = parseInt(savedTime) - Math.floor(Date.now()/1000);
+                if(remaining > 0) startExam(remaining);
+                else { alert("সময় শেষ হয়ে গেছে!"); submitQuiz(); }
+            }
+        };
+        function saveAns(qIdx, val) {
+            var saved = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            saved[qIdx] = val;
+            localStorage.setItem("ans_" + fName + "_" + user.id, JSON.stringify(saved));
+        }
+        function startExam(existingSec) {
+            if(!existingSec) {
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+            }
+            if(!localStorage.getItem("start_time_" + fName + "_" + user.id)){
+                localStorage.setItem("start_time_" + fName + "_" + user.id, Date.now());
+            }
+            document.getElementById('preview-box').style.display = 'none';
+            document.getElementById('exam-box').style.display = 'block';
+            var list = document.getElementById('q-list');
+            var savedAns = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            var h = "";
+            questions.forEach(function(q, i){
+                var s = savedAns["q"+i] || "";
+                h += "<div class='card'>";
+                if(q.stim && q.stim.trim() !== "") {
+                    h += "<div class='stim-box'>"+q.stim.replace(/\\n/g, '<br>')+"</div>";
+                }
+                // প্রশ্নপত্রের (generated file) জন্য এখানে নিউলাইন হ্যান্ডেল করা হয়েছে
+                h += "<p><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
+                if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক' onchange='saveAns(\"q"+i+"\", \"ক\")' "+(s=='ক'?'checked':'')+"> ক) "+q.o1+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='খ' onchange='saveAns(\"q"+i+"\", \"খ\")' "+(s=='খ'?'checked':'')+"> খ) "+q.o2+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='গ' onchange='saveAns(\"q"+i+"\", \"গ\")' "+(s=='গ'?'checked':'')+"> গ) "+q.o3+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ঘ' onchange='saveAns(\"q"+i+"\", \"ঘ\")' "+(s=='ঘ'?'checked':'')+"> ঘ) "+q.o4+"</label></div>";
+            });
+            list.innerHTML = h;
+            if(window.MathJax) window.MathJax.typeset();
+            var totalSec = existingSec || (30 * 60);
+            if(!existingSec) {
+                var expiry = Math.floor(Date.now()/1000) + totalSec;
+                localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
+            }
+            runTimer(totalSec);
+        }
+        function runTimer(sec) {
+            timerInterval = setInterval(function(){
+                var m = Math.floor(sec/60), s = sec%60;
+                document.getElementById("t").innerText = "সময় বাকি: " + m + ":" + (s < 10 ? "0" : "") + s;
+                if(sec <= 0){ clearInterval(timerInterval); submitQuiz(); }
+                sec--;
+            }, 1000);
+        }
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            var startTime = localStorage.getItem("start_time_" + fName + "_" + user.id) || Date.now();
+            var diff = Math.floor((Date.now() - startTime) / 1000);
+            var mSpent = Math.floor(diff / 60);
+            var sSpent = diff % 60;
+            var timeSpentStr = mSpent + "m " + sSpent + "s";
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "জমা হচ্ছে...";
+            var correct = 0;
+            var wrongNums = [];
+            questions.forEach(function(q, i){
+    var sel = document.querySelector('input[name="q'+i+'"]:checked');
+    if(sel && sel.value === q.ans) { 
+        correct++; 
+    } else { 
+        if(sel) {
+            wrongNums.push((i + 1) + "(" + sel.value + ")");
+        } else {
+            wrongNums.push(i + 1);
+        }
+    }
+});
+            var now = new Date();
+            var resData = {
+                chapter: "প্যাটার্ন, বীজ-৪.১, তথ্য ও উপাত্ত ", class: user.cls, correct: correct,
+                date: now.toLocaleDateString('en-GB'), name: user.name,
+                quizTitle: "গণিত টেস্ট - ০১", roll: user.roll, section: user.sec,
+                subject: "গণিত", time: now.toLocaleTimeString(),
+                timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
+                total: questions.length, userId: user.id,
+                wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই"
+            };
+            var resKey = fName + "_" + Date.now();
+            db.ref("QuizResults/" + resKey).set(resData).then(() => {
+                return db.ref("IndividualQuizzes/" + user.id).once('value');
+            }).then(snap => {
+                if(snap.exists()){ snap.forEach(child => { if(child.val().file === fName) child.ref.remove(); }); }
+                localStorage.removeItem("timer_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                alert("পরীক্ষা সফলভাবে জমা হয়েছে!");
+                
+                // রিয়েল-টাইম ফলাফল বিশ্লেষণ ও ডাইনামিক রিভিউ পেজ জেনারেশন
+                var reviewHtml = "<div class='card' style='border-top: 5px solid #27ae60;'>";
+                reviewHtml += "<h2 style='text-align:center; color:#27ae60; margin-bottom:5px;'>🎉 পরীক্ষা সম্পন্ন হয়েছে!</h2>";
+                reviewHtml += "<p style='text-align:center; color:#7f8c8d; margin-top:0;'>আপনার উত্তরপত্র সফলভাবে ডাটাবেসে জমা হয়েছে।</p><hr>";
+                
+                // ১ ও ২ নং নির্দেশনার তথ্য (পরীক্ষার্থী ও পরীক্ষার বিবরণ)
+                reviewHtml += "<table style='width:100%; border-collapse:collapse; margin-bottom:15px; font-size:14px;'>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>পরীক্ষার্থী:</b> "+user.name+"</td><td style='padding:5px; color:#555;'><b>পরীক্ষা:</b> "+document.title+"</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>শ্রেণী-শাখা:</b> "+user.cls+" ("+user.sec+")</td><td style='padding:5px; color:#555;'><b>বিষয়:</b> গণিত</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>রোল নং:</b> "+user.roll+"</td><td style='padding:5px; color:#555;'><b>অধ্যায়:</b> প্যাটার্ন, বীজ-৪.১, তথ্য ও উপাত্ত </td></tr>";
+                reviewHtml += "</table><hr>";
+                
+                // ৩ ও ৪ নং নির্দেশনার তথ্য (পরিসংখ্যান ও সময়)
+                reviewHtml += "<div style='background:#f8f9fa; padding:12px; border-radius:8px; margin-bottom:20px; font-size:14px; border-left:4px solid #3498db;'>";
+                reviewHtml += "<p style='margin:4px 0;'>📊 <b>মোট প্রশ্ন:</b> "+questions.length+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#27ae60;'>✅ <b>সঠি উত্তর:</b> "+correct+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#e74c3c;'>❌ <b>ভুল ও উত্তরহীন:</b> "+(wrongNums.length > 0 ? wrongNums.join(', ') : 'নাই')+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#7f8c8d;'>📅 <b>তারিখ ও সময়:</b> "+resData.date+" | "+resData.time+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#8e44ad;'>⏱️ <b>ব্যয়কৃত সময়:</b> "+timeSpentStr+"</p>";
+                reviewHtml += "</div>";
+                
+                reviewHtml += "<h3 style='color:#2c3e50; border-bottom:2px solid #eee; padding-bottom:8px;'>📝 প্রশ্নপত্র ও উত্তরপত্র পর্যালোচনা (Review):</h3>";
+                
+                // ৫ নং নির্দেশনার তথ্য (অপশনের ব্যাকগ্রাউন্ড কালার সহ সম্পূর্ণ রিভিউ কার্ড)
+                questions.forEach(function(q, idx){
+                    var selectedRadio = document.querySelector('input[name="q'+idx+'"]:checked');
+                    var selectedVal = selectedRadio ? selectedRadio.value : null;
+                    
+                    reviewHtml += "<div style='margin-bottom:25px; padding-bottom:15px; border-bottom:1px dashed #ddd;'>";
+                    
+                    if(q.stim && q.stim.trim() !== "") {
+                        reviewHtml += "<div class='stim-box'>"+q.stim.replace(/\n/g, '<br>')+"</div>";
+                    }
+                    
+                    reviewHtml += "<p><b>"+(idx+1)+". "+q.ques.replace(/\n/g, '<br>')+"</b></p>";
+                    if(q.img) reviewHtml += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                    
+                    // ৪টি অপশনের কাস্টম ব্যাকগ্রাউন্ড রেন্ডারিং লজিক
+                    var opts = [{k:'ক', v:q.o1}, {k:'খ', v:q.o2}, {k:'গ', v:q.o3}, {k:'ঘ', v:q.o4}];
+                    opts.forEach(function(opt) {
+                        var bgStyle = "background:#f0f0f0; color:#000;";
+                        var tickMark = "";
+                        
+                        if (opt.k === q.ans) {
+                            tickMark = " <span style='color:#27ae60; font-weight:bold;'>✔ (সঠিক উত্তর)</span>";
+                            if (selectedVal === q.ans) {
+                                bgStyle = "background:#d4edda; color:#155724; font-weight:bold; border-color:#c3e6cb;"; // সঠিক উত্তর দিলে সবুজ
+                            }
+                        } else if (selectedVal === opt.k) {
+                            bgStyle = "background:#f8d7da; color:#721c24; border-color:#f5c6cb;"; // ভুল উত্তর দিলে লাল
+                        }
+                        
+                        reviewHtml += "<div style='padding:10px; margin:5px 0; border-radius:6px; border:1px solid #ddd; "+bgStyle+"'>"+opt.k+") "+opt.v+tickMark+"</div>";
+                    });
+                    
+                    reviewHtml += "</div>";
+                });
+                
+                reviewHtml += "</div>";
+                document.getElementById("main").innerHTML = reviewHtml;
+                if(window.MathJax) window.MathJax.typeset();
+            }).catch(e => alert(e.message));
+        }
+    </script>
+</body>
+</html>
