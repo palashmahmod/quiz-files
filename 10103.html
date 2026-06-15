@@ -52,8 +52,38 @@
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         var db = firebase.database();
     
-        var questions = [{"stim":"","ques":"আধুনিক পরিসংখ্যানের জনক কে?","img":"","o1":"স্যার রোনাল্ড অ্যালমার ফিশার","o2":"গটফ্রিড আখেনওয়াল","o3":"কার্ল পিয়ারসন","o4":"ব্লেইজ প্যাসকেল","ans":"ক"},{"stim":"","ques":"কেন্দ্রীয় প্রবণতা পরিমাপের ক্ষেত্রে—   <br>   i. মধ্যক চরম বা প্রান্তিক মান দ্বারা প্রভাবিত হয় না  <br>  ii. প্রচুরক কেবল সারণি পর্যবেক্ষণ করেই আনুমানিক বের করা যায়  <br>  iii. গাণিতিক গড় উপাত্তের সকল মানের ওপর ভিত্তি করে নির্ণীত হয়  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"মানুষের সততা, গায়ের রং কিংবা মেধা—এগুলো কোন ধরনের উপাত্ত?","img":"","o1":"সংখ্যাবাচক উপাত্ত","o2":"বিচ্ছিন্ন উপাত্ত","o3":"গুণবাচক উপাত্ত","o4":"অবিচ্ছিন্ন উপাত্ত","ans":"গ"},{"stim":"","ques":"উপাত্তসমূহকে সহজে বোঝার জন্য এবং আকর্ষণীয়ভাবে উপস্থাপনের সেরা মাধ্যম কোনটি?","img":"","o1":"গণসংখ্যা সারণি","o2":"তালি চিহ্ন","o3":"লেখচিত্র","o4":"গাণিতিক সূত্র","ans":"গ"},{"stim":"","ques":"গাণিতিক গড় থেকে উপাত্তসমূহের বিচ্যুতির বীজগাণিতিক সমষ্টি সর্বদা কত হয়?","img":"","o1":"1","o2":"0","o3":"মোট গণসংখ্যার সমান","o4":"ঋণাত্মক","ans":"খ"},{"stim":"","ques":"কোনো শ্রেণির মধ্যবিন্দু নির্ণয়ে নিচের কোনগুলো আবশ্যক?  <br>  i. শ্রেণির নিম্নসীমা  <br>  ii. শ্রেণির উচ্চসীমা  <br>  iii. শ্রেণির গণসংখ্যা  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"নিচের সারণিটি লক্ষ করো এবং (7 ও 8) নং প্রশ্নের উত্তর দাও:   <br>  <table border=\"1\" style=\"width:100%; border-collapse: collapse; text-align: center;\">   <tr>    <th>শ্রেণি ব্যাপ্তি</th>    <td>50-59</td>    <td>60-69</td>    <td>70-79</td>  </tr>  <tr>    <th>গণসংখ্যা</th>    <td>9</td>    <td>16</td>    <td>5</td>   </tr> </table>","ques":"উদ্দীপকের সারণি অনুযায়ী প্রচুরক শ্রেণি কোনটি?","img":"","o1":"50-59","o2":"60-69","o3":"70-79","o4":"কোনোটিই নয়","ans":"খ"},{"stim":"","ques":"প্রচুরক শ্রেণির গণসংখ্যা ঘনত্ব (Frequency Density) কত?","img":"","o1":"1.6","o2":"16","o3":"2.6","o4":"0.6","ans":"ক"},{"stim":"","ques":"কোনো উপাত্তের মধ্যক 12 এবং গাণিতিক গড় 10 হলে, প্রচুরক কত হবে?","img":"","o1":"22","o2":"2","o3":"16","o4":"14","ans":"গ"},{"stim":"","ques":"গণসংখ্যা ঘনত্ব (Frequency Density) সম্পর্কিত সঠিক তথ্য হলো—  <br>  i. এটি কোনো শ্রেণির গণসংখ্যা ও ওই শ্রেণির ব্যাপ্তির অনুপাত  <br>  ii. অসমান শ্রেণি ব্যাপ্তির ক্ষেত্রে আয়তলেখ আঁকতে এটি প্রয়োজন হয়  <br>  iii. এর গাণিতিক সূত্র হলো: শ্রেণি ব্যাপ্তি $\\div$ গণসংখ্যা  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"উপাত্তের প্রতিটি মানের সাথে 5 যোগ করলে নতুন গাণিতিক গড় পূর্বের গড়ের চেয়ে কত বাড়বে?","img":"","o1":"5 গুণ হবে","o2":"5 কমবে","o3":"5 বাড়বে","o4":"অপরিবর্তিত থাকবে","ans":"গ"},{"stim":"","ques":"আয়তলেখ অঙ্কনের সময় আয়তক্ষেত্রগুলোর ক্ষেত্রফল কার আনুপাতিক হয়?","img":"","o1":"শ্রেণি ব্যবধানের","o2":"গণসংখ্যার","o3":"শ্রেণির মধ্যবিন্দুর","o4":"ক্রমযোজিত গণসংখ্যার","ans":"খ"},{"stim":"","ques":"নিচের কোনটি কেন্দ্রীয় প্রবণতার পরিমাপ নয়?","img":"","o1":"গাণিতিক গড়","o2":"মধ্যক","o3":"প্রচুরক","o4":"পরিসর","ans":"ঘ"},{"stim":"নিচের সারণিটি লক্ষ করো এবং (14 থেকে 16) নং প্রশ্নের উত্তর দাও:   <br>  <table border=\"1\" style=\"width:100%; border-collapse: collapse; text-align: center;\">   <tr>    <th>শ্রেণি ব্যাপ্তি</th>    <td>60-64</td>    <td>65-69</td>    <td>70-78</td>  </tr>  <tr>    <th>গণসংখ্যা</th>    <td>5</td>    <td>11</td>    <td>4</td>   </tr> </table>","ques":"মধ্যক শ্রেণির পূর্ববর্তী শ্রেণির ক্রমযোজিত গণসংখ্যা ($F_c$) কত?","img":"","o1":"5","o2":"11","o3":"16","o4":"4","ans":"ক"},{"stim":"","ques":"উদ্দীপকের সারণি অনুযায়ী প্রচুরক শ্রেণি কোনটি?","img":"","o1":"60-64","o2":"65-69","o3":"70-74","o4":"কোনোটিই নয়","ans":"খ"},{"stim":"","ques":"সারণিটির প্রথম শ্রেণির মধ্যবিন্দু কত?","img":"","o1":"60","o2":"62","o3":"64","o4":"62.5","ans":"খ"},{"stim":"","ques":"কোনো উপাত্তের সবগুলো মান যদি একই হয়, তবে তাদের গড়, মধ্যক ও প্রচুরক কেমন হবে?","img":"","o1":"গড় সবচেয়ে বড় হবে","o2":"প্রচুরক থাকবে না","o3":"সবগুলো পরস্পর সমান হবে","o4":"মধ্যক শূন্য হবে","ans":"গ"},{"stim":"","ques":"4 টি সংখ্যার গড় 20 এবং অন্য 6 টি সংখ্যার গড় 30 হলে, সবগুলো সংখ্যার সম্মিলিত বা ভারযুক্ত গড় কত?","img":"","o1":"25","o2":"26","o3":"24","o4":"27.5","ans":"খ"},{"stim":"","ques":"কোনো শ্রেণির উচ্চসীমা 60 এবং নিম্নসীমা 50 হলে, শ্রেণিটির মধ্যবিন্দু কত?","img":"","o1":"5","o2":"110","o3":"55","o4":"50.5","ans":"খ"},{"stim":"নিচের সারণিটি লক্ষ করো এবং (20 থেকে 22) নং প্রশ্নের উত্তর দাও:   <br>  <table border=\"1\" style=\"width:100%; border-collapse: collapse; text-align: center;\">  <tr>    <th>কাজের সময় <br> (ঘণ্টা)</th>    <td>1-4</td>    <td>5-8</td>    <td>9-12</td>  </tr>  <tr>    <th>গণসংখ্যা</th>    <td>3</td>    <td>8</td>    <td>4</td>  </tr> </table>","ques":"সারণিটির মোট গণসংখ্যার  অর্ধেক  ($\\frac{n}{2}$) এর মান কত?","img":"","o1":"4","o2":"7.5","o3":"8","o4":"15","ans":"খ"},{"stim":"","ques":"প্রথম শ্রেণির ক্রমযোজিত গণসংখ্যা কত?","img":"","o1":"3","o2":"8","o3":"11","o4":"4","ans":"ক"},{"stim":"","ques":"প্রচুরক শ্রেণির নিম্নসীমা কত?","img":"","o1":"1","o2":"5","o3":"9","o4":"8","ans":"খ"},{"stim":"","ques":"গণসংখ্যা বহুভুজ (Frequency Polygon) আসলে কেমন চিত্র?","img":"","o1":"একটি সরলরেখা","o2":"একটি আবদ্ধ বহুভুজ রেখাচিত্র","o3":"একটি বৃত্তাকার চিত্র","o4":"স্তম্ভ চিত্র","ans":"খ"},{"stim":"","ques":"পরিসংখ্যান শব্দটির উৎপত্তিগত ইতিহাস অনুযায়ী—  <br>  i. 'Status' একটি ল্যাটিন শব্দ  <br>  ii. 'Statista' একটি ইতালীয় শব্দ  <br>  iii. 'Statistik' একটি ফরাসি শব্দ  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"নিচের উদ্দীপকটি লক্ষ করে (25 থেকে 28) নম্বর প্রশ্নের উত্তর দিন:   <br>  5 জন শ্রমিকের দৈনিক আয় (টাকায়): 500, 550, 600, 550, 700","ques":"শ্রমিকদের আয়ের প্রচুরক কত টাকা?","img":"","o1":"500","o2":"550","o3":"600","o4":"700","ans":"খ"},{"stim":"","ques":"শ্রমিকদের আয়ের মধ্যক কত টাকা?","img":"","o1":"550","o2":"575","o3":"600","o4":"500","ans":"খ"},{"stim":"","ques":"শ্রমিকদের দৈনিক আয়ের গাণিতিক গড় কত টাকা?","img":"","o1":"550","o2":"580","o3":"600","o4":"590","ans":"খ"},{"stim":"","ques":"শ্রমিকদের সর্বোচ্চ ও সর্বনিম্ন আয়ের পার্থক্য বা ব্যবধান কত টাকা?","img":"","o1":"100","o2":"150","o3":"200","o4":"250","ans":"গ"},{"stim":"","ques":"গণসংখ্যা ঘনত্ব (Frequency Density) নির্ণয়ের সঠিক সূত্র কোনটি?","img":"","o1":"গণসংখ্যা $\\times$ শ্রেণি ব্যাপ্তি","o2":"শ্রেণি ব্যাপ্তি $\\div$ গণসংখ্যা","o3":"গণসংখ্যা $\\div$ শ্রেণি ব্যাপ্তি","o4":"গণসংখ্যা + শ্রেণি ব্যাপ্তি","ans":"গ"},{"stim":"","ques":"কোনো শ্রেণির গণসংখ্যা 15 এবং শ্রেণি ব্যাপ্তি 5 হলে, ওই শ্রেণির গণসংখ্যা ঘনত্ব কত?","img":"","o1":"75","o2":"3","o3":"10","o4":"0.33","ans":"খ"}];
+        var questions = [{"stim":"","ques":"আধুনিক পরিসংখ্যানের জনক কে?","img":"","o1":"স্যার রোনাল্ড অ্যালমার ফিশার","o2":"গটফ্রিড আখেনওয়াল","o3":"কার্ল পিয়ারসন","o4":"ব্লেইজ প্যাসকেল","ans":"ক"},{"stim":"","ques":"কেন্দ্রীয় প্রবণতা পরিমাপের ক্ষেত্রে—   <br>   i. মধ্যক চরম বা প্রান্তিক মান দ্বারা প্রভাবিত হয় না  <br>  ii. প্রচুরক কেবল সারণি পর্যবেক্ষণ করেই আনুমানিক বের করা যায়  <br>  iii. গাণিতিক গড় উপাত্তের সকল মানের ওপর ভিত্তি করে নির্ণীত হয়  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"মানুষের সততা, গায়ের রং কিংবা মেধা—এগুলো কোন ধরনের উপাত্ত?","img":"","o1":"সংখ্যাবাচক উপাত্ত","o2":"বিচ্ছিন্ন উপাত্ত","o3":"গুণবাচক উপাত্ত","o4":"অবিচ্ছিন্ন উপাত্ত","ans":"গ"},{"stim":"","ques":"উপাত্তসমূহকে সহজে বোঝার জন্য এবং আকর্ষণীয়ভাবে উপস্থাপনের সেরা মাধ্যম কোনটি?","img":"","o1":"গণসংখ্যা সারণি","o2":"তালি চিহ্ন","o3":"লেখচিত্র","o4":"গাণিতিক সূত্র","ans":"গ"},{"stim":"","ques":"গাণিতিক গড় থেকে উপাত্তসমূহের বিচ্যুতির বীজগাণিতিক সমষ্টি সর্বদা কত হয়?","img":"","o1":"1","o2":"0","o3":"মোট গণসংখ্যার সমান","o4":"ঋণাত্মক","ans":"খ"},{"stim":"","ques":"কোনো শ্রেণির মধ্যবিন্দু নির্ণয়ে নিচের কোনগুলো আবশ্যক?  <br>  i. শ্রেণির নিম্নসীমা  <br>  ii. শ্রেণির উচ্চসীমা  <br>  iii. শ্রেণির গণসংখ্যা  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"নিচের সারণিটি লক্ষ করো এবং (7 ও 8) নং প্রশ্নের উত্তর দাও:   <br>  <table border=\"1\" style=\"width:100%; border-collapse: collapse; text-align: center;\">   <tr>    <th>শ্রেণি ব্যাপ্তি</th>    <td>50-59</td>    <td>60-69</td>    <td>70-79</td>  </tr>  <tr>    <th>গণসংখ্যা</th>    <td>9</td>    <td>16</td>    <td>5</td>   </tr> </table>","ques":"উদ্দীপকের সারণি অনুযায়ী প্রচুরক শ্রেণি কোনটি?","img":"","o1":"50-59","o2":"60-69","o3":"70-79","o4":"কোনোটিই নয়","ans":"খ"},{"stim":"","ques":"প্রচুরক শ্রেণির গণসংখ্যা ঘনত্ব (Frequency Density) কত?","img":"","o1":"1.6","o2":"16","o3":"2.6","o4":"0.6","ans":"ক"},{"stim":"","ques":"কোনো উপাত্তের মধ্যক 12 এবং গাণিতিক গড় 10 হলে, প্রচুরক কত হবে?","img":"","o1":"22","o2":"2","o3":"16","o4":"14","ans":"গ"},{"stim":"","ques":"গণসংখ্যা ঘনত্ব (Frequency Density) সম্পর্কিত সঠিক তথ্য হলো—  <br>  i. এটি কোনো শ্রেণির গণসংখ্যা ও ওই শ্রেণির ব্যাপ্তির অনুপাত  <br>  ii. অসমান শ্রেণি ব্যাপ্তির ক্ষেত্রে আয়তলেখ আঁকতে এটি প্রয়োজন হয়  <br>  iii. এর গাণিতিক সূত্র হলো: শ্রেণি ব্যাপ্তি $\\div$ গণসংখ্যা  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"উপাত্তের প্রতিটি মানের সাথে 5 যোগ করলে নতুন গাণিতিক গড় পূর্বের গড়ের চেয়ে কত বাড়বে?","img":"","o1":"5 গুণ হবে","o2":"5 কমবে","o3":"5 বাড়বে","o4":"অপরিবর্তিত থাকবে","ans":"গ"},{"stim":"","ques":"আয়তলেখ অঙ্কনের সময় আয়তক্ষেত্রগুলোর ক্ষেত্রফল কার আনুপাতিক হয়?","img":"","o1":"শ্রেণি ব্যবধানের","o2":"গণসংখ্যার","o3":"শ্রেণির মধ্যবিন্দুর","o4":"ক্রমযোজিত গণসংখ্যার","ans":"খ"},{"stim":"","ques":"নিচের কোনটি কেন্দ্রীয় প্রবণতার পরিমাপ নয়?","img":"","o1":"গাণিতিক গড়","o2":"মধ্যক","o3":"প্রচুরক","o4":"পরিসর","ans":"ঘ"},{"stim":"নিচের সারণিটি লক্ষ করো এবং (14 থেকে 16) নং প্রশ্নের উত্তর দাও:   <br>  <table border=\"1\" style=\"width:100%; border-collapse: collapse; text-align: center;\">   <tr>    <th>শ্রেণি ব্যাপ্তি</th>    <td>60-64</td>    <td>65-69</td>    <td>70-78</td>  </tr>  <tr>    <th>গণসংখ্যা</th>    <td>5</td>    <td>11</td>    <td>4</td>   </tr> </table>","ques":"মধ্যক শ্রেণির পূর্ববর্তী শ্রেণির ক্রমযোজিত গণসংখ্যা ($F_c$) কত?","img":"","o1":"5","o2":"11","o3":"16","o4":"4","ans":"ক"},{"stim":"","ques":"উদ্দীপকের সারণি অনুযায়ী প্রচুরক শ্রেণি কোনটি?","img":"","o1":"60-64","o2":"65-69","o3":"70-74","o4":"কোনোটিই নয়","ans":"খ"},{"stim":"","ques":"সারণিটির প্রথম শ্রেণির মধ্যবিন্দু কত?","img":"","o1":"60","o2":"62","o3":"64","o4":"62.5","ans":"খ"},{"stim":"","ques":"কোনো উপাত্তের সবগুলো মান যদি একই হয়, তবে তাদের গড়, মধ্যক ও প্রচুরক কেমন হবে?","img":"","o1":"গড় সবচেয়ে বড় হবে","o2":"প্রচুরক থাকবে না","o3":"সবগুলো পরস্পর সমান হবে","o4":"মধ্যক শূন্য হবে","ans":"গ"},{"stim":"","ques":"4 টি সংখ্যার গড় 20 এবং অন্য 6 টি সংখ্যার গড় 30 হলে, সবগুলো সংখ্যার সম্মিলিত বা ভারযুক্ত গড় কত?","img":"","o1":"25","o2":"26","o3":"24","o4":"27.5","ans":"খ"},{"stim":"","ques":"কোনো শ্রেণির উচ্চসীমা 60 এবং নিম্নসীমা 50 হলে, শ্রেণিটির মধ্যবিন্দু কত?","img":"","o1":"5","o2":"110","o3":"55","o4":"50.5","ans":"খ"},{"stim":"নিচের সারণিটি লক্ষ করো এবং (20 থেকে 22) নং প্রশ্নের উত্তর দাও:   <br>  <table border=\"1\" style=\"width:100%; border-collapse: collapse; text-align: center;\">  <tr>    <th>কাজের সময় <br> (ঘণ্টা)</th>    <td>1-4</td>    <td>5-8</td>    <td>9-12</td>  </tr>  <tr>    <th>গণসংখ্যা</th>    <td>3</td>    <td>8</td>    <td>4</td>  </tr> </table>","ques":"সারণিটির মোট গণসংখ্যার অর্ধেক ($\\frac{n}{2}$) এর মান কত?","img":"","o1":"4","o2":"7.5","o3":"8","o4":"15","ans":"খ"},{"stim":"","ques":"প্রথম শ্রেণির ক্রমযোজিত গণসংখ্যা কত?","img":"","o1":"3","o2":"8","o3":"11","o4":"4","ans":"ক"},{"stim":"","ques":"প্রচুরক শ্রেণির নিম্নসীমা কত?","img":"","o1":"1","o2":"5","o3":"9","o4":"8","ans":"খ"},{"stim":"","ques":"গণসংখ্যা বহুভুজ (Frequency Polygon) আসলে কেমন চিত্র?","img":"","o1":"একটি সরলরেখা","o2":"একটি আবদ্ধ বহুভুজ রেখাচিত্র","o3":"একটি বৃত্তাকার চিত্র","o4":"স্তম্ভ চিত্র","ans":"খ"},{"stim":"","ques":"পরিসংখ্যান শব্দটির উৎপত্তিগত ইতিহাস অনুযায়ী—  <br>  i. 'Status' একটি ল্যাটিন শব্দ  <br>  ii. 'Statista' একটি ইতালীয় শব্দ  <br>  iii. 'Statistik' একটি ফরাসি শব্দ  <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"নিচের উদ্দীপকটি লক্ষ করে (25 থেকে 28) নম্বর প্রশ্নের উত্তর দিন:   <br>  5 জন শ্রমিকের দৈনিক আয় (টাকায়): 500, 550, 600, 550, 700","ques":"শ্রমিকদের আয়ের প্রচুরক কত টাকা?","img":"","o1":"500","o2":"550","o3":"600","o4":"700","ans":"খ"},{"stim":"","ques":"শ্রমিকদের আয়ের মধ্যক কত টাকা?","img":"","o1":"550","o2":"575","o3":"600","o4":"500","ans":"খ"},{"stim":"","ques":"শ্রমিকদের দৈনিক আয়ের গাণিতিক গড় কত টাকা?","img":"","o1":"550","o2":"580","o3":"600","o4":"590","ans":"খ"},{"stim":"","ques":"শ্রমিকদের সর্বোচ্চ ও সর্বনিম্ন আয়ের পার্থক্য বা ব্যবধান কত টাকা?","img":"","o1":"100","o2":"150","o3":"200","o4":"250","ans":"গ"},{"stim":"","ques":"গণসংখ্যা ঘনত্ব (Frequency Density) নির্ণয়ের সঠিক সূত্র কোনটি?","img":"","o1":"গণসংখ্যা $\\times$ শ্রেণি ব্যাপ্তি","o2":"শ্রেণি ব্যাপ্তি $\\div$ গণসংখ্যা","o3":"গণসংখ্যা $\\div$ শ্রেণি ব্যাপ্তি","o4":"গণসংখ্যা + শ্রেণি ব্যাপ্তি","ans":"গ"},{"stim":"","ques":"কোনো শ্রেণির গণসংখ্যা 15 এবং শ্রেণি ব্যাপ্তি 5 হলে, ওই শ্রেণির গণসংখ্যা ঘনত্ব কত?","img":"","o1":"75","o2":"3","o3":"10","o4":"0.33","ans":"খ"}];
         var fName = "10103";
+        
+        // ডাইনামিক ডিভাইস ট্র্যাকিং লজিক (Escaped carefully)
+        function getDeviceInformation() {
+            var ua = navigator.userAgent;
+            var deviceModel = "Unknown Device";
+            
+            if (/android/i.test(ua)) {
+                var matches = ua.match(/Android\s+([^\s;]+);?\s+([^;?)]+)/);
+                if (matches && matches[2]) {
+                    deviceModel = matches[2].trim();
+                } else {
+                    deviceModel = "Android Device";
+                }
+            } else if (/iPhone|iPad|iPod/i.test(ua)) {
+                deviceModel = "Apple iPhone";
+            } else if (/Macintosh/i.test(ua)) {
+                deviceModel = "Mac PC";
+            } else if (/Windows/i.test(ua)) {
+                deviceModel = "Windows PC";
+            }
+
+            var deviceUUID = localStorage.getItem("quiz_device_uuid");
+            if (!deviceUUID) {
+                deviceUUID = 'DEV-' + Math.random().toString(36).substring(2, 11).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
+                localStorage.setItem("quiz_device_uuid", deviceUUID);
+            }
+            return { model: deviceModel, uuid: deviceUUID };
+        }
+        var deviceInfo = getDeviceInformation();
+
         var timerInterval;
         var urlParams = new URLSearchParams(window.location.search);
         var user = {
@@ -99,7 +129,6 @@
                 if(q.stim && q.stim.trim() !== "") {
                     h += "<div class='stim-box'>"+q.stim.replace(/\\n/g, '<br>')+"</div>";
                 }
-                // প্রশ্নপত্রের (generated file) জন্য এখানে নিউলাইন হ্যান্ডেল করা হয়েছে
                 h += "<p><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
                 if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
                 h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক' onchange='saveAns(\"q"+i+"\", \"ক\")' "+(s=='ক'?'checked':'')+"> ক) "+q.o1+"</label>";
@@ -137,17 +166,14 @@
             var correct = 0;
             var wrongNums = [];
             questions.forEach(function(q, i){
-    var sel = document.querySelector('input[name="q'+i+'"]:checked');
-    if(sel && sel.value === q.ans) { 
-        correct++; 
-    } else { 
-        if(sel) {
-            wrongNums.push((i + 1) + "(" + sel.value + ")");
-        } else {
-            wrongNums.push(i + 1);
-        }
-    }
-});
+                var sel = document.querySelector('input[name="q'+i+'"]:checked');
+                if(sel && sel.value === q.ans) { 
+                    correct++; 
+                } else { 
+                    if(sel) { wrongNums.push((i + 1) + "(" + sel.value + ")"); } 
+                    else { wrongNums.push(i + 1); }
+                }
+            });
             var now = new Date();
             var resData = {
                 chapter: "পরিসংখ্যান ", class: user.cls, correct: correct,
@@ -156,7 +182,9 @@
                 subject: "গণিত", time: now.toLocaleTimeString(),
                 timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
                 total: questions.length, userId: user.id,
-                wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই"
+                wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই",
+                deviceModel: deviceInfo.model,
+                deviceIMEI: deviceInfo.uuid
             };
             var resKey = fName + "_" + Date.now();
             db.ref("QuizResults/" + resKey).set(resData).then(() => {
@@ -168,19 +196,17 @@
                 localStorage.removeItem("ans_" + fName + "_" + user.id);
                 alert("পরীক্ষা সফলভাবে জমা হয়েছে!");
                 
-                // রিয়েল-টাইম ফলাফল বিশ্লেষণ ও ডাইনামিক রিভিউ পেজ জেনারেশন
                 var reviewHtml = "<div class='card' style='border-top: 5px solid #27ae60;'>";
-                reviewHtml += "<h2 style='text-align:center; color:#27ae60; margin-bottom:5px;'>🎉 পরীক্ষা সম্পন্ন হয়েছে!</h2>";
-                reviewHtml += "<p style='text-align:center; color:#7f8c8d; margin-top:0;'>আপনার উত্তরপত্র সফলভাবে ডাটাবেসে জমা হয়েছে।</p><hr>";
+                reviewHtml += "<h2 style='text-align:center; color:#27ae60; margin-bottom:5px;'>🎉 পরীক্ষা সম্পন্ন হয়েছে!</h2>";
+                reviewHtml += "<p style='text-align:center; color:#7f8c8d; margin-top:0;'>আপনার উত্তরপত্র সফলভাবে ডাটাবেসে জমা হয়েছে।</p><hr>";
                 
-                // ১ ও ২ নং নির্দেশনার তথ্য (পরীক্ষার্থী ও পরীক্ষার বিবরণ)
                 reviewHtml += "<table style='width:100%; border-collapse:collapse; margin-bottom:15px; font-size:14px;'>";
                 reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>পরীক্ষার্থী:</b> "+user.name+"</td><td style='padding:5px; color:#555;'><b>পরীক্ষা:</b> "+document.title+"</td></tr>";
                 reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>শ্রেণী-শাখা:</b> "+user.cls+" ("+user.sec+")</td><td style='padding:5px; color:#555;'><b>বিষয়:</b> গণিত</td></tr>";
                 reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>রোল নং:</b> "+user.roll+"</td><td style='padding:5px; color:#555;'><b>অধ্যায়:</b> পরিসংখ্যান </td></tr>";
+                reviewHtml += "<tr><td colspan='2' style='padding:5px; color:#e67e22;'><b>ডিভাইস মডেল:</b> "+deviceInfo.model+" ("+deviceInfo.uuid+")</td></tr>";
                 reviewHtml += "</table><hr>";
                 
-                // ৩ ও ৪ নং নির্দেশনার তথ্য (পরিসংখ্যান ও সময়)
                 reviewHtml += "<div style='background:#f8f9fa; padding:12px; border-radius:8px; margin-bottom:20px; font-size:14px; border-left:4px solid #3498db;'>";
                 reviewHtml += "<p style='margin:4px 0;'>📊 <b>মোট প্রশ্ন:</b> "+questions.length+" টি</p>";
                 reviewHtml += "<p style='margin:4px 0; color:#27ae60;'>✅ <b>সঠি উত্তর:</b> "+correct+" টি</p>";
@@ -191,41 +217,28 @@
                 
                 reviewHtml += "<h3 style='color:#2c3e50; border-bottom:2px solid #eee; padding-bottom:8px;'>📝 প্রশ্নপত্র ও উত্তরপত্র পর্যালোচনা (Review):</h3>";
                 
-                // ৫ নং নির্দেশনার তথ্য (অপশনের ব্যাকগ্রাউন্ড কালার সহ সম্পূর্ণ রিভিউ কার্ড)
                 questions.forEach(function(q, idx){
                     var selectedRadio = document.querySelector('input[name="q'+idx+'"]:checked');
                     var selectedVal = selectedRadio ? selectedRadio.value : null;
-                    
                     reviewHtml += "<div style='margin-bottom:25px; padding-bottom:15px; border-bottom:1px dashed #ddd;'>";
-                    
                     if(q.stim && q.stim.trim() !== "") {
                         reviewHtml += "<div class='stim-box'>"+q.stim.replace(/\n/g, '<br>')+"</div>";
                     }
-                    
                     reviewHtml += "<p><b>"+(idx+1)+". "+q.ques.replace(/\n/g, '<br>')+"</b></p>";
                     if(q.img) reviewHtml += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
                     
-                    // ৪টি অপশনের কাস্টম ব্যাকগ্রাউন্ড রেন্ডারিং লজিক
                     var opts = [{k:'ক', v:q.o1}, {k:'খ', v:q.o2}, {k:'গ', v:q.o3}, {k:'ঘ', v:q.o4}];
                     opts.forEach(function(opt) {
                         var bgStyle = "background:#f0f0f0; color:#000;";
                         var tickMark = "";
-                        
                         if (opt.k === q.ans) {
                             tickMark = " <span style='color:#27ae60; font-weight:bold;'>✔ (সঠিক উত্তর)</span>";
-                            if (selectedVal === q.ans) {
-                                bgStyle = "background:#d4edda; color:#155724; font-weight:bold; border-color:#c3e6cb;"; // সঠিক উত্তর দিলে সবুজ
-                            }
-                        } else if (selectedVal === opt.k) {
-                            bgStyle = "background:#f8d7da; color:#721c24; border-color:#f5c6cb;"; // ভুল উত্তর দিলে লাল
-                        }
-                        
+                            if (selectedVal === q.ans) { bgStyle = "background:#d4edda; color:#155724; font-weight:bold; border-color:#c3e6cb;"; }
+                        } else if (selectedVal === opt.k) { bgStyle = "background:#f8d7da; color:#721c24; border-color:#f5c6cb;"; }
                         reviewHtml += "<div style='padding:10px; margin:5px 0; border-radius:6px; border:1px solid #ddd; "+bgStyle+"'>"+opt.k+") "+opt.v+tickMark+"</div>";
                     });
-                    
                     reviewHtml += "</div>";
                 });
-                
                 reviewHtml += "</div>";
                 document.getElementById("main").innerHTML = reviewHtml;
                 if(window.MathJax) window.MathJax.typeset();
