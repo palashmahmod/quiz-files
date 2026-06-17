@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>(৯ম-১০ম) গণিতের ২য় অধ্যায়(সেট), টেস্ট: ০১</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        body{font-family:sans-serif;background:#f4f7f6;padding:15px;margin:0;user-select:none;}
+        .card{background:white;padding:20px;border-radius:12px;max-width:500px;margin:10px auto;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+        .timer{position:fixed;top:0;left:0;width:100%;background:red;color:white;text-align:center;padding:8px;z-index:100;font-weight:bold;}
+        .opt{display:block;padding:12px;background:#f0f0f0;margin:8px 0;border-radius:8px;cursor:pointer;border:1px solid #ddd;}
+        input[type="radio"]{margin-right:10px;}
+        button{width:100%;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
+        .info-p { margin: 5px 0; font-size: 15px; }
+        #exam-box { display:none; margin-top:50px; }
+        .stim-box { background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; margin-bottom: 10px; font-style: italic; color: #555; }
+        mjx-utext { font-family: 'Segoe UI', Tahoma, sans-serif !important; font-style: normal !important; display: inline !important; direction: ltr !important; }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div class="card" id="preview-box">
+            <h2 style="text-align:center; color:#2c3e50;">(৯ম-১০ম) গণিতের ২য় অধ্যায়(সেট), টেস্ট: ০১</h2>
+            <hr>
+            <p class="info-p"><b>বিষয়:</b> গণিত</p>
+            <p class="info-p"><b>অধ্যায়:</b> সেট ও ফাংশন </p>
+            <p class="info-p"><b>মোট প্রশ্ন:</b> 30টি</p>
+            <p class="info-p"><b>সময়:</b> 30 মিনিট</p>
+            <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
+            <br>
+            <button onclick="startExam()">পরিক্ষা শুরু করুন</button>
+        </div>
+        <div id="exam-box">
+            <div class="timer" id="t">সময় বাকি: --:--</div>
+            <div id="q-list"></div>
+            <div class="card"><button id="submitBtn" onclick="submitQuiz()">জমা দিন</button></div>
+        </div>
+    </div>
+    <script>
+        
+        var firebaseConfig = {
+            apiKey: "AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco",
+            databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com",
+            projectId: "quiz-storage-d8707"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        var db = firebase.database();
+    
+        var questions = [{"stim":"","ques":"$A = \\{x \\in \\mathbb{N} : x^2 > 15$ এবং $x^3 < 36\\}$ সেটটির তালিকা রূপ কোনটি?","img":"","o1":"$\\{4\\}$","o2":"$\\varnothing$","o3":"$\\{3, 4\\}$","o4":"$\\{5\\}$","ans":"খ"},{"stim":"","ques":"$A = \\{1, 2\\}$ এবং $B = \\{3, 4\\}$ দুটি সেট হলে—    <br>    i. $A$ ও $B$ পরস্পর নিশ্চেদ সেট  <br>   ii. $A \\cap B = \\varnothing$  <br>   iii. $A \\setminus B = B$  <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"নিচের কোন সেটটি ফাঁকা সেট ($\\varnothing$) নির্দেশ করে?","img":"","o1":"$\\{x \\in \\mathbb{N} : x$ জোড় মৌলিক সংখ্যা $\\}$","o2":"$\\{x \\in \\mathbb{N} : 5 < x < 6\\}$","o3":"$\\{0\\}$","o4":"$\\{x \\in \\mathbb{Z} : x^2 = 4\\}$","ans":"খ"},{"stim":"নিচের উদ্দীপকের আলোকে (4 ও 5) নং প্রশ্নের উত্তর দাও:   <br>   $X = \\{x \\in \\mathbb{N} : x^2 < 10\\}$ এবং $Y = \\{2, 3, 5\\}$ দুটি সেট।","ques":"$X$ সেটের তালিকা রূপ কোনটি?","img":"","o1":"$\\{1, 2, 3\\}$","o2":"$\\{1, 2, 3, 4\\}$","o3":"$\\{0, 1, 2, 3\\}$","o4":"$\\{2, 3\\}$","ans":"ক"},{"stim":"","ques":"$X \\cup Y$ নিচের কোনটি?","img":"","o1":"$\\{2, 3\\}$","o2":"$\\{1, 2, 3, 5\\}$","o3":"$\\{1, 2, 3, 4, 5\\}$","o4":"$\\{5\\}$","ans":"খ"},{"stim":"","ques":"$A = \\{a, b, c\\}$ এবং $B = \\varnothing$ হলে, $A \\times B$ নিচের কোনটি?","img":"","o1":"$\\{a, b, c, 0\\}$","o2":"$\\varnothing$","o3":"$\\{(a, 0), (b, 0), (c, 0)\\}$","o4":"$\\{a, b, c\\}$","ans":"খ"},{"stim":"","ques":"$A = \\{x \\in \\mathbb{N} : x$ মৌলিক সংখ্যা এবং $x \\le 5\\}$ হলে—  <br>   i. $A = \\{2, 3, 5\\}$  <br>   ii. $A$ এর উপসেট সংখ্যা $8$  <br>   iii. $A$ এর বিজোড় উপাদানগুলোর সেট $\\{3, 5\\}$  <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"$A = \\{x \\in \\mathbb{N} : x, 6$ এর গুণিতক এবং $x \\le 20\\}$ সেটটির উপাদান সংখ্যা কত?","img":"","o1":"$2$","o2":"$3$","o3":"$4$","o4":"$6$","ans":"খ"},{"stim":"নিচের উদ্দীপকের আলোকে (9 ও 10) নং প্রশ্নের উত্তর দাও:   <br>   $M = \\{a, b\\}$ এবং $N = \\{b, c\\}$ দুটি সেট।","ques":"$P(M)$ এর উপাদান সংখ্যা কত?","img":"","o1":"$2$","o2":"$3$","o3":"$4$","o4":"$8$","ans":"গ"},{"stim":"","ques":"$M \\times N$ এর উপাদান সংখ্যা কতটি?","img":"","o1":"$2$","o2":"$4$","o3":"$6$","o4":"$8$","ans":"খ"},{"stim":"","ques":"যদি $A = \\{x, y\\}$ হয়, তবে $P(A)$ এর উপসেট সংখ্যা কতটি হবে?","img":"","o1":"$4$","o2":"$8$","o3":"$16$","o4":"$2$","ans":"গ"},{"stim":"","ques":"যদি $U = \\{1, 2, 3, 4, 5, 6, 7\\}$ এবং $A = \\{2, 4, 6\\}$ হয়, তবে $A'$ এর উপাদান সংখ্যা কত?","img":"","o1":"$3$","o2":"$4$","o3":"$5$","o4":"$7$","ans":"খ"},{"stim":"","ques":"ফাঁকা সেট ($\\varnothing$) এর ক্ষেত্রে নিচের তথ্যগুলো লক্ষ করো—  <br>   i. এটি যেকোনো সেটের উপসেট  <br>   ii. এর উপসেট সংখ্যা $1$  <br>   iii. এর প্রকৃত উপসেট সংখ্যা $1$  <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"$A = \\{x \\in \\mathbb{N} : x, 36$ এর গুণনীয়ক$\\}$ সেটের উপাদান সংখ্যা কতটি?","img":"","o1":"$6$","o2":"$7$","o3":"$9$","o4":"$12$","ans":"গ"},{"stim":"নিচের উদ্দীপকের আলোকে (15 ও 16) নং প্রশ্নের উত্তর দাও:   <br>   সার্বিক সেট $U = \\{1, 2, 3, 4, 5, 6, 7, 8\\}$, $A = \\{2, 4, 6\\}$ এবং $B = \\{4, 6, 8\\}$।","ques":"$A \\cap B$ কোনটি?","img":"","o1":"$\\{2, 4, 6, 8\\}$","o2":"$\\{4, 6\\}$","o3":"$\\{2, 8\\}$","o4":"$\\varnothing$","ans":"খ"},{"stim":"","ques":"$(A \\cup B)'$ কোনটি?","img":"","o1":"$\\{1, 3, 5, 7\\}$","o2":"$\\{2, 4, 6, 8\\}$","o3":"$\\{1, 2, 3, 5, 7\\}$","o4":"$\\varnothing$","ans":"ক"},{"stim":"","ques":"$A = \\{1, 2, 3\\}$ এবং $B = \\{4, 5\\}$ হলে, $A \\cap B$ সেটের উপসেট সংখ্যা কত?","img":"","o1":"$0$","o2":"$1$","o3":"$2$","o4":"$4$","ans":"খ"},{"stim":"","ques":"$\\{x \\in \\mathbb{N} : x^2 > 9$ এবং $x^3 < 130\\}$ সেটটির তালিকা রূপ কোনটি?","img":"","o1":"$\\{3, 4, 5\\}$","o2":"$\\{4, 5\\}$","o3":"$\\{4, 5, 6\\}$","o4":"$\\{3, 4\\}$","ans":"খ"},{"stim":"","ques":"ভেনচিত্র (Venn Diagram) এর ক্ষেত্রে নিচের কোন তথ্যগুলো সঠিক?  <br>   i. জন ভেন এর নামানুসারে এর নামকরণ করা হয়  <br>   ii. সার্বিক সেটকে সাধারণত আয়তক্ষেত্র দ্বারা প্রকাশ করা হয়  <br>   iii. উপসেটগুলোকে সাধারণত বৃত্ত বা বৃত্তাভাস দ্বারা প্রকাশ করা হয়  <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"$f(x) = \\frac{x}{x-2}$ একটি ফাংশন হলে—  <br>   i. $x = 2$ এর জন্য ফাংশনটি অসংজ্ঞায়িত  <br>   ii. এর ডোমেন $\\mathbb{R} \\setminus \\{2\\}$  <br>   iii. $f(0) = 0$  <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"$A$ সেটের উপাদান সংখ্যা কতটি?","img":"","o1":"$3$","o2":"$4$","o3":"$5$","o4":"$2$","ans":"গ"},{"stim":"","ques":"$A = \\{a\\}$ হলে, $P(A)$ এর সঠিক রূপ কোনটি?","img":"","o1":"$\\{a, \\varnothing\\}$","o2":"$\\{\\varnothing, \\{a\\}\\}$","o3":"$\\{\\{a\\}\\}$","o4":"$\\{a\\}$","ans":"খ"},{"stim":"","ques":"$A = \\{x \\in \\mathbb{Z} : -2 \\le x \\le 2\\}$ সেটের উপাদান সংখ্যা কতটি?","img":"","o1":"$2$","o2":"$3$","o3":"$4$","o4":"$5$","ans":"ঘ"},{"stim":"","ques":"$A = \\{a, b\\}$ হলে—  <br>   i. $P(A) = \\{\\varnothing, \\{a\\}, \\{b\\}, \\{a, b\\}\\}$  <br>   ii. $P(A)$ এর উপাদান সংখ্যা $4$  <br>   iii. $A$ এর প্রকৃত উপসেট সংখ্যা $3$  <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"কোনো সেটের অনূর্ধ্ব উপসেট বা প্রকৃত উপসেট সংখ্যা নির্ণয়ের সূত্র কী?","img":"","o1":"$2^n$","o2":"$2^n - 1$","o3":"$2^{n-1}$","o4":"$2n - 1$","ans":"খ"},{"stim":"নিচের উদ্দীপকের আলোকে (26 ও 27) নং প্রশ্নের উত্তর দাও:  <br>    $A = \\{x \\in \\mathbb{N} : x$ মৌলিক সংখ্যা এবং $x < 10\\}$ একটি সেট।","ques":"$A$ সেটের তালিকা রূপ নিচের কোনটি?","img":"","o1":"$\\{1, 2, 3, 5, 7\\}$","o2":"$\\{2, 3, 5, 7\\}$","o3":"$\\{3, 5, 7\\}$","o4":"$\\{2, 3, 5, 7, 9\\}$","ans":"খ"},{"stim":"","ques":"$A$ সেটের প্রকৃত উপসেট সংখ্যা কতটি?","img":"","o1":"$15$","o2":"$16$","o3":"$7$","o4":"$8$","ans":"ক"},{"stim":"","ques":"$U = \\{1, 2, 3, 4, 5\\}$ এবং $A = \\{1, 3, 5\\}$ হলে, $A'$ বা $A^c$ কত?","img":"","o1":"$\\{2, 4\\}$","o2":"$\\{1, 3, 5\\}$","o3":"$\\varnothing$","o4":"$\\{1, 2, 3, 4, 5\\}$","ans":"ক"},{"stim":"","ques":"$A = \\{3, 5, 7\\}$ হলে—  <br>   i. $A$ সেটের উপাদান সংখ্যা $3$  <br>   ii. $A$ সেটের প্রকৃত উপসেট সংখ্যা $7$  <br>   iii. $P(A)$ এর উপাদান সংখ্যা $8$  <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"$\\{x \\in \\mathbb{N} : x^2 < 10\\}$ সেটের উপাদান সংখ্যা কতটি?","img":"","o1":"$2$","o2":"$3$","o3":"$4$","o4":"অসংখ্য","ans":"খ"}];
+        var fName = "10109";
+        
+        // ডাইনামিক ডিভাইস ট্র্যাকিং লজিক (Escaped carefully)
+        function getDeviceInformation() {
+            var ua = navigator.userAgent;
+            var deviceModel = "Unknown Device";
+            
+            if (/android/i.test(ua)) {
+                var matches = ua.match(/Android\s+([^\s;]+);?\s+([^;?)]+)/);
+                if (matches && matches[2]) {
+                    deviceModel = matches[2].trim();
+                } else {
+                    deviceModel = "Android Device";
+                }
+            } else if (/iPhone|iPad|iPod/i.test(ua)) {
+                deviceModel = "Apple iPhone";
+            } else if (/Macintosh/i.test(ua)) {
+                deviceModel = "Mac PC";
+            } else if (/Windows/i.test(ua)) {
+                deviceModel = "Windows PC";
+            }
+
+            var deviceUUID = localStorage.getItem("quiz_device_uuid");
+            if (!deviceUUID) {
+                deviceUUID = 'DEV-' + Math.random().toString(36).substring(2, 11).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
+                localStorage.setItem("quiz_device_uuid", deviceUUID);
+            }
+            return { model: deviceModel, uuid: deviceUUID };
+        }
+        var deviceInfo = getDeviceInformation();
+
+        var timerInterval;
+        var urlParams = new URLSearchParams(window.location.search);
+        var user = {
+            id: urlParams.get('id'),
+            name: urlParams.get('name'),
+            roll: urlParams.get('roll'),
+            cls: urlParams.get('cls'),
+            sec: urlParams.get('sec')
+        };
+        if(user.id){
+            document.getElementById('uName').innerText = user.name;
+            document.getElementById('uIdDisplay').innerText = user.id;
+        }
+        window.onload = function() {
+            var savedTime = localStorage.getItem("timer_" + fName + "_" + user.id);
+            if(savedTime) {
+                var remaining = parseInt(savedTime) - Math.floor(Date.now()/1000);
+                if(remaining > 0) startExam(remaining);
+                else { alert("সময় শেষ হয়ে গেছে!"); submitQuiz(); }
+            }
+        };
+        function saveAns(qIdx, val) {
+            var saved = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            saved[qIdx] = val;
+            localStorage.setItem("ans_" + fName + "_" + user.id, JSON.stringify(saved));
+        }
+        function startExam(existingSec) {
+            if(!existingSec) {
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+            }
+            if(!localStorage.getItem("start_time_" + fName + "_" + user.id)){
+                localStorage.setItem("start_time_" + fName + "_" + user.id, Date.now());
+            }
+            document.getElementById('preview-box').style.display = 'none';
+            document.getElementById('exam-box').style.display = 'block';
+            var list = document.getElementById('q-list');
+            var savedAns = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            var h = "";
+            questions.forEach(function(q, i){
+                var s = savedAns["q"+i] || "";
+                h += "<div class='card'>";
+                if(q.stim && q.stim.trim() !== "") {
+                    h += "<div class='stim-box'>"+q.stim.replace(/\\n/g, '<br>')+"</div>";
+                }
+                h += "<p><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
+                if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক' onchange='saveAns(\"q"+i+"\", \"ক\")' "+(s=='ক'?'checked':'')+"> ক) "+q.o1+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='খ' onchange='saveAns(\"q"+i+"\", \"খ\")' "+(s=='খ'?'checked':'')+"> খ) "+q.o2+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='গ' onchange='saveAns(\"q"+i+"\", \"গ\")' "+(s=='গ'?'checked':'')+"> গ) "+q.o3+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ঘ' onchange='saveAns(\"q"+i+"\", \"ঘ\")' "+(s=='ঘ'?'checked':'')+"> ঘ) "+q.o4+"</label></div>";
+            });
+            list.innerHTML = h;
+            if(window.MathJax) window.MathJax.typeset();
+            var totalSec = existingSec || (30 * 60);
+            if(!existingSec) {
+                var expiry = Math.floor(Date.now()/1000) + totalSec;
+                localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
+            }
+            runTimer(totalSec);
+        }
+        function runTimer(sec) {
+            timerInterval = setInterval(function(){
+                var m = Math.floor(sec/60), s = sec%60;
+                document.getElementById("t").innerText = "সময় বাকি: " + m + ":" + (s < 10 ? "0" : "") + s;
+                if(sec <= 0){ clearInterval(timerInterval); submitQuiz(); }
+                sec--;
+            }, 1000);
+        }
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            var startTime = localStorage.getItem("start_time_" + fName + "_" + user.id) || Date.now();
+            var diff = Math.floor((Date.now() - startTime) / 1000);
+            var mSpent = Math.floor(diff / 60);
+            var sSpent = diff % 60;
+            var timeSpentStr = mSpent + "m " + sSpent + "s";
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "জমা হচ্ছে...";
+            var correct = 0;
+            var wrongNums = [];
+            questions.forEach(function(q, i){
+                var sel = document.querySelector('input[name="q'+i+'"]:checked');
+                if(sel && sel.value === q.ans) { 
+                    correct++; 
+                } else { 
+                    if(sel) { wrongNums.push((i + 1) + "(" + sel.value + ")"); } 
+                    else { wrongNums.push(i + 1); }
+                }
+            });
+            var now = new Date();
+            var resData = {
+                chapter: "সেট ও ফাংশন ", class: user.cls, correct: correct,
+                date: now.toLocaleDateString('en-GB'), name: user.name,
+                quizTitle: "(৯ম-১০ম) গণিতের ২য় অধ্যায়(সেট), টেস্ট: ০১", roll: user.roll, section: user.sec,
+                subject: "গণিত", time: now.toLocaleTimeString(),
+                timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
+                total: questions.length, userId: user.id,
+                wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই",
+                deviceModel: deviceInfo.model,
+                deviceIMEI: deviceInfo.uuid
+            };
+            var resKey = fName + "_" + Date.now();
+            db.ref("QuizResults/" + resKey).set(resData).then(() => {
+                return db.ref("IndividualQuizzes/" + user.id).once('value');
+            }).then(snap => {
+                if(snap.exists()){ snap.forEach(child => { if(child.val().file === fName) child.ref.remove(); }); }
+                localStorage.removeItem("timer_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                alert("পরীক্ষা সফলভাবে জমা হয়েছে!");
+                
+                var reviewHtml = "<div class='card' style='border-top: 5px solid #27ae60;'>";
+                reviewHtml += "<h2 style='text-align:center; color:#27ae60; margin-bottom:5px;'>🎉 পরীক্ষা সম্পন্ন হয়েছে!</h2>";
+                reviewHtml += "<p style='text-align:center; color:#7f8c8d; margin-top:0;'>আপনার উত্তরপত্র সফলভাবে ডাটাবেসে জমা হয়েছে।</p><hr>";
+                
+                reviewHtml += "<table style='width:100%; border-collapse:collapse; margin-bottom:15px; font-size:14px;'>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>পরীক্ষার্থী:</b> "+user.name+"</td><td style='padding:5px; color:#555;'><b>পরীক্ষা:</b> "+document.title+"</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>শ্রেণী-শাখা:</b> "+user.cls+" ("+user.sec+")</td><td style='padding:5px; color:#555;'><b>বিষয়:</b> গণিত</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>রোল নং:</b> "+user.roll+"</td><td style='padding:5px; color:#555;'><b>অধ্যায়:</b> সেট ও ফাংশন </td></tr>";
+                reviewHtml += "<tr><td colspan='2' style='padding:5px; color:#e67e22;'><b>ডিভাইস মডেল:</b> "+deviceInfo.model+" ("+deviceInfo.uuid+")</td></tr>";
+                reviewHtml += "</table><hr>";
+                
+                reviewHtml += "<div style='background:#f8f9fa; padding:12px; border-radius:8px; margin-bottom:20px; font-size:14px; border-left:4px solid #3498db;'>";
+                reviewHtml += "<p style='margin:4px 0;'>📊 <b>মোট প্রশ্ন:</b> "+questions.length+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#27ae60;'>✅ <b>সঠি উত্তর:</b> "+correct+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#e74c3c;'>❌ <b>ভুল ও উত্তরহীন:</b> "+(wrongNums.length > 0 ? wrongNums.join(', ') : 'নাই')+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#7f8c8d;'>📅 <b>তারিখ ও সময়:</b> "+resData.date+" | "+resData.time+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#8e44ad;'>⏱️ <b>ব্যয়কৃত সময়:</b> "+timeSpentStr+"</p>";
+                reviewHtml += "</div>";
+                
+                reviewHtml += "<h3 style='color:#2c3e50; border-bottom:2px solid #eee; padding-bottom:8px;'>📝 প্রশ্নপত্র ও উত্তরপত্র পর্যালোচনা (Review):</h3>";
+                
+                questions.forEach(function(q, idx){
+                    var selectedRadio = document.querySelector('input[name="q'+idx+'"]:checked');
+                    var selectedVal = selectedRadio ? selectedRadio.value : null;
+                    reviewHtml += "<div style='margin-bottom:25px; padding-bottom:15px; border-bottom:1px dashed #ddd;'>";
+                    if(q.stim && q.stim.trim() !== "") {
+                        reviewHtml += "<div class='stim-box'>"+q.stim.replace(/\n/g, '<br>')+"</div>";
+                    }
+                    reviewHtml += "<p><b>"+(idx+1)+". "+q.ques.replace(/\n/g, '<br>')+"</b></p>";
+                    if(q.img) reviewHtml += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                    
+                    var opts = [{k:'ক', v:q.o1}, {k:'খ', v:q.o2}, {k:'গ', v:q.o3}, {k:'ঘ', v:q.o4}];
+                    opts.forEach(function(opt) {
+                        var bgStyle = "background:#f0f0f0; color:#000;";
+                        var tickMark = "";
+                        if (opt.k === q.ans) {
+                            tickMark = " <span style='color:#27ae60; font-weight:bold;'>✔ (সঠিক উত্তর)</span>";
+                            if (selectedVal === q.ans) { bgStyle = "background:#d4edda; color:#155724; font-weight:bold; border-color:#c3e6cb;"; }
+                        } else if (selectedVal === opt.k) { bgStyle = "background:#f8d7da; color:#721c24; border-color:#f5c6cb;"; }
+                        reviewHtml += "<div style='padding:10px; margin:5px 0; border-radius:6px; border:1px solid #ddd; "+bgStyle+"'>"+opt.k+") "+opt.v+tickMark+"</div>";
+                    });
+                    reviewHtml += "</div>";
+                });
+                reviewHtml += "</div>";
+                document.getElementById("main").innerHTML = reviewHtml;
+                if(window.MathJax) window.MathJax.typeset();
+            }).catch(e => alert(e.message));
+        }
+    </script>
+</body>
+</html>
