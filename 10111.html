@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>(৯ম-১০ম) গণিতের ২য় অধ্যায়(ফাংশন), টেস্ট: ০১</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        body{font-family:sans-serif;background:#f4f7f6;padding:15px;margin:0;user-select:none;}
+        .card{background:white;padding:20px;border-radius:12px;max-width:500px;margin:10px auto;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+        .timer{position:fixed;top:0;left:0;width:100%;background:red;color:white;text-align:center;padding:8px;z-index:100;font-weight:bold;}
+        .opt{display:block;padding:12px;background:#f0f0f0;margin:8px 0;border-radius:8px;cursor:pointer;border:1px solid #ddd;}
+        input[type="radio"]{margin-right:10px;}
+        button{width:100%;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
+        .info-p { margin: 5px 0; font-size: 15px; }
+        #exam-box { display:none; margin-top:50px; }
+        .stim-box { background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; margin-bottom: 10px; font-style: italic; color: #555; }
+        mjx-utext { font-family: 'Segoe UI', Tahoma, sans-serif !important; font-style: normal !important; display: inline !important; direction: ltr !important; }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div class="card" id="preview-box">
+            <h2 style="text-align:center; color:#2c3e50;">(৯ম-১০ম) গণিতের ২য় অধ্যায়(ফাংশন), টেস্ট: ০১</h2>
+            <hr>
+            <p class="info-p"><b>বিষয়:</b> গণিত</p>
+            <p class="info-p"><b>অধ্যায়:</b> সেট ও ফাংশন</p>
+            <p class="info-p"><b>মোট প্রশ্ন:</b> 30টি</p>
+            <p class="info-p"><b>সময়:</b> 40 মিনিট</p>
+            <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
+            <br>
+            <button onclick="startExam()">পরিক্ষা শুরু করুন</button>
+        </div>
+        <div id="exam-box">
+            <div class="timer" id="t">সময় বাকি: --:--</div>
+            <div id="q-list"></div>
+            <div class="card"><button id="submitBtn" onclick="submitQuiz()">জমা দিন</button></div>
+        </div>
+    </div>
+    <script>
+        
+        var firebaseConfig = {
+            apiKey: "AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco",
+            databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com",
+            projectId: "quiz-storage-d8707"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        var db = firebase.database();
+    
+        var questions = [{"stim":"","ques":"$f(x) = x^2 - 2x + 1$ হলে, $f(1) + f(-1)$ এর মান কত?","img":"","o1":"$0$","o2":"$4$","o3":"$2$","o4":"$1$","ans":"খ"},{"stim":"","ques":"$f(x) = \\frac{x}{x-2}$ হলে, $f(x)$ এর মান $1$ হলে $x$ এর মান কত?","img":"","o1":"$2$","o2":"$0$","o3":"কোন বাস্তব মান নেই","o4":"$1$","ans":"গ"},{"stim":"","ques":"অন্বয় বা রিলেশন $R = \\{(1, 2), (2, 3), (3, 4)\\}$ এর ডোমেন (Domain) কোনটি?","img":"","o1":"$\\{1, 2, 3\\}$","o2":"$\\{2, 3, 4\\}$","o3":"$\\{1, 2, 3, 4\\}$","o4":"$\\{1, 4\\}$","ans":"ক"},{"stim":"","ques":"$g(y) = y^2 + my - 4$ হলে, $m$ এর কোন মানের জন্য $g(-1) = 0$ হবে?","img":"","o1":"$3$","o2":"$-2$","o3":"$-3$","o4":"$2$","ans":"গ"},{"stim":"নিচের উদ্দীপকের আলোকে (5 ও 6) নং প্রশ্নের উত্তর দাও:    <br>   $f(y) = \\frac{2y + 1}{2y - 1}$ একটি ফাংশন।","ques":"$f(1)$ এর মান কত?","img":"","o1":"$1$","o2":"$3$","o3":"$2$","o4":"$0$","ans":"খ"},{"stim":"","ques":"$y$ এর কোন মানের জন্য ফাংশনটি অসংজ্ঞায়িত?","img":"","o1":"1","o2":"-1","o3":"$\\frac{1}{2}$","o4":"$-\\frac{1}{2}$","ans":"গ"},{"stim":"","ques":"$f(x) = 2x^2 + ax - 10$ হলে, $a$ এর কোন মানের জন্য $f(3) = 5$ হবে?","img":"","o1":"$1$","o2":"$-1$","o3":"$2$","o4":"$-2$","ans":"খ"},{"stim":"","ques":"$g(x) = x^3 - 3x^2 + px - 10$ হলে, $p$ এর কোন মানের জন্য $g(5) = 0$ হবে?","img":"","o1":"$8$","o2":"$-8$","o3":"$4$","o4":"$-4$","ans":"খ"},{"stim":"","ques":"অন্বয় $R = \\{(1, 2), (2, 3), (3, 4)\\}$ এর রেঞ্জ (Range) কোনটি?","img":"","o1":"$\\{1, 2, 3\\}$","o2":"$\\{2, 3, 4\\}$","o3":"$\\{1, 4\\}$","o4":"$\\{2, 4\\}$","ans":"খ"},{"stim":"","ques":"$f(x) = \\frac{x-1}{x-1}$ ফাংশনটির ক্ষেত্রে—    <br>    i. $x = 1$ এর জন্য ফাংশনটি অসংজ্ঞায়িত   <br>   ii. $x \\ne 1$ এর জন্য $f(x) = 1$   <br>   iii. এর ডোমেন $\\mathbb{R} \\setminus \\{1\\}$   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"$f(x) = x^2 - 4x + 3$ হলে, $f(1)$ এর মান কত?","img":"","o1":"3","o2":"0","o3":"-1","o4":"8","ans":"খ"},{"stim":"নিচের উদ্দীপকের আলোকে (12 ও 13) নং প্রশ্নের উত্তর দাও:    <br>   $F(x) = \\sqrt{x - 3}$ একটি ফাংশন।","ques":"$F(7)$ এর মান কত?","img":"","o1":"4","o2":"2","o3":"3","o4":"0","ans":"খ"},{"stim":"","ques":"ফাংশনটির ডোমেন নিচের কোনটি?","img":"","o1":"$x \\ge 3$","o2":"$x > 3$","o3":"$x \\le 3$","o4":"$x < 3$","ans":"ক"},{"stim":"","ques":"কোনো অন্বয়ের প্রথম উপাদানগুলোর সেটকে কী বলা হয়?","img":"","o1":"রেঞ্জ","o2":"কো-ডোমেন","o3":"ডোমেন","o4":"ফাংশন","ans":"গ"},{"stim":"","ques":"$B = \\{-1,0,1,2,3\\}$ এবং $S = \\{(x,y): x \\in B, y \\in B$ এবং $y=2x\\}$ অন্বয়টির রেঞ্জ কোনটি?","img":"","o1":"$\\{0,2\\}$","o2":"$\\{0,1\\}$","o3":"$\\{-2,0,2,4,6\\}$","o4":"$\\{1,2,3\\}$","ans":"ক"},{"stim":"","ques":"$P = \\{-3,-2,-1,0,1\\}$ এবং $F = \\{(x,y): x \\in P, y \\in P$ এবং $x-y=1\\}$ অন্বয়টির ডোমেন কোনটি?","img":"","o1":"$\\{-3,-2,-1,0\\}$","o2":"$\\{-3,-2,-1\\}$","o3":"$\\{-2,-1,0,1\\}$","o4":"$\\{-3,-2,-1,0,1\\}$","ans":"গ"},{"stim":"","ques":"$Q = \\{2,4,6,7,8\\}$ এবং $T = \\{(x,y): x \\in Q, y \\in Q$ এবং $2x-3y=2\\}$ অন্বয়টিকে তালিকা পদ্ধতিতে প্রকাশ করলে কোনটি হবে?","img":"","o1":"$\\{(4,2),(7,4)\\}$","o2":"$\\{(2,4),(4,7)\\}$","o3":"$\\{(4,2),(6,4)\\}$","o4":"$\\{(7,4),(8,6)\\}$","ans":"ক"},{"stim":"","ques":"$f(x) = \\frac{1}{x}$ ফাংশনটি $x$ এর কোন মানের জন্য অসংজ্ঞায়িত?","img":"","o1":"1","o2":"-1","o3":"0","o4":"$\\infty$","ans":"গ"},{"stim":"","ques":"$f(x) = x^4 + 5x + 3$ হলে, $f(-1)$ এর মান কত?","img":"","o1":"-1","o2":"9","o3":"-3","o4":"7","ans":"ক"},{"stim":"","ques":"$f(t) = t^2 - 4$ একটি ফাংশন হলে—   <br>   i. $f(2) = 0$   <br>   ii. $f(-2) = 0$   <br>   iii. $f(0) = -4$   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"$f(x) = \\frac{2x+1}{2x-1}$ হলে, $f(-1)$ এর মান কত?","img":"","o1":"$\\frac{1}{3}$","o2":"$-\\frac{1}{3}$","o3":"$3$","o4":"$-3$","ans":"ক"},{"stim":"","ques":"$f(x) = \\frac{4x-7}{2x-4}$ হলে, $f(3)$ এর মান কত?","img":"","o1":"$\\frac{3}{2}$","o2":"$\\frac{5}{2}$","o3":"$2$","o4":"$3$","ans":"খ"},{"stim":"","ques":"$f(x) = \\frac{2x^2+2}{2x^2-2}$ হলে, $f\\left(\\frac{1}{3}\\right)$ এর মান কত?","img":"","o1":"$\\frac{5}{4}$","o2":"$-\\frac{5}{4}$","o3":"$\\frac{4}{5}$","o4":"$-\\frac{4}{5}$","ans":"ঘ"},{"stim":"","ques":"$f(x) = 2x + 1$ একটি ফাংশন হলে, $f(x) = 5$ এর জন্য $x$ এর মান কত?","img":"","o1":"2","o2":"3","o3":"4","o4":"5","ans":"ক"},{"stim":"নিচের উদ্দীপকের আলোকে (25 ও 26) নং প্রশ্নের উত্তর দাও:   <br>   $f(x) = x^2 - 5x + 6$ একটি চলকীয় ফাংশন।","ques":"$f(x) = 0$ হলে, $x$ এর মান কত হবে?","img":"","o1":"$2, 3$","o2":"$-2, -3$","o3":"$1, 6$","o4":"$-1, -6$","ans":"ক"},{"stim":"","ques":"$f(-2)$ এর মান নিচের কোনটি?","img":"","o1":"$0$","o2":"$12$","o3":"$20$","o4":"$-8$","ans":"গ"},{"stim":"","ques":"$g(x) = x^2 - 9$ হলে, $x$ এর কোন মানের জন্য $g(x) = 0$ হবে?","img":"","o1":"$\\pm 3$","o2":"$3$","o3":"$-3$","o4":"$0$","ans":"ক"},{"stim":"","ques":"$f(x) = 3x - 2$ হলে—   <br>   i. $f(x) = 1$ হলে $x = 1$   <br>   ii. $f(0) = -2$   <br>   iii. $f(-1) = -5$   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"ii ও iii","o3":"i ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"$g(x) = \\frac{x^2+1}{x^2-1}$ এবং $\\frac{g\\left(\\frac{1}{x^2}\\right)+2}{g\\left(\\frac{1}{x^2}\\right)-3} = 5$ হলে, $x$ এর মান কত?","img":"","o1":"$\\pm\\sqrt[4]{\\frac{11}{21}}$","o2":"$\\pm\\sqrt[4]{\\frac{13}{21}}$","o3":"$\\pm\\sqrt[4]{\\frac{17}{21}}$","o4":"$\\pm\\sqrt[4]{\\frac{19}{21}}$","ans":"খ"},{"stim":"","ques":"$f(x) = x^3 - kx^2 + 5x - 6$ হলে, $k$ এর কোন মানের জন্য $f(2) = 0$ হবে?","img":"","o1":"$2$","o2":"$3$","o3":"$4$","o4":"$5$","ans":"খ"}];
+        var fName = "10111";
+        
+        // ডাইনামিক ডিভাইস ট্র্যাকিং লজিক (Escaped carefully)
+        function getDeviceInformation() {
+            var ua = navigator.userAgent;
+            var deviceModel = "Unknown Device";
+            
+            if (/android/i.test(ua)) {
+                var matches = ua.match(/Android\s+([^\s;]+);?\s+([^;?)]+)/);
+                if (matches && matches[2]) {
+                    deviceModel = matches[2].trim();
+                } else {
+                    deviceModel = "Android Device";
+                }
+            } else if (/iPhone|iPad|iPod/i.test(ua)) {
+                deviceModel = "Apple iPhone";
+            } else if (/Macintosh/i.test(ua)) {
+                deviceModel = "Mac PC";
+            } else if (/Windows/i.test(ua)) {
+                deviceModel = "Windows PC";
+            }
+
+            var deviceUUID = localStorage.getItem("quiz_device_uuid");
+            if (!deviceUUID) {
+                deviceUUID = 'DEV-' + Math.random().toString(36).substring(2, 11).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
+                localStorage.setItem("quiz_device_uuid", deviceUUID);
+            }
+            return { model: deviceModel, uuid: deviceUUID };
+        }
+        var deviceInfo = getDeviceInformation();
+
+        var timerInterval;
+        var urlParams = new URLSearchParams(window.location.search);
+        var user = {
+            id: urlParams.get('id'),
+            name: urlParams.get('name'),
+            roll: urlParams.get('roll'),
+            cls: urlParams.get('cls'),
+            sec: urlParams.get('sec')
+        };
+        if(user.id){
+            document.getElementById('uName').innerText = user.name;
+            document.getElementById('uIdDisplay').innerText = user.id;
+        }
+        window.onload = function() {
+            var savedTime = localStorage.getItem("timer_" + fName + "_" + user.id);
+            if(savedTime) {
+                var remaining = parseInt(savedTime) - Math.floor(Date.now()/1000);
+                if(remaining > 0) startExam(remaining);
+                else { alert("সময় শেষ হয়ে গেছে!"); submitQuiz(); }
+            }
+        };
+        function saveAns(qIdx, val) {
+            var saved = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            saved[qIdx] = val;
+            localStorage.setItem("ans_" + fName + "_" + user.id, JSON.stringify(saved));
+        }
+        function startExam(existingSec) {
+            if(!existingSec) {
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+            }
+            if(!localStorage.getItem("start_time_" + fName + "_" + user.id)){
+                localStorage.setItem("start_time_" + fName + "_" + user.id, Date.now());
+            }
+            document.getElementById('preview-box').style.display = 'none';
+            document.getElementById('exam-box').style.display = 'block';
+            var list = document.getElementById('q-list');
+            var savedAns = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            var h = "";
+            questions.forEach(function(q, i){
+                var s = savedAns["q"+i] || "";
+                h += "<div class='card'>";
+                if(q.stim && q.stim.trim() !== "") {
+                    h += "<div class='stim-box'>"+q.stim.replace(/\\n/g, '<br>')+"</div>";
+                }
+                h += "<p><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
+                if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক' onchange='saveAns(\"q"+i+"\", \"ক\")' "+(s=='ক'?'checked':'')+"> ক) "+q.o1+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='খ' onchange='saveAns(\"q"+i+"\", \"খ\")' "+(s=='খ'?'checked':'')+"> খ) "+q.o2+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='গ' onchange='saveAns(\"q"+i+"\", \"গ\")' "+(s=='গ'?'checked':'')+"> গ) "+q.o3+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ঘ' onchange='saveAns(\"q"+i+"\", \"ঘ\")' "+(s=='ঘ'?'checked':'')+"> ঘ) "+q.o4+"</label></div>";
+            });
+            list.innerHTML = h;
+            if(window.MathJax) window.MathJax.typeset();
+            var totalSec = existingSec || (40 * 60);
+            if(!existingSec) {
+                var expiry = Math.floor(Date.now()/1000) + totalSec;
+                localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
+            }
+            runTimer(totalSec);
+        }
+        function runTimer(sec) {
+            timerInterval = setInterval(function(){
+                var m = Math.floor(sec/60), s = sec%60;
+                document.getElementById("t").innerText = "সময় বাকি: " + m + ":" + (s < 10 ? "0" : "") + s;
+                if(sec <= 0){ clearInterval(timerInterval); submitQuiz(); }
+                sec--;
+            }, 1000);
+        }
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            var startTime = localStorage.getItem("start_time_" + fName + "_" + user.id) || Date.now();
+            var diff = Math.floor((Date.now() - startTime) / 1000);
+            var mSpent = Math.floor(diff / 60);
+            var sSpent = diff % 60;
+            var timeSpentStr = mSpent + "m " + sSpent + "s";
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "জমা হচ্ছে...";
+            var correct = 0;
+            var wrongNums = [];
+            questions.forEach(function(q, i){
+                var sel = document.querySelector('input[name="q'+i+'"]:checked');
+                if(sel && sel.value === q.ans) { 
+                    correct++; 
+                } else { 
+                    if(sel) { wrongNums.push((i + 1) + "(" + sel.value + ")"); } 
+                    else { wrongNums.push(i + 1); }
+                }
+            });
+            var now = new Date();
+            var resData = {
+                chapter: "সেট ও ফাংশন", class: user.cls, correct: correct,
+                date: now.toLocaleDateString('en-GB'), name: user.name,
+                quizTitle: "(৯ম-১০ম) গণিতের ২য় অধ্যায়(ফাংশন), টেস্ট: ০১", roll: user.roll, section: user.sec,
+                subject: "গণিত", time: now.toLocaleTimeString(),
+                timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
+                total: questions.length, userId: user.id,
+                wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই",
+                deviceModel: deviceInfo.model,
+                deviceIMEI: deviceInfo.uuid
+            };
+            var resKey = fName + "_" + Date.now();
+            db.ref("QuizResults/" + resKey).set(resData).then(() => {
+                return db.ref("IndividualQuizzes/" + user.id).once('value');
+            }).then(snap => {
+                if(snap.exists()){ snap.forEach(child => { if(child.val().file === fName) child.ref.remove(); }); }
+                localStorage.removeItem("timer_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                alert("পরীক্ষা সফলভাবে জমা হয়েছে!");
+                
+                var reviewHtml = "<div class='card' style='border-top: 5px solid #27ae60;'>";
+                reviewHtml += "<h2 style='text-align:center; color:#27ae60; margin-bottom:5px;'>🎉 পরীক্ষা সম্পন্ন হয়েছে!</h2>";
+                reviewHtml += "<p style='text-align:center; color:#7f8c8d; margin-top:0;'>আপনার উত্তরপত্র সফলভাবে ডাটাবেসে জমা হয়েছে।</p><hr>";
+                
+                reviewHtml += "<table style='width:100%; border-collapse:collapse; margin-bottom:15px; font-size:14px;'>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>পরীক্ষার্থী:</b> "+user.name+"</td><td style='padding:5px; color:#555;'><b>পরীক্ষা:</b> "+document.title+"</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>শ্রেণী-শাখা:</b> "+user.cls+" ("+user.sec+")</td><td style='padding:5px; color:#555;'><b>বিষয়:</b> গণিত</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>রোল নং:</b> "+user.roll+"</td><td style='padding:5px; color:#555;'><b>অধ্যায়:</b> সেট ও ফাংশন</td></tr>";
+                reviewHtml += "<tr><td colspan='2' style='padding:5px; color:#e67e22;'><b>ডিভাইস মডেল:</b> "+deviceInfo.model+" ("+deviceInfo.uuid+")</td></tr>";
+                reviewHtml += "</table><hr>";
+                
+                reviewHtml += "<div style='background:#f8f9fa; padding:12px; border-radius:8px; margin-bottom:20px; font-size:14px; border-left:4px solid #3498db;'>";
+                reviewHtml += "<p style='margin:4px 0;'>📊 <b>মোট প্রশ্ন:</b> "+questions.length+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#27ae60;'>✅ <b>সঠি উত্তর:</b> "+correct+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#e74c3c;'>❌ <b>ভুল ও উত্তরহীন:</b> "+(wrongNums.length > 0 ? wrongNums.join(', ') : 'নাই')+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#7f8c8d;'>📅 <b>তারিখ ও সময়:</b> "+resData.date+" | "+resData.time+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#8e44ad;'>⏱️ <b>ব্যয়কৃত সময়:</b> "+timeSpentStr+"</p>";
+                reviewHtml += "</div>";
+                
+                reviewHtml += "<h3 style='color:#2c3e50; border-bottom:2px solid #eee; padding-bottom:8px;'>📝 প্রশ্নপত্র ও উত্তরপত্র পর্যালোচনা (Review):</h3>";
+                
+                questions.forEach(function(q, idx){
+                    var selectedRadio = document.querySelector('input[name="q'+idx+'"]:checked');
+                    var selectedVal = selectedRadio ? selectedRadio.value : null;
+                    reviewHtml += "<div style='margin-bottom:25px; padding-bottom:15px; border-bottom:1px dashed #ddd;'>";
+                    if(q.stim && q.stim.trim() !== "") {
+                        reviewHtml += "<div class='stim-box'>"+q.stim.replace(/\n/g, '<br>')+"</div>";
+                    }
+                    reviewHtml += "<p><b>"+(idx+1)+". "+q.ques.replace(/\n/g, '<br>')+"</b></p>";
+                    if(q.img) reviewHtml += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                    
+                    var opts = [{k:'ক', v:q.o1}, {k:'খ', v:q.o2}, {k:'গ', v:q.o3}, {k:'ঘ', v:q.o4}];
+                    opts.forEach(function(opt) {
+                        var bgStyle = "background:#f0f0f0; color:#000;";
+                        var tickMark = "";
+                        if (opt.k === q.ans) {
+                            tickMark = " <span style='color:#27ae60; font-weight:bold;'>✔ (সঠিক উত্তর)</span>";
+                            if (selectedVal === q.ans) { bgStyle = "background:#d4edda; color:#155724; font-weight:bold; border-color:#c3e6cb;"; }
+                        } else if (selectedVal === opt.k) { bgStyle = "background:#f8d7da; color:#721c24; border-color:#f5c6cb;"; }
+                        reviewHtml += "<div style='padding:10px; margin:5px 0; border-radius:6px; border:1px solid #ddd; "+bgStyle+"'>"+opt.k+") "+opt.v+tickMark+"</div>";
+                    });
+                    reviewHtml += "</div>";
+                });
+                reviewHtml += "</div>";
+                document.getElementById("main").innerHTML = reviewHtml;
+                if(window.MathJax) window.MathJax.typeset();
+            }).catch(e => alert(e.message));
+        }
+    </script>
+</body>
+</html>
