@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>জীববিজ্ঞান (৯ম-১০ম) ৫ম  অধ্যায়, সেট: ০১</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        body{font-family:sans-serif;background:#f4f7f6;padding:15px;margin:0;user-select:none;}
+        .card{background:white;padding:20px;border-radius:12px;max-width:500px;margin:10px auto;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+        .timer{position:fixed;top:0;left:0;width:100%;background:red;color:white;text-align:center;padding:8px;z-index:100;font-weight:bold;}
+        .opt{display:block;padding:12px;background:#f0f0f0;margin:8px 0;border-radius:8px;cursor:pointer;border:1px solid #ddd;}
+        input[type="radio"]{margin-right:10px;}
+        button{width:100%;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
+        .info-p { margin: 5px 0; font-size: 15px; }
+        #exam-box { display:none; margin-top:50px; }
+        .stim-box { background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; margin-bottom: 10px; font-style: italic; color: #555; }
+        mjx-utext { font-family: 'Segoe UI', Tahoma, sans-serif !important; font-style: normal !important; display: inline !important; direction: ltr !important; }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div class="card" id="preview-box">
+            <h2 style="text-align:center; color:#2c3e50;">জীববিজ্ঞান (৯ম-১০ম) ৫ম  অধ্যায়, সেট: ০১</h2>
+            <hr>
+            <p class="info-p"><b>বিষয়:</b> জীববিজ্ঞান</p>
+            <p class="info-p"><b>অধ্যায়:</b> খাদ্য, পুষ্টি ও পরিপাক</p>
+            <p class="info-p"><b>মোট প্রশ্ন:</b> 30টি</p>
+            <p class="info-p"><b>সময়:</b> 30 মিনিট</p>
+            <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
+            <br>
+            <button onclick="startExam()">পরিক্ষা শুরু করুন</button>
+        </div>
+        <div id="exam-box">
+            <div class="timer" id="t">সময় বাকি: --:--</div>
+            <div id="q-list"></div>
+            <div class="card"><button id="submitBtn" onclick="submitQuiz()">জমা দিন</button></div>
+        </div>
+    </div>
+    <script>
+        
+        var firebaseConfig = {
+            apiKey: "AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco",
+            databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com",
+            projectId: "quiz-storage-d8707"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        var db = firebase.database();
+    
+        var questions = [{"stim":"","ques":"ইউরিয়া সারে কোন পুষ্টি উপাদান বিদ্যমান?","img":"","o1":"নাইট্রোজেন","o2":"পটাশিয়াম","o3":"ফসফরাস","o4":"ম্যাগনেসিয়াম","ans":"ক"},{"stim":"","ques":"কোনটির অভাবে পাতার রং হলুদ হয়ে যায়?","img":"","o1":"Fe","o2":"N","o3":"Ca","o4":"Mg","ans":"খ"},{"stim":"","ques":"স্নেহজাতীয় পদার্থের গাঠনিক উপাদান—    <br>    i. কার্বন \t  <br>   ii. অক্সিজেন \t  <br>   iii. হাইড্রোজেন  <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"নিচের অনুচ্ছেদটি পড়ে (4 ও 5) নং প্রশ্নের উত্তর দাও:  <br>   রূপমের উচ্চতা ১.২৫ মিটার এবং ওজন ৫০ কেজি। সে সব সময় আঁশ যুক্ত খাবার খেতে পছন্দ করে।","ques":"রূপমের BMI কত?","img":"","o1":"৩০","o2":"৩২","o3":"৪০","o4":"৫০","ans":"খ"},{"stim":"","ques":"রূপমের পছন্দনীয় খাবার —  <br>   i. মোটা হওয়ার প্রবণতা কমায়  <br>   ii. ক্ষুধা প্রবণতা বাড়ায়  <br>   iii. খাদ্যনালিতে ক্যান্সারের সম্ভাবনা কমায়  <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"খ"},{"stim":"","ques":"প্রাণীর খাদ্যের প্রধান উপাদান কয়টি?","img":"","o1":"৩টি","o2":"৪টি","o3":"৫টি","o4":"৬টি","ans":"ক"},{"stim":"","ques":"১ গ্রাম শর্করা থেকে কত কিলোক্যালরি শক্তি উৎপন্ন হয়?","img":"","o1":"৪.১ কিলোক্যালরি","o2":"৯.৩ কিলোক্যালরি","o3":"৫.৬ কিলোক্যালরি","o4":"৭.০ কিলোক্যালরি","ans":"ক"},{"stim":"","ques":"যকৃৎকে মানবদেহের অত্যন্ত গুরুত্বপূর্ণ অঙ্গ বলা হয়, কারণ এটি—  <br>   i. পিত্তরস তৈরি করে পিত্তথলিতে জমা রাখে  <br>   ii. উদ্বৃত্ত গ্লুকোজকে গ্লাইকোজেন হিসেবে সঞ্চয় করে  <br>   iii. অতিরিক্ত অ্যামিনো অ্যাসিড ভেঙে ইউরিয়া তৈরি করে  <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"১ গ্রাম চর্বি বা স্নেহ জাতীয় খাদ্য থেকে কত কিলোক্যালরি শক্তি পাওয়া যায়?","img":"","o1":"৪.১ কিলোক্যালরি","o2":"৯.৩ কিলোক্যালরি","o3":"৪.৫ কিলোক্যালরি","o4":"৭.৩ কিলোক্যালরি","ans":"খ"},{"stim":"","ques":"সুষম খাদ্যের পিরামিডের একদম নিচের স্তরে কোন জাতীয় খাদ্য থাকে?","img":"","o1":"স্নেহ জাতীয়","o2":"আমিষ জাতীয়","o3":"ভিটামিন ও খনিজ","o4":"শর্করা জাতীয়","ans":"ঘ"},{"stim":"","ques":"কিলোক্যালরি ও কিলোজুলের মধ্যে সম্পর্ক স্থাপনের সঠিক সূত্র কোনটি?","img":"","o1":"$১\\text{ kcal} \\approx ৪.২\\text{ kJ}$","o2":"$১\\text{ kJ} \\approx ৪.২\\text{ kcal}$","o3":"$১\\text{ kcal} \\approx ৯.৩\\text{ kJ}$","o4":"$১\\text{ kJ} \\approx ৯.৩\\text{ kcal}$","ans":"ক"},{"stim":"","ques":"BMI এর পূর্ণরূপ কী?","img":"","o1":"Body Mass Index","o2":"Body Muscle Index","o3":"Body Measurement Index","o4":"Basic Mass Index","ans":"ক"},{"stim":"নিচের অনুচ্ছেদটি পড়ে (13 ও 14) নং প্রশ্নের উত্তর দাও:  <br>    তামিমের বয়স ১৫ বছর। সে প্রতিদিনের খাদ্যতালিকায় এমনভাবে খাবার নির্বাচন করে যেখানে শর্করা, আমিষ, স্নেহ, ভিটামিন, খনিজ লবণ ও পানি সঠিক অনুপাতে থাকে। সে একটি চিত্রের মাধ্যমে তার খাদ্যের স্তরগুলো সাজিয়ে দেখেছে।","ques":"তামিমের তৈরি করা স্তরভিত্তিক খাদ্য চিত্রটিকে পুষ্টিবিজ্ঞানের ভাষায় কী বলা হয়?","img":"","o1":"খাদ্য তালিকা","o2":"আদর্শ খাদ্য পিরামিড","o3":"ক্যালরি চার্ট","o4":"পুষ্টি চক্র","ans":"খ"},{"stim":"","ques":"উক্ত চিত্রের একদম শীর্ষদেশে কোন জাতীয় খাদ্যের অবস্থান?","img":"","o1":"শর্করা","o2":"ফলমূল ও শাকসবজি","o3":"মাছ ও মাংস","o4":"তেল ও চর্বি","ans":"ঘ"},{"stim":"","ques":"BMI নির্ণয়ের সঠিক গাণিতিক সূত্র কোনটি?","img":"","o1":"$\\text{BMI} = \\frac{\\text{ওজন (কেজি)}}{\\text{উচ্চতা (মিটার)}^২}$","o2":"$\\text{BMI} = \\frac{\\text{উচ্চতা (মিটার)}}{\\text{ওজন (কেজি)}^২}$","o3":"$\\text{BMI} = \\text{ওজন (কেজি)} \\times \\text{উচ্চতা (মিটার)}^২$","o4":"$\\text{BMI} = \\frac{\\text{ওজন (গ্রাম)}}{\\text{উচ্চতা (সেন্টিমিটার)}^২}$","ans":"ক"},{"stim":"","ques":"একজন প্রাপ্তবয়স্ক মানুষের BMI এর আদর্শ মান কত ধরা হয়?","img":"","o1":"১৮.৫ থেকে ২৪.৯","o2":"২৫.০ থেকে ২৯.৯","o3":"৩০.০ থেকে ৩৪.৯","o4":"১৫.০ থেকে ১৮.৪","ans":"ক"},{"stim":"","ques":"কোনো ব্যক্তির উচ্চতা ১.৫ মিটার এবং ওজন ৪৫ কেজি হলে তার BMI কত?","img":"","o1":"১৫","o2":"১৮.৫","o3":"২০","o4":"২৫","ans":"গ"},{"stim":"","ques":"BMR এর পূর্ণরূপ কী?","img":"","o1":"Body Metabolic Rate","o2":"Basal Metabolic Rate","o3":"Basic Muscle Rate","o4":"Body Mass Ratio","ans":"খ"},{"stim":"","ques":"পাকস্থলীতে প্রধানত কোন জাতীয় খাদ্য পরিপাক হয়?","img":"","o1":"শর্করা","o2":"স্নেহ","o3":"আমিষ","o4":"ভিটামিন","ans":"গ"},{"stim":"","ques":"অগ্ন্যাশয় রস থেকে নিঃসৃত এনজাইমগুলো হলো—  <br>   i. ট্রিপসিন  <br>   ii. অ্যামাইলেজ  <br>   iii. লাইপেজ  <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"নিষ্ক্রিয় পেপসিনোজেনকে সক্রিয় পেপসিনে রূপান্তর করে কোনটি?","img":"","o1":"লালা রস","o2":"HCl","o3":"পিত্তরস","o4":"ট্রিপসিন","ans":"গ"},{"stim":"","ques":"মানবদেহের বৃহত্তম গ্রন্থি কোনটি?","img":"","o1":"অগ্ন্যাশয়","o2":"থাইরয়েড","o3":"যকৃৎ (Liver)","o4":"পিটুইটারি","ans":"গ"},{"stim":"","ques":"যকৃৎ থেকে নিঃসৃত পিত্তরস কোথায় জমা থাকে?","img":"","o1":"পাকস্থলীতে","o2":"পিত্তথলিতে","o3":"অগ্ন্যাশয়ে","o4":"অ্যাপেন্ডিক্সে","ans":"খ"},{"stim":"","ques":"পরিপাককৃত খাদ্য মূলত পরিপাকতন্ত্রের কোন অংশে শোষিত হয়?","img":"","o1":"পাকস্থলী","o2":"ক্ষুদ্রান্ত্র","o3":"বৃহদান্ত্র","o4":"মলাশয়","ans":"খ"},{"stim":"","ques":"বৃহদান্ত্রের প্রধান কাজ কোনটি?","img":"","o1":"আমিষ পরিপাক করা","o2":"পানি ও কিছু খনিজ লবণ শোষণ করা","o3":"পিত্তরস তৈরি করা","o4":"চর্বি জাতীয় খাদ্য ভেঙে ফেলা","ans":"খ"},{"stim":"","ques":"ক্ষুদ্রান্ত্রের ভিলাই (Villi)-এর কাজ হলো—  <br>   i. পরিপাক হওয়া সরল খাদ্য উপাদান শোষণ করা  <br>   ii. খাদ্যের অপাচ্য অংশ থেকে পানি শোষণ করা  <br>   iii. শোষিত খাদ্য রক্ত ও লসিকা নালীতে পৌঁছে দেওয়া  <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"খ"},{"stim":"নিচের অনুচ্ছেদটি পড়ে (27 ও 28) নং প্রশ্নের উত্তর দাও:  <br>    রাসেল ল্যাবে পরীক্ষা করে দেখল ১ গ্রাম ওজনের একটি খাদ্য উপাদান থেকে ৪.১ কিলোক্যালরি শক্তি পাওয়া যায়। অপরদিকে আরেকটি উপাদান থেকে ৯.৩ কিলোক্যালরি শক্তি উৎপন্ন হয়।","ques":"রাসেলের প্রথম উপাদানটি নিচের কোন খাদ্যের প্রতিনিধিত্ব করে?","img":"","o1":"সরিষার তেল","o2":"মাখন","o3":"চাল বা গম","o4":"খনিজ লবণ","ans":"গ"},{"stim":"","ques":"দ্বিতীয় উপাদানটির ১ গ্রাম থেকে প্রাপ্ত শক্তিকে জুলে (Joule) রূপান্তর করলে তার মান কত হবে?","img":"","o1":"$১\\text{ kcal} \\approx ৪.২\\text{ kJ}$ সূত্রে প্রায় ৩৯ কিলোজুল","o2":"প্রায় ১৭ কিলোজুল","o3":"প্রায় ৪.২ কিলোজুল","o4":"প্রায় ৯.৩ কিলোজুল","ans":"ক"},{"stim":"","ques":"প্রতিদিনের খাদ্যতালিকায় রাফেজ বা আঁশযুক্ত খাবার রাখার প্রয়োজনীয়তা হলো—  <br>   i. এটি কোষ্ঠকাঠিন্য দূর করতে সাহায্য করে  <br>   ii. এটি পরিপাক নালীর ক্যানসারের ঝুঁকি কমায়  <br>   iii. এটি দেহকে প্রচুর পরিমাণে তাপ ও শক্তি সরবরাহ করে  <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"অ্যাপেন্ডিক্স নামক অংশটি পরিপাকতন্ত্রের কোন অংশের সাথে যুক্ত থাকে?","img":"","o1":"পাকস্থলী","o2":"যকৃৎ","o3":"সিকাম","o4":"রেকটাম","ans":"গ"}];
+        var fName = "91010501";
+        
+        // ডাইনামিক ডিভাইস ট্র্যাকিং লজিক (Escaped carefully)
+        function getDeviceInformation() {
+            var ua = navigator.userAgent;
+            var deviceModel = "Unknown Device";
+            
+            if (/android/i.test(ua)) {
+                var matches = ua.match(/Android\s+([^\s;]+);?\s+([^;?)]+)/);
+                if (matches && matches[2]) {
+                    deviceModel = matches[2].trim();
+                } else {
+                    deviceModel = "Android Device";
+                }
+            } else if (/iPhone|iPad|iPod/i.test(ua)) {
+                deviceModel = "Apple iPhone";
+            } else if (/Macintosh/i.test(ua)) {
+                deviceModel = "Mac PC";
+            } else if (/Windows/i.test(ua)) {
+                deviceModel = "Windows PC";
+            }
+
+            var deviceUUID = localStorage.getItem("quiz_device_uuid");
+            if (!deviceUUID) {
+                deviceUUID = 'DEV-' + Math.random().toString(36).substring(2, 11).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
+                localStorage.setItem("quiz_device_uuid", deviceUUID);
+            }
+            return { model: deviceModel, uuid: deviceUUID };
+        }
+        var deviceInfo = getDeviceInformation();
+
+        var timerInterval;
+        var urlParams = new URLSearchParams(window.location.search);
+        var user = {
+            id: urlParams.get('id'),
+            name: urlParams.get('name'),
+            roll: urlParams.get('roll'),
+            cls: urlParams.get('cls'),
+            sec: urlParams.get('sec')
+        };
+        if(user.id){
+            document.getElementById('uName').innerText = user.name;
+            document.getElementById('uIdDisplay').innerText = user.id;
+        }
+        window.onload = function() {
+            var savedTime = localStorage.getItem("timer_" + fName + "_" + user.id);
+            if(savedTime) {
+                var remaining = parseInt(savedTime) - Math.floor(Date.now()/1000);
+                if(remaining > 0) startExam(remaining);
+                else { alert("সময় শেষ হয়ে গেছে!"); submitQuiz(); }
+            }
+        };
+        function saveAns(qIdx, val) {
+            var saved = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            saved[qIdx] = val;
+            localStorage.setItem("ans_" + fName + "_" + user.id, JSON.stringify(saved));
+        }
+        function startExam(existingSec) {
+            if(!existingSec) {
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+            }
+            if(!localStorage.getItem("start_time_" + fName + "_" + user.id)){
+                localStorage.setItem("start_time_" + fName + "_" + user.id, Date.now());
+            }
+            document.getElementById('preview-box').style.display = 'none';
+            document.getElementById('exam-box').style.display = 'block';
+            var list = document.getElementById('q-list');
+            var savedAns = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            var h = "";
+            questions.forEach(function(q, i){
+                var s = savedAns["q"+i] || "";
+                h += "<div class='card'>";
+                if(q.stim && q.stim.trim() !== "") {
+                    h += "<div class='stim-box'>"+q.stim.replace(/\\n/g, '<br>')+"</div>";
+                }
+                h += "<p><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
+                if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক' onchange='saveAns(\"q"+i+"\", \"ক\")' "+(s=='ক'?'checked':'')+"> ক) "+q.o1+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='খ' onchange='saveAns(\"q"+i+"\", \"খ\")' "+(s=='খ'?'checked':'')+"> খ) "+q.o2+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='গ' onchange='saveAns(\"q"+i+"\", \"গ\")' "+(s=='গ'?'checked':'')+"> গ) "+q.o3+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ঘ' onchange='saveAns(\"q"+i+"\", \"ঘ\")' "+(s=='ঘ'?'checked':'')+"> ঘ) "+q.o4+"</label></div>";
+            });
+            list.innerHTML = h;
+            if(window.MathJax) window.MathJax.typeset();
+            var totalSec = existingSec || (30 * 60);
+            if(!existingSec) {
+                var expiry = Math.floor(Date.now()/1000) + totalSec;
+                localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
+            }
+            runTimer(totalSec);
+        }
+        function runTimer(sec) {
+            timerInterval = setInterval(function(){
+                var m = Math.floor(sec/60), s = sec%60;
+                document.getElementById("t").innerText = "সময় বাকি: " + m + ":" + (s < 10 ? "0" : "") + s;
+                if(sec <= 0){ clearInterval(timerInterval); submitQuiz(); }
+                sec--;
+            }, 1000);
+        }
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            var startTime = localStorage.getItem("start_time_" + fName + "_" + user.id) || Date.now();
+            var diff = Math.floor((Date.now() - startTime) / 1000);
+            var mSpent = Math.floor(diff / 60);
+            var sSpent = diff % 60;
+            var timeSpentStr = mSpent + "m " + sSpent + "s";
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "জমা হচ্ছে...";
+            var correct = 0;
+            var wrongNums = [];
+            questions.forEach(function(q, i){
+                var sel = document.querySelector('input[name="q'+i+'"]:checked');
+                if(sel && sel.value === q.ans) { 
+                    correct++; 
+                } else { 
+                    if(sel) { wrongNums.push((i + 1) + "(" + sel.value + ")"); } 
+                    else { wrongNums.push(i + 1); }
+                }
+            });
+            var now = new Date();
+            var resData = {
+                chapter: "খাদ্য, পুষ্টি ও পরিপাক", class: user.cls, correct: correct,
+                date: now.toLocaleDateString('en-GB'), name: user.name,
+                quizTitle: "জীববিজ্ঞান (৯ম-১০ম) ৫ম  অধ্যায়, সেট: ০১", roll: user.roll, section: user.sec,
+                subject: "জীববিজ্ঞান", time: now.toLocaleTimeString(),
+                timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
+                total: questions.length, userId: user.id,
+                wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই",
+                deviceModel: deviceInfo.model,
+                deviceIMEI: deviceInfo.uuid
+            };
+            var resKey = fName + "_" + Date.now();
+            db.ref("QuizResults/" + resKey).set(resData).then(() => {
+                return db.ref("IndividualQuizzes/" + user.id).once('value');
+            }).then(snap => {
+                if(snap.exists()){ snap.forEach(child => { if(child.val().file === fName) child.ref.remove(); }); }
+                localStorage.removeItem("timer_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                alert("পরীক্ষা সফলভাবে জমা হয়েছে!");
+                
+                var reviewHtml = "<div class='card' style='border-top: 5px solid #27ae60;'>";
+                reviewHtml += "<h2 style='text-align:center; color:#27ae60; margin-bottom:5px;'>🎉 পরীক্ষা সম্পন্ন হয়েছে!</h2>";
+                reviewHtml += "<p style='text-align:center; color:#7f8c8d; margin-top:0;'>আপনার উত্তরপত্র সফলভাবে ডাটাবেসে জমা হয়েছে।</p><hr>";
+                
+                reviewHtml += "<table style='width:100%; border-collapse:collapse; margin-bottom:15px; font-size:14px;'>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>পরীক্ষার্থী:</b> "+user.name+"</td><td style='padding:5px; color:#555;'><b>পরীক্ষা:</b> "+document.title+"</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>শ্রেণী-শাখা:</b> "+user.cls+" ("+user.sec+")</td><td style='padding:5px; color:#555;'><b>বিষয়:</b> জীববিজ্ঞান</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>রোল নং:</b> "+user.roll+"</td><td style='padding:5px; color:#555;'><b>অধ্যায়:</b> খাদ্য, পুষ্টি ও পরিপাক</td></tr>";
+                reviewHtml += "<tr><td colspan='2' style='padding:5px; color:#e67e22;'><b>ডিভাইস মডেল:</b> "+deviceInfo.model+" ("+deviceInfo.uuid+")</td></tr>";
+                reviewHtml += "</table><hr>";
+                
+                reviewHtml += "<div style='background:#f8f9fa; padding:12px; border-radius:8px; margin-bottom:20px; font-size:14px; border-left:4px solid #3498db;'>";
+                reviewHtml += "<p style='margin:4px 0;'>📊 <b>মোট প্রশ্ন:</b> "+questions.length+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#27ae60;'>✅ <b>সঠি উত্তর:</b> "+correct+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#e74c3c;'>❌ <b>ভুল ও উত্তরহীন:</b> "+(wrongNums.length > 0 ? wrongNums.join(', ') : 'নাই')+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#7f8c8d;'>📅 <b>তারিখ ও সময়:</b> "+resData.date+" | "+resData.time+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#8e44ad;'>⏱️ <b>ব্যয়কৃত সময়:</b> "+timeSpentStr+"</p>";
+                reviewHtml += "</div>";
+                               
+                reviewHtml += "</div>";
+                document.getElementById("main").innerHTML = reviewHtml;
+                if(window.MathJax) window.MathJax.typeset();
+            }).catch(e => alert(e.message));
+        }
+    </script>
+</body>
+</html>
