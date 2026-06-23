@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>জীববিজ্ঞান (৯ম-১০ম) ৫ম  অধ্যায়, সেট: ০২</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        body{font-family:sans-serif;background:#f4f7f6;padding:15px;margin:0;user-select:none;}
+        .card{background:white;padding:20px;border-radius:12px;max-width:500px;margin:10px auto;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+        .timer{position:fixed;top:0;left:0;width:100%;background:red;color:white;text-align:center;padding:8px;z-index:100;font-weight:bold;}
+        .opt{display:block;padding:12px;background:#f0f0f0;margin:8px 0;border-radius:8px;cursor:pointer;border:1px solid #ddd;}
+        input[type="radio"]{margin-right:10px;}
+        button{width:100%;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
+        .info-p { margin: 5px 0; font-size: 15px; }
+        #exam-box { display:none; margin-top:50px; }
+        .stim-box { background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; margin-bottom: 10px; font-style: italic; color: #555; }
+        mjx-utext { font-family: 'Segoe UI', Tahoma, sans-serif !important; font-style: normal !important; display: inline !important; direction: ltr !important; }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div class="card" id="preview-box">
+            <h2 style="text-align:center; color:#2c3e50;">জীববিজ্ঞান (৯ম-১০ম) ৫ম  অধ্যায়, সেট: ০২</h2>
+            <hr>
+            <p class="info-p"><b>বিষয়:</b> জীববিজ্ঞান</p>
+            <p class="info-p"><b>অধ্যায়:</b> খাদ্য, পুষ্টি ও পরিপাক</p>
+            <p class="info-p"><b>মোট প্রশ্ন:</b> 30টি</p>
+            <p class="info-p"><b>সময়:</b> 30 মিনিট</p>
+            <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
+            <br>
+            <button onclick="startExam()">পরিক্ষা শুরু করুন</button>
+        </div>
+        <div id="exam-box">
+            <div class="timer" id="t">সময় বাকি: --:--</div>
+            <div id="q-list"></div>
+            <div class="card"><button id="submitBtn" onclick="submitQuiz()">জমা দিন</button></div>
+        </div>
+    </div>
+    <script>
+        
+        var firebaseConfig = {
+            apiKey: "AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco",
+            databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com",
+            projectId: "quiz-storage-d8707"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        var db = firebase.database();
+    
+        var questions = [{"stim":"","ques":"নিচের কোনটি ক্লোরোপ্লাস্ট গঠন ও সংরক্ষণে প্রয়োজন?","img":"","o1":"ম্যাগনেসিয়াম","o2":"ক্যালসিয়াম","o3":"ক্যাডমিয়াম","o4":"ম্যাঙ্গানিজ","ans":"ঘ"},{"stim":"","ques":"উদ্ভিদে সালফারের ঘাটতি দেখা দিলে—    <br>    i. কচি পাতা প্রথমে হালকা সবুজ ও পরে হলুদ হয়   <br>   ii. উদ্ভিদের ডগা মরে যেতে পারে (ডাইব্যাক)   <br>   iii. মূল ও কন্দের বৃদ্ধি ব্যাহত হয়   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"কোন পুষ্টি উপাদানের অভাবে পাতার কিনারায় পুড়ে যাওয়া সদৃশ বাদামি রং দেখা যায়?","img":"","o1":"নাইট্রোজেন","o2":"পটাশিয়াম","o3":"ফসফরাস","o4":"ক্যালসিয়াম","ans":"খ"},{"stim":"","ques":"চর্বি জমা থাকে—   <br>   i. মস্তিষ্কে   <br>   ii. ত্বকে   <br>   iii. যকৃতে   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"নিচের উদ্দীপকটি পড়ে (5 ও 6) নং প্রশ্নের উত্তর দাও:   <br>   তামিমের দেহের ওজন 60 কেজি এবং উচ্চতা 140 সে.মি.।","ques":"তামিমের BMI এর মান কত?","img":"","o1":"25.4","o2":"28.5","o3":"30.6","o4":"32.7","ans":"গ"},{"stim":"","ques":"তামিমের শরীরের—   <br>   i. ওজন অতিরিক্ত   <br>   ii. মোটা হওয়ার প্রথম স্তর   <br>   iii. বেছে খাদ্য গ্রহণ ও ব্যায়াম করা প্রয়োজন   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"খাদ্যের কোন উপাদানটি কোষ্ঠকাঠিন্য দূর করতে সাহায্য করে?","img":"","o1":"শর্করা","o2":"চর্বি","o3":"রাফেজ বা আঁশযুক্ত খাবার","o4":"খনিজ লবণ","ans":"গ"},{"stim":"","ques":"মানবদেহের ওজনের প্রায় কত শতাংশ পানি?","img":"","o1":"২০-৩০%","o2":"৪৫-৫০%","o3":"৬০-৭০%","o4":"৮০-৯০%","ans":"গ"},{"stim":"","ques":"পুষ্টি উপাদান মূলত কয়টি ধাপে পরিপাক ও আত্মীকরণ সম্পন্ন করে?","img":"","o1":"৩টি","o2":"৪টি","o3":"৫টি","o4":"৬টি","ans":"গ"},{"stim":"","ques":"লালা গ্রন্থি থেকে নিঃসৃত লালারসে পানির পরিমাণ কত?","img":"","o1":"৫০%","o2":"৭৫%","o3":"৯৫%","o4":"৯৯.৫%","ans":"ঘ"},{"stim":"","ques":"মানুষের মুখে কয় জোড়া লালা গ্রন্থি থাকে?","img":"","o1":"১ জোড়া","o2":"২ জোড়া","o3":"৩ জোড়া","o4":"৪ জোড়া","ans":"গ"},{"stim":"","ques":"নিচের কোনটি মানবদেহের লালা গ্রন্থি নয়?","img":"","o1":"প্যারোটিড গ্রন্থি","o2":"সাবম্যান্ডিবুলার গ্রন্থি","o3":"সাবলিঙ্গুয়াল গ্রন্থি","o4":"থাইরয়েড গ্রন্থি","ans":"ঘ"},{"stim":"","ques":"উদ্ভিদের শ্বসন প্রক্রিয়ায় সাহায্য করে কোনটি—","img":"","o1":"ফসফরাস","o2":"পটাশিয়াম","o3":"ম্যাগনেসিয়াম","o4":"মলিবডেনাম","ans":"গ"},{"stim":"","ques":"মানবদেহে খনিজ লবণ ক্যালসিয়ামের প্রধান কাজ হলো—   <br>   i. দাঁত ও হাড়ের সুস্থতা রক্ষা করা   <br>   ii. রক্ত জমাট বাঁধতে সাহায্য করা   <br>   iii. স্নায়ু উদ্দীপনা ও পেশী সংকোচন নিয়ন্ত্রণ করা   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"","ques":"কোন পুষ্টি উপাদানের মাত্রা কমে গেলে মাইটোকন্ড্রিয়ায় অক্সিডেটিভ ফসফোরাইলেশন প্রক্রিয়া বিপর্যস্ত হয়?","img":"","o1":"ফসফরাস","o2":"পটাশিয়াম","o3":"ক্যালসিয়াম","o4":"ম্যাগনেসিয়াম","ans":"গ"},{"stim":"","ques":"প্রাণিজ স্নেহ পদার্থ—   <br>   i. ঘি   <br>   ii. ডিমের সাদা অংশ   <br>   iii. ডিমের কুসুম   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"খ"},{"stim":"নিচের উদ্দীপকটি পড়ে (17 ও 18) নং প্রশ্নের উত্তর দাও:   <br>   রাশেদ মিয়া একজন পূর্ণ বয়স্ক কৃষক। তিনি প্রতিদিন সকাল থেকে সন্ধ্যা পর্যন্ত কাজ করেন। কিন্তু সে সব সময়ই অসুস্থতা বোধ করে। তার খাদ্য তালিকায় শাকসবজি ও অল্প পরিমাণ মাছ রয়েছে।","ques":"রাশেদ মিয়ার খাদ্য তালিকায় দৈনিক কত গ্রাম মাছ প্রয়োজন?","img":"","o1":"২০","o2":"৩০","o3":"৪০","o4":"৫০","ans":"খ"},{"stim":"","ques":"রাশেদ মিয়া অসুস্থতা বোধ করে কারণ সে—   <br>   i. খাদ্যের পুষ্টিমান সম্পর্কে অবগত নয়   <br>   ii. খাদ্য গ্রহণে কোনো নীতিমালা অনুসরণ করে না   <br>   iii. অধিক পরিমাণ শাক-সবজি গ্রহণ করে   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"নিচের উদ্দীপকটি পড়ে (19 ও 20) নং প্রশ্নের উত্তর দাও:    <br>   তুহিন পরিপাকতন্ত্রের এমন একটি অঙ্গের চিত্র দেখল যা একাধারে পাচক রস বা এনজাইম নিঃসৃত করে এবং রক্তে শর্করার মাত্রা ঠিক রাখার জন্য হরমোন নিঃসরণ করে।","ques":"তুহিনের দেখা মিশ্র গ্রন্থিটির নাম কী?","img":"","o1":"যকৃৎ","o2":"লালা গ্রন্থি","o3":"অগ্ন্যাশয়","o4":"গ্যাস্ট্রিক গ্রন্থি","ans":"গ"},{"stim":"","ques":"উক্ত গ্রন্থি থেকে নিঃসৃত কোন হরমোনটির অভাবে মানবদেহে ডায়াবেটিস রোগ হয়?","img":"","o1":"থাইরক্সিন","o2":"ইনসুলিন","o3":"অ্যাড্রেনালিন","o4":"গ্লুকাগন","ans":"খ"},{"stim":"","ques":"গলবিল ও পাকস্থলীর সংযোগকারী নালীর নাম কী?","img":"","o1":"শ্বাসনালী","o2":"অন্ননালী","o3":"ক্লোমনালী","o4":"লসিকানালী","ans":"খ"},{"stim":"","ques":"পাকস্থলীর ভেতরের দেয়ালে কোন গ্রন্থি থাকে যা পাচক রস নিঃসৃত করে?","img":"","o1":"গ্যাস্ট্রিক গ্রন্থি","o2":"পিটুইটারি গ্রন্থি","o3":"থাইরয়েড গ্রন্থি","o4":"ল্যাপটিড গ্রন্থি","ans":"ক"},{"stim":"","ques":"খাদ্যে স্নেহ বা চর্বি জাতীয় উপাদানের ভূমিকা হলো—   <br>   i. এটি দেহের ত্বক মসৃণ ও সতেজ রাখে   <br>   ii. এটি ভিটামিন A, D, E এবং K-কে দ্রবীভূত করে দেহে শোষণে সাহায্য করে   <br>   iii. এটি শর্করার চেয়ে কম ক্যালরি শক্তি উৎপাদন করে   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"পরিপাক নালীর কোন অংশে কোনো খাদ্য পরিপাক হয় না?","img":"","o1":"মুখগহ্বর","o2":"পাকস্থলী","o3":"অন্ননালী","o4":"ক্ষুদ্রান্ত্র","ans":"গ"},{"stim":"নিচের উদ্দীপকটি পড়ে (25 ও 26) নং প্রশ্নের উত্তর দাও:    <br>   ক্ষুদ্রান্ত্রে খাদ্য সম্পূর্ণ পরিপাক হওয়ার পর এর ভেতরের প্রাচীরে থাকা অসংখ্য আঙুলের মতো প্রবর্ধক অংশ দ্বারা সরল খাদ্য উপাদানগুলো শোষিত হয়ে রক্তে মিশে যায়।","ques":"ক্ষুদ্রান্ত্রের প্রাচীরে থাকা আঙুলের মতো এই প্রবর্ধকগুলোকে কী বলে?","img":"","o1":"ভিলাই","o2":"ল্যাকটিয়াল","o3":"সিকাম","o4":"কোলন","ans":"ক"},{"stim":"","ques":"শোষিত সরল আমিষ উপাদানটি রক্তপ্রবাহের মাধ্যমে কোষের প্রোটোপ্লাজমে রূপান্তরিত হওয়ার প্রক্রিয়াকে কী বলে?","img":"","o1":"পরিপাক","o2":"আত্মীকরণ","o3":"ইমালসিফিকেশন","o4":"শোষণ","ans":"খ"},{"stim":"","ques":"পাকস্থলীতে আংশিক পরিপাক হওয়া তরল মণ্ডের মতো খাদ্যকে কী বলে?","img":"","o1":"কাইম বা মণ্ড","o2":"বোলান","o3":"কাইল","o4":"এনজাইম","ans":"ক"},{"stim":"","ques":"শান্ত বা স্থির অবস্থায় মানবদেহের সর্বনিম্ন শক্তি ব্যয়ের হারকে কী বলে?","img":"","o1":"BMI","o2":"BMR","o3":"RBC","o4":"WBC","ans":"খ"},{"stim":"","ques":"হ্যারিস-বেনেডিক্ট সূত্রে ছেলেদের BMR নির্ণয়ের বেস বা ধ্রুবক সংখ্যাটি কত?","img":"","o1":"৬৬","o2":"৬৬৫.৫","o3":"৫","o4":"১৩.৭","ans":"ক"},{"stim":"","ques":"BMI এর অপর নাম কী?","img":"","o1":"Quetelet Index","o2":"Mass Index","o3":"Muscle Index","o4":"Fat Index","ans":"ক"}];
+        var fName = "91010502";
+        
+        // ডাইনামিক ডিভাইস ট্র্যাকিং লজিক (Escaped carefully)
+        function getDeviceInformation() {
+            var ua = navigator.userAgent;
+            var deviceModel = "Unknown Device";
+            
+            if (/android/i.test(ua)) {
+                var matches = ua.match(/Android\s+([^\s;]+);?\s+([^;?)]+)/);
+                if (matches && matches[2]) {
+                    deviceModel = matches[2].trim();
+                } else {
+                    deviceModel = "Android Device";
+                }
+            } else if (/iPhone|iPad|iPod/i.test(ua)) {
+                deviceModel = "Apple iPhone";
+            } else if (/Macintosh/i.test(ua)) {
+                deviceModel = "Mac PC";
+            } else if (/Windows/i.test(ua)) {
+                deviceModel = "Windows PC";
+            }
+
+            var deviceUUID = localStorage.getItem("quiz_device_uuid");
+            if (!deviceUUID) {
+                deviceUUID = 'DEV-' + Math.random().toString(36).substring(2, 11).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
+                localStorage.setItem("quiz_device_uuid", deviceUUID);
+            }
+            return { model: deviceModel, uuid: deviceUUID };
+        }
+        var deviceInfo = getDeviceInformation();
+
+        var timerInterval;
+        var urlParams = new URLSearchParams(window.location.search);
+        var user = {
+            id: urlParams.get('id'),
+            name: urlParams.get('name'),
+            roll: urlParams.get('roll'),
+            cls: urlParams.get('cls'),
+            sec: urlParams.get('sec')
+        };
+        if(user.id){
+            document.getElementById('uName').innerText = user.name;
+            document.getElementById('uIdDisplay').innerText = user.id;
+        }
+        window.onload = function() {
+            var savedTime = localStorage.getItem("timer_" + fName + "_" + user.id);
+            if(savedTime) {
+                var remaining = parseInt(savedTime) - Math.floor(Date.now()/1000);
+                if(remaining > 0) startExam(remaining);
+                else { alert("সময় শেষ হয়ে গেছে!"); submitQuiz(); }
+            }
+        };
+        function saveAns(qIdx, val) {
+            var saved = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            saved[qIdx] = val;
+            localStorage.setItem("ans_" + fName + "_" + user.id, JSON.stringify(saved));
+        }
+        function startExam(existingSec) {
+            if(!existingSec) {
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+            }
+            if(!localStorage.getItem("start_time_" + fName + "_" + user.id)){
+                localStorage.setItem("start_time_" + fName + "_" + user.id, Date.now());
+            }
+            document.getElementById('preview-box').style.display = 'none';
+            document.getElementById('exam-box').style.display = 'block';
+            var list = document.getElementById('q-list');
+            var savedAns = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            var h = "";
+            questions.forEach(function(q, i){
+                var s = savedAns["q"+i] || "";
+                h += "<div class='card'>";
+                if(q.stim && q.stim.trim() !== "") {
+                    h += "<div class='stim-box'>"+q.stim.replace(/\\n/g, '<br>')+"</div>";
+                }
+                h += "<p><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
+                if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক' onchange='saveAns(\"q"+i+"\", \"ক\")' "+(s=='ক'?'checked':'')+"> ক) "+q.o1+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='খ' onchange='saveAns(\"q"+i+"\", \"খ\")' "+(s=='খ'?'checked':'')+"> খ) "+q.o2+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='গ' onchange='saveAns(\"q"+i+"\", \"গ\")' "+(s=='গ'?'checked':'')+"> গ) "+q.o3+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ঘ' onchange='saveAns(\"q"+i+"\", \"ঘ\")' "+(s=='ঘ'?'checked':'')+"> ঘ) "+q.o4+"</label></div>";
+            });
+            list.innerHTML = h;
+            if(window.MathJax) window.MathJax.typeset();
+            var totalSec = existingSec || (30 * 60);
+            if(!existingSec) {
+                var expiry = Math.floor(Date.now()/1000) + totalSec;
+                localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
+            }
+            runTimer(totalSec);
+        }
+        function runTimer(sec) {
+            timerInterval = setInterval(function(){
+                var m = Math.floor(sec/60), s = sec%60;
+                document.getElementById("t").innerText = "সময় বাকি: " + m + ":" + (s < 10 ? "0" : "") + s;
+                if(sec <= 0){ clearInterval(timerInterval); submitQuiz(); }
+                sec--;
+            }, 1000);
+        }
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            var startTime = localStorage.getItem("start_time_" + fName + "_" + user.id) || Date.now();
+            var diff = Math.floor((Date.now() - startTime) / 1000);
+            var mSpent = Math.floor(diff / 60);
+            var sSpent = diff % 60;
+            var timeSpentStr = mSpent + "m " + sSpent + "s";
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "জমা হচ্ছে...";
+            var correct = 0;
+            var wrongNums = [];
+            questions.forEach(function(q, i){
+                var sel = document.querySelector('input[name="q'+i+'"]:checked');
+                if(sel && sel.value === q.ans) { 
+                    correct++; 
+                } else { 
+                    if(sel) { wrongNums.push((i + 1) + "(" + sel.value + ")"); } 
+                    else { wrongNums.push(i + 1); }
+                }
+            });
+            var now = new Date();
+            var resData = {
+                chapter: "খাদ্য, পুষ্টি ও পরিপাক", class: user.cls, correct: correct,
+                date: now.toLocaleDateString('en-GB'), name: user.name,
+                quizTitle: "জীববিজ্ঞান (৯ম-১০ম) ৫ম  অধ্যায়, সেট: ০২", roll: user.roll, section: user.sec,
+                subject: "জীববিজ্ঞান", time: now.toLocaleTimeString(),
+                timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
+                total: questions.length, userId: user.id,
+                wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই",
+                deviceModel: deviceInfo.model,
+                deviceIMEI: deviceInfo.uuid
+            };
+            var resKey = fName + "_" + Date.now();
+            db.ref("QuizResults/" + resKey).set(resData).then(() => {
+                return db.ref("IndividualQuizzes/" + user.id).once('value');
+            }).then(snap => {
+                if(snap.exists()){ snap.forEach(child => { if(child.val().file === fName) child.ref.remove(); }); }
+                localStorage.removeItem("timer_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                alert("পরীক্ষা সফলভাবে জমা হয়েছে!");
+                
+                var reviewHtml = "<div class='card' style='border-top: 5px solid #27ae60;'>";
+                reviewHtml += "<h2 style='text-align:center; color:#27ae60; margin-bottom:5px;'>🎉 পরীক্ষা সম্পন্ন হয়েছে!</h2>";
+                reviewHtml += "<p style='text-align:center; color:#7f8c8d; margin-top:0;'>আপনার উত্তরপত্র সফলভাবে ডাটাবেসে জমা হয়েছে।</p><hr>";
+                
+                reviewHtml += "<table style='width:100%; border-collapse:collapse; margin-bottom:15px; font-size:14px;'>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>পরীক্ষার্থী:</b> "+user.name+"</td><td style='padding:5px; color:#555;'><b>পরীক্ষা:</b> "+document.title+"</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>শ্রেণী-শাখা:</b> "+user.cls+" ("+user.sec+")</td><td style='padding:5px; color:#555;'><b>বিষয়:</b> জীববিজ্ঞান</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>রোল নং:</b> "+user.roll+"</td><td style='padding:5px; color:#555;'><b>অধ্যায়:</b> খাদ্য, পুষ্টি ও পরিপাক</td></tr>";
+                reviewHtml += "<tr><td colspan='2' style='padding:5px; color:#e67e22;'><b>ডিভাইস মডেল:</b> "+deviceInfo.model+" ("+deviceInfo.uuid+")</td></tr>";
+                reviewHtml += "</table><hr>";
+                
+                reviewHtml += "<div style='background:#f8f9fa; padding:12px; border-radius:8px; margin-bottom:20px; font-size:14px; border-left:4px solid #3498db;'>";
+                reviewHtml += "<p style='margin:4px 0;'>📊 <b>মোট প্রশ্ন:</b> "+questions.length+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#27ae60;'>✅ <b>সঠি উত্তর:</b> "+correct+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#e74c3c;'>❌ <b>ভুল ও উত্তরহীন:</b> "+(wrongNums.length > 0 ? wrongNums.join(', ') : 'নাই')+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#7f8c8d;'>📅 <b>তারিখ ও সময়:</b> "+resData.date+" | "+resData.time+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#8e44ad;'>⏱️ <b>ব্যয়কৃত সময়:</b> "+timeSpentStr+"</p>";
+                reviewHtml += "</div>";
+                               
+                reviewHtml += "</div>";
+                document.getElementById("main").innerHTML = reviewHtml;
+                if(window.MathJax) window.MathJax.typeset();
+            }).catch(e => alert(e.message));
+        }
+    </script>
+</body>
+</html>
