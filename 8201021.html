@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>৮ম বিজ্ঞান, অধ্যায় – ১,২ (সেট:০১)</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        body{font-family:sans-serif;background:#f4f7f6;padding:15px;margin:0;user-select:none;}
+        .card{background:white;padding:20px;border-radius:12px;max-width:500px;margin:10px auto;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+        .timer{position:fixed;top:0;left:0;width:100%;background:red;color:white;text-align:center;padding:8px;z-index:100;font-weight:bold;}
+        .opt{display:block;padding:12px;background:#f0f0f0;margin:8px 0;border-radius:8px;cursor:pointer;border:1px solid #ddd;}
+        input[type="radio"]{margin-right:10px;}
+        button{width:100%;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
+        .info-p { margin: 5px 0; font-size: 15px; }
+        #exam-box { display:none; margin-top:50px; }
+        .stim-box { background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db; margin-bottom: 10px; font-style: italic; color: #555; }
+        mjx-utext { font-family: 'Segoe UI', Tahoma, sans-serif !important; font-style: normal !important; display: inline !important; direction: ltr !important; }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div class="card" id="preview-box">
+            <h2 style="text-align:center; color:#2c3e50;">৮ম বিজ্ঞান, অধ্যায় – ১,২ (সেট:০১)</h2>
+            <hr>
+            <p class="info-p"><b>বিষয়:</b> বিজ্ঞান</p>
+            <p class="info-p"><b>অধ্যায়:</b> ১ম ও ২য়</p>
+            <p class="info-p"><b>মোট প্রশ্ন:</b> 40টি</p>
+            <p class="info-p"><b>সময়:</b> 40 মিনিট</p>
+            <p class="info-p"><b>পরীক্ষার্থী:</b> <span id="uName"></span> (ID: <span id="uIdDisplay"></span>)</p>
+            <br>
+            <button onclick="startExam()">পরিক্ষা শুরু করুন</button>
+        </div>
+        <div id="exam-box">
+            <div class="timer" id="t">সময় বাকি: --:--</div>
+            <div id="q-list"></div>
+            <div class="card"><button id="submitBtn" onclick="submitQuiz()">জমা দিন</button></div>
+        </div>
+    </div>
+    <script>
+        
+        var firebaseConfig = {
+            apiKey: "AIzaSyBmCTx0ytWLW6YPeAbUHGEixFOehynuEco",
+            databaseURL: "https://quiz-storage-d8707-default-rtdb.firebaseio.com",
+            projectId: "quiz-storage-d8707"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        var db = firebase.database();
+    
+        var questions = [{"stim":"","ques":"দ্বিপদ নামকরণের জনক কাকে বলা হয়?","img":"","o1":"অ্যারিস্টটল","o2":"জন রে","o3":"ক্যারোলাস লিনিয়াস","o4":"থিওফ্রাস্টাস","ans":"গ"},{"stim":"","ques":"আর্থ্রোপোডা পর্বের প্রাণীদের ক্ষেত্রে প্রযোজ্য—     <br>    i. দেহ কাইটিন সমৃদ্ধ শক্ত খোলস দ্বারা আবৃত    <br>   ii. মাথায় একজোড়া পুঞ্জাক্ষি ও অ্যান্টেনা থাকে    <br>   iii. রক্তপূর্ণ গহ্বর বা হিমোসিল থাকে না    <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"নিউক্লিওলাসের পুনঃ আবির্ভাব ঘটে কোন ধাপে?","img":"","o1":"অ্যানাফেজ","o2":"টেলোফেজ","o3":"মেটাফেজ","o4":"প্রো-মেটাফেজ","ans":"খ"},{"stim":"","ques":"বংশগতির ভৌতভিত্তি কী?","img":"","o1":"ক্রোমোজোম","o2":"জিন","o3":"ডিএনএ","o4":"আরএনএ","ans":"ক"},{"stim":"","ques":"মানুষের চুলের প্রকৃতি ও চামড়ার রং নিয়ন্ত্রণ করে কোনটি?","img":"","o1":"RNA","o2":"DNA","o3":"সেন্ট্রোমিয়ার","o4":"নিউক্লিওলাস","ans":"খ"},{"stim":"","ques":"জিনের অবস্থান কোথায়?","img":"","o1":"ক্রোমোজোম","o2":"নিউক্লিওপ্লাজম","o3":"সাইটোপ্লাজম","o4":"মাইটোকন্ড্রিয়া","ans":"ক"},{"stim":"","ques":"আধুনিক শ্রেণিবিন্যাসের সবচেয়ে নিচের ধাপ বা একক কোনটি?","img":"","o1":"জগৎ","o2":"পর্ব","o3":"শ্রেণী","o4":"প্রজাতি","ans":"ঘ"},{"stim":"","ques":"কোন পর্বের প্রাণীদের দেহ স্পঞ্জ নামে পরিচিত এবং এদের দেহে অগণিত ছিদ্র থাকে?","img":"","o1":"নিডারিয়া","o2":"পরিফেরা","o3":"মলাস্কা","o4":"অ্যানিলিডা","ans":"খ"},{"stim":"নিচের তথ্যের আলোকে (9  এবং 10)  নং প্রশ্নের উত্তর দাও:    <br>   সিয়াম তার বাগানে একটি কেঁচো মাটি খুঁড়ে বের হতে দেখল। এরপর সে পুকুরপাড়ে গিয়ে একটি শামুক দেখতে পেল। সে লক্ষ্য করল কেঁচোটির দেহ অনেকগুলো আংটির মতো খণ্ড নিয়ে গঠিত, অন্যদিকে শামুকটির দেহ একটি শক্ত খোলস দ্বারা আবৃত এবং এটি অত্যন্ত নরম।","ques":"সিয়ামের দেখা প্রথম প্রাণীটি (কেঁচো) কোন পর্বের অন্তর্ভুক্ত?","img":"","o1":"প্লাতিহেলমিনথিস","o2":"নেমাটোডা","o3":"অ্যানিলিডা","o4":"মলাস্কা","ans":"গ"},{"stim":"","ques":"উদ্দীপকের দ্বিতীয় প্রাণীটির (শামুক) চলন অঙ্গের নাম কী?","img":"","o1":"ক্ষণপদ","o2":"পেশীবহুল পদ","o3":"সিটা","o4":"ফ্ল্যাজেলা","ans":"খ"},{"stim":"","ques":"তারা মাছ কোন পর্বের অন্তর্ভুক্ত?","img":"","o1":"মলাস্কা","o2":"নেমাটোডা","o3":"অ্যানেলিডা","o4":"একাইনোডার্মাটা","ans":"ঘ"},{"stim":"","ques":"কোন ধাপে ক্যারিওকাইনেসিসের সমাপ্তি ঘটে?","img":"","o1":"টেলোফেজ","o2":"অ্যানাফেজ","o3":"প্রো – মেটাফেজ","o4":"মেটাফেজ","ans":"ক"},{"stim":"","ques":"রহিমের চাচার জালে ধরা পড়া প্রাণীগুলো কোন উপপর্বের অন্তর্ভুক্ত?","img":"","o1":"ইউরোকর্ডাটা","o2":"সেফালোকর্ডাটা","o3":"ভার্টিব্রাটা","o4":"টিউনিকাটা","ans":"গ"},{"stim":"","ques":"রহিমের চাচার জালে যে সকল শ্রেণির প্রাণী ধরা পড়ে সেগুলো হলো —   <br>   i. সরীসৃপ    <br>   ii. কনড্রিকথিস    <br>   iii. অসটিকথিস   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"খ"},{"stim":"","ques":"প্রাণীজগতের সবচেয়ে বড় পর্ব কোনটি?","img":"","o1":"অ্যানিলিডা","o2":"মলাস্কা","o3":"আর্থ্রোপোডা","o4":"কর্ডাটা","ans":"গ"},{"stim":"","ques":"মলাস্কা পর্বের প্রাণীদের চেনার উপায় হলো—   <br>   i. দেহ নরম এবং সাধারণত শক্ত খোলসে আবৃত থাকে   <br>   ii. পেশীবহুল পা দিয়ে এরা চলাচল করে   <br>   iii. ফুসফুস বা ফুলকার সাহায্যে শ্বাসকার্য চালায়   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ঘ"},{"stim":"নিচের তথ্যের আলোকে (17  এবং 18)  নং প্রশ্নের উত্তর দাও:","ques":"উদ্দীপকের 'A' চিহ্নিত প্রাণীটি কোন পর্বের অন্তর্গত?","img":"https://i.postimg.cc/023zJyw7/Picsart-26-06-29-00-39-22-097.jpg","o1":"প্লাতিহেলমিনথিস","o2":"নেমাটোডা","o3":"অ্যানিলিডা","o4":"মলাস্কা","ans":"খ"},{"stim":"","ques":"উদ্দীপকের 'B' চিহ্নিত প্রাণীটির চলন অঙ্গের নাম কী?","img":"","o1":"সিটা ও চোষক","o2":"ক্ষণপদ","o3":"পাখনা","o4":"পেশীবহুল পদ","ans":"ক"},{"stim":"","ques":"কোন কোষ বিভাজনকে প্রত্যক্ষ কোষ বিভাজন বলা হয়?","img":"","o1":"অ্যামাইটোসিস","o2":"মাইটোসিস","o3":"মিয়োসিস","o4":"সাইটোকাইনেসিস","ans":"ক"},{"stim":"","ques":"উন্নত শ্রেণীর উদ্ভিদের বর্ধনশীল অঙ্গ ও প্রাণীর দেহকোষে কোন কোষ বিভাজন ঘটে?","img":"","o1":"অ্যামাইটোসিস","o2":"মাইটোসিস","o3":"মিয়োসিস","o4":"কোনোটিই নয়","ans":"খ"},{"stim":"","ques":"মাইটোসিস কোষ বিভাজনে একটি মাতৃকোষ থেকে কয়টি অপত্য কোষ তৈরি হয়?","img":"","o1":"২টি","o2":"৩টি","o3":"৪টি","o4":"৮টি","ans":"ক"},{"stim":"","ques":"উভচর শ্রেণীর প্রাণীদের বৈশিষ্ট্য হলো—   <br>   i. ত্বক আঁশহীন, নরম ও ভেজা   <br>   ii. এরা শীতল রক্তের প্রাণী   <br>   iii. এদের হৃদপিণ্ড চার প্রকোষ্ঠবিশিষ্ট   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"জীবের জননকোষ বা গ্যামেট সৃষ্টির সময় কোন কোষ বিভাজন ঘটে?","img":"","o1":"মাইটোসিস","o2":"মিয়োসিস","o3":"অ্যামাইটোসিস","o4":"সাইটোকাইনেসিস","ans":"খ"},{"stim":"","ques":"কোন উপপর্বের প্রাণীদের সারা জীবন বা ভ্রূণ অবস্থায় পৃষ্ঠীয় দেশে নটোকর্ড থাকে?","img":"","o1":"ইউরোকর্ডাটা","o2":"সেফালোকর্ডাটা","o3":"ভার্টিব্রাটা","o4":"কর্ডাটা","ans":"ঘ"},{"stim":"","ques":"ব্যাঙ কোন শ্রেণীর মেরুদণ্ডী প্রাণী?","img":"","o1":"মৎস্যকূল","o2":"উভচর","o3":"সরীসৃপ","o4":"স্তন্যপায়ী","ans":"খ"},{"stim":"","ques":"কোন শ্রেণীর প্রাণীদের হাড়গুলো ফাঁপা ও বায়ুপূর্ণ হওয়ায় এরা সহজে উড়তে পারে?","img":"","o1":"সরীসৃপ","o2":"পক্ষীকূল","o3":"স্তন্যপায়ী","o4":"উভচর","ans":"খ"},{"stim":"","ques":"মিয়োসিস কোষ বিভাজনের বৈশিষ্ট্য হলো—   <br>   i. এটি জীবের জনন মাতৃকোষে ঘটে   <br>   ii. একটি মাতৃকোষ থেকে ৪টি অপত্য কোষ তৈরি হয়   <br>   iii. অপত্য কোষের ক্রোমোজোম সংখ্যা মাতৃকোষের সমান থাকে   <br>  নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"তিমি ও ডলফিন কোন শ্রেণীর অন্তর্গত?","img":"","o1":"মৎস্যকূল","o2":"উভচর","o3":"স্তন্যপায়ী","o4":"সরীসৃপ","ans":"গ"},{"stim":"","ques":"তারা মাছ এবং সমুদ্র শশা কোন পর্বের অন্তর্গত?","img":"","o1":"মলাস্কা","o2":"একাইনোডার্মাটা","o3":"কর্ডাটা","o4":"অ্যানিলিডা","ans":"খ"},{"stim":"নিচের তথ্যের আলোকে (30  এবং 31)  নং প্রশ্নের উত্তর দাও:    <br>   টমেটো গাছের চারা রোপণের কয়েক সপ্তাহের মধ্যে সেটি বেশ বড় হয়ে উঠল এবং তাতে ফুল ফুটল। শিক্ষক ক্লাসে বললেন, উদ্ভিদের এই দৈহিক বৃদ্ধির পেছনে এক ধরনের বিশেষ কোষ বিভাজন কাজ করে, যেখানে মাতৃকোষের ক্রোমোজোম সংখ্যা এবং অপত্য কোষের ক্রোমোজোম সংখ্যা সমান থাকে।","ques":"উদ্দীপকের উদ্ভিদের দৈহিক বৃদ্ধির জন্য কোন কোষ বিভাজনটি দায়ী?","img":"","o1":"অ্যামাইটোসিস","o2":"মাইটোসিস","o3":"মিয়োসিস","o4":"সাইটোকাইনেসিস","ans":"খ"},{"stim":"","ques":"এই ধরনের কোষ বিভাজনে নিউক্লিয়াস ও ক্রোমোজোম কতবার বিভাজিত হয়?","img":"","o1":"নিউক্লিয়াস একবার ও ক্রোমোজোম দুইবার","o2":"নিউক্লিয়াস দুইবার ও ক্রোমোজোম একবার","o3":"নিউক্লিয়াস ও ক্রোমোজোম উভয়ই একবার","o4":"নিউক্লিয়াস ও ক্রোমোজোম উভয়ই দুইবার","ans":"গ"},{"stim":"","ques":"কর্ডাটা পর্বের প্রধান উপপর্ব কয়টি?","img":"","o1":"২টি","o2":"৩টি","o3":"৪টি","o4":"৫টি","ans":"খ"},{"stim":"","ques":"কোন কোষ বিভাজনকে হ্রাসমূলক বিভাজন বলা হয়?","img":"","o1":"অ্যামাইটোসিস","o2":"মাইটোসিস","o3":"মিয়োসিস","o4":"ক্যারাইওকাইনেসিস","ans":"গ"},{"stim":"","ques":"মাইটোসিসের প্রোফেজ ধাপে যা ঘটে—   <br>   i. নিউক্লিয়াস আকারে বড় হয়   <br>   ii. ক্রোমোজোম থেকে পানি হ্রাস পেতে থাকে   <br>   iii. ক্রোমোজোমগুলো কোষের বিষুবীয় অঞ্চলে আসে   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"নিচের তথ্যের আলোকে (35  এবং 36)  নং প্রশ্নের উত্তর দাও:","ques":"উদ্দীপকের চিত্রে মাইটোসিস কোষ বিভাজনের কোন ধাপটিকে নির্দেশ করা হয়েছে?","img":"https://i.postimg.cc/L6yzQSZY/Picsart-26-06-29-00-34-08-260.jpg","o1":"প্রোফেজ","o2":"প্রো-মেটাফেজ","o3":"মেটাফেজ","o4":"অ্যানাফেজ","ans":"গ"},{"stim":"","ques":"এই ধাপটির প্রধান বৈশিষ্ট্য কোনটি?","img":"","o1":"নিউক্লিয়ার পর্দা সম্পূর্ণ বিলুপ্ত হয় না","o2":"ক্রোমোজোমগুলো সবচেয়ে খাটো ও মোটা দেখায়","o3":"ক্রোমাটিডগুলো মেরুমুখী চলন শুরু করে","o4":"নিউক্লিয়াসের পুনরাবির্ভাব ঘটে","ans":"গ"},{"stim":"","ques":"মিয়োসিস কোষ বিভাজনে একটি মাতৃকোষ বিভাজিত হয়ে কয়টি অপত্য কোষ তৈরি করে?","img":"","o1":"২টি","o2":"৪টি","o3":"৮টি","o4":"১৬টি","ans":"খ"},{"stim":"","ques":"বংশগতিবিদ্যার জনক কে?","img":"","o1":"গ্রেগর জোহান মেন্ডেল","o2":"চার্লস ডারউইন","o3":"রবার্ট হুক","o4":"ল্যামার্ক","ans":"ক"},{"stim":"","ques":"মাইটোসিস কোষ বিভাজনের গুরুত্ব হলো—   <br>   i. জীবের দৈহিক বৃদ্ধি ঘটানো   <br>   ii. ক্ষতস্থান পূরণ করা   <br>   iii. জননকোষের সংখ্যা বৃদ্ধি করা   <br>   নিচের কোনটি সঠিক?","img":"","o1":"i ও ii","o2":"i ও iii","o3":"ii ও iii","o4":"i, ii ও iii","ans":"ক"},{"stim":"","ques":"মানবদেহের প্রতিটি কোষে কয়টি ক্রোমোজোম থাকে?","img":"","o1":"২৩টি","o2":"৪৬টি","o3":"৪৪টি","o4":"২২টি","ans":"খ"}];
+        var fName = "8201021";
+        
+        // ডাইনামিক ডিভাইস ট্র্যাকিং লজিক (Escaped carefully)
+        function getDeviceInformation() {
+            var ua = navigator.userAgent;
+            var deviceModel = "Unknown Device";
+            
+            if (/android/i.test(ua)) {
+                var matches = ua.match(/Android\s+([^\s;]+);?\s+([^;?)]+)/);
+                if (matches && matches[2]) {
+                    deviceModel = matches[2].trim();
+                } else {
+                    deviceModel = "Android Device";
+                }
+            } else if (/iPhone|iPad|iPod/i.test(ua)) {
+                deviceModel = "Apple iPhone";
+            } else if (/Macintosh/i.test(ua)) {
+                deviceModel = "Mac PC";
+            } else if (/Windows/i.test(ua)) {
+                deviceModel = "Windows PC";
+            }
+
+            var deviceUUID = localStorage.getItem("quiz_device_uuid");
+            if (!deviceUUID) {
+                deviceUUID = 'DEV-' + Math.random().toString(36).substring(2, 11).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
+                localStorage.setItem("quiz_device_uuid", deviceUUID);
+            }
+            return { model: deviceModel, uuid: deviceUUID };
+        }
+        var deviceInfo = getDeviceInformation();
+
+        var timerInterval;
+        var urlParams = new URLSearchParams(window.location.search);
+        var user = {
+            id: urlParams.get('id'),
+            name: urlParams.get('name'),
+            roll: urlParams.get('roll'),
+            cls: urlParams.get('cls'),
+            sec: urlParams.get('sec')
+        };
+        if(user.id){
+            document.getElementById('uName').innerText = user.name;
+            document.getElementById('uIdDisplay').innerText = user.id;
+        }
+        window.onload = function() {
+            var savedTime = localStorage.getItem("timer_" + fName + "_" + user.id);
+            if(savedTime) {
+                var remaining = parseInt(savedTime) - Math.floor(Date.now()/1000);
+                if(remaining > 0) startExam(remaining);
+                else { alert("সময় শেষ হয়ে গেছে!"); submitQuiz(); }
+            }
+        };
+        function saveAns(qIdx, val) {
+            var saved = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            saved[qIdx] = val;
+            localStorage.setItem("ans_" + fName + "_" + user.id, JSON.stringify(saved));
+        }
+        function startExam(existingSec) {
+            if(!existingSec) {
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+            }
+            if(!localStorage.getItem("start_time_" + fName + "_" + user.id)){
+                localStorage.setItem("start_time_" + fName + "_" + user.id, Date.now());
+            }
+            document.getElementById('preview-box').style.display = 'none';
+            document.getElementById('exam-box').style.display = 'block';
+            var list = document.getElementById('q-list');
+            var savedAns = JSON.parse(localStorage.getItem("ans_" + fName + "_" + user.id) || "{}");
+            var h = "";
+            questions.forEach(function(q, i){
+                var s = savedAns["q"+i] || "";
+                h += "<div class='card'>";
+                if(q.stim && q.stim.trim() !== "") {
+                    h += "<div class='stim-box'>"+q.stim.replace(/\\n/g, '<br>')+"</div>";
+                }
+                h += "<p><b>"+(i+1)+". "+q.ques.replace(/\\n/g, '<br>')+"</b></p>";
+                if(q.img) h += "<img src='"+q.img+"' style='width:100%;border-radius:8px;margin-bottom:10px;'>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ক' onchange='saveAns(\"q"+i+"\", \"ক\")' "+(s=='ক'?'checked':'')+"> ক) "+q.o1+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='খ' onchange='saveAns(\"q"+i+"\", \"খ\")' "+(s=='খ'?'checked':'')+"> খ) "+q.o2+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='গ' onchange='saveAns(\"q"+i+"\", \"গ\")' "+(s=='গ'?'checked':'')+"> গ) "+q.o3+"</label>";
+                h += "<label class='opt'><input type='radio' name='q"+i+"' value='ঘ' onchange='saveAns(\"q"+i+"\", \"ঘ\")' "+(s=='ঘ'?'checked':'')+"> ঘ) "+q.o4+"</label></div>";
+            });
+            list.innerHTML = h;
+            if(window.MathJax) window.MathJax.typeset();
+            var totalSec = existingSec || (40 * 60);
+            if(!existingSec) {
+                var expiry = Math.floor(Date.now()/1000) + totalSec;
+                localStorage.setItem("timer_" + fName + "_" + user.id, expiry);
+            }
+            runTimer(totalSec);
+        }
+        function runTimer(sec) {
+            timerInterval = setInterval(function(){
+                var m = Math.floor(sec/60), s = sec%60;
+                document.getElementById("t").innerText = "সময় বাকি: " + m + ":" + (s < 10 ? "0" : "") + s;
+                if(sec <= 0){ clearInterval(timerInterval); submitQuiz(); }
+                sec--;
+            }, 1000);
+        }
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            var startTime = localStorage.getItem("start_time_" + fName + "_" + user.id) || Date.now();
+            var diff = Math.floor((Date.now() - startTime) / 1000);
+            var mSpent = Math.floor(diff / 60);
+            var sSpent = diff % 60;
+            var timeSpentStr = mSpent + "m " + sSpent + "s";
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "জমা হচ্ছে...";
+            var correct = 0;
+            var wrongNums = [];
+            questions.forEach(function(q, i){
+                var sel = document.querySelector('input[name="q'+i+'"]:checked');
+                if(sel && sel.value === q.ans) { 
+                    correct++; 
+                } else { 
+                    if(sel) { wrongNums.push((i + 1) + "(" + sel.value + ")"); } 
+                    else { wrongNums.push(i + 1); }
+                }
+            });
+            var now = new Date();
+            var resData = {
+                chapter: "১ম ও ২য়", class: user.cls, correct: correct,
+                date: now.toLocaleDateString('en-GB'), name: user.name,
+                quizTitle: "৮ম বিজ্ঞান, অধ্যায় – ১,২ (সেট:০১)", roll: user.roll, section: user.sec,
+                subject: "বিজ্ঞান", time: now.toLocaleTimeString(),
+                timeSpent: timeSpentStr, timestamp: firebase.database.ServerValue.TIMESTAMP,
+                total: questions.length, userId: user.id,
+                wrongQuestions: wrongNums.length > 0 ? wrongNums.join(", ") : "নাই",
+                deviceModel: deviceInfo.model,
+                deviceIMEI: deviceInfo.uuid
+            };
+            var resKey = fName + "_" + Date.now();
+            db.ref("QuizResults/" + resKey).set(resData).then(() => {
+                return db.ref("IndividualQuizzes/" + user.id).once('value');
+            }).then(snap => {
+                if(snap.exists()){ snap.forEach(child => { if(child.val().file === fName) child.ref.remove(); }); }
+                localStorage.removeItem("timer_" + fName + "_" + user.id);
+                localStorage.removeItem("start_time_" + fName + "_" + user.id);
+                localStorage.removeItem("ans_" + fName + "_" + user.id);
+                alert("পরীক্ষা সফলভাবে জমা হয়েছে!");
+                
+                var reviewHtml = "<div class='card' style='border-top: 5px solid #27ae60;'>";
+                reviewHtml += "<h2 style='text-align:center; color:#27ae60; margin-bottom:5px;'>🎉 পরীক্ষা সম্পন্ন হয়েছে!</h2>";
+                reviewHtml += "<p style='text-align:center; color:#7f8c8d; margin-top:0;'>আপনার উত্তরপত্র সফলভাবে ডাটাবেসে জমা হয়েছে।</p><hr>";
+                
+                reviewHtml += "<table style='width:100%; border-collapse:collapse; margin-bottom:15px; font-size:14px;'>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>পরীক্ষার্থী:</b> "+user.name+"</td><td style='padding:5px; color:#555;'><b>পরীক্ষা:</b> "+document.title+"</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>শ্রেণী-শাখা:</b> "+user.cls+" ("+user.sec+")</td><td style='padding:5px; color:#555;'><b>বিষয়:</b> বিজ্ঞান</td></tr>";
+                reviewHtml += "<tr><td style='padding:5px; color:#555;'><b>রোল নং:</b> "+user.roll+"</td><td style='padding:5px; color:#555;'><b>অধ্যায়:</b> ১ম ও ২য়</td></tr>";
+                reviewHtml += "<tr><td colspan='2' style='padding:5px; color:#e67e22;'><b>ডিভাইস মডেল:</b> "+deviceInfo.model+" ("+deviceInfo.uuid+")</td></tr>";
+                reviewHtml += "</table><hr>";
+                
+                reviewHtml += "<div style='background:#f8f9fa; padding:12px; border-radius:8px; margin-bottom:20px; font-size:14px; border-left:4px solid #3498db;'>";
+                reviewHtml += "<p style='margin:4px 0;'>📊 <b>মোট প্রশ্ন:</b> "+questions.length+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#27ae60;'>✅ <b>সঠি উত্তর:</b> "+correct+" টি</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#e74c3c;'>❌ <b>ভুল ও উত্তরহীন:</b> "+(wrongNums.length > 0 ? wrongNums.join(', ') : 'নাই')+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#7f8c8d;'>📅 <b>তারিখ ও সময়:</b> "+resData.date+" | "+resData.time+"</p>";
+                reviewHtml += "<p style='margin:4px 0; color:#8e44ad;'>⏱️ <b>ব্যয়কৃত সময়:</b> "+timeSpentStr+"</p>";
+                reviewHtml += "</div>";
+                               
+                reviewHtml += "</div>";
+                document.getElementById("main").innerHTML = reviewHtml;
+                if(window.MathJax) window.MathJax.typeset();
+            }).catch(e => alert(e.message));
+        }
+    </script>
+</body>
+</html>
